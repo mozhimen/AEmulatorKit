@@ -1,0 +1,37 @@
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        mavenLocal()
+        maven { url 'https://maven.aliyun.com/repository/central' }
+        maven { url 'https://maven.aliyun.com/repository/google' }
+        maven { url 'https://maven.aliyun.com/repository/jcenter' }
+        maven { url 'https://maven.aliyun.com/repository/public' }
+        maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
+        maven { url 'https://maven.aliyun.com/repository/grails-core' }
+        maven { url 'https://raw.githubusercontent.com/saki4510t/libcommon/master/repository/' }
+        maven { url 'https://gitee.com/liuchaoya/libcommon/raw/master/repository/' }
+        maven { url "https://repo.eclipse.org/content/repositories/paho-snapshots/" }
+        maven { url 'https://developer.huawei.com/repo/' }
+        maven { url "https://jitpack.io" }
+        maven { url 'https://www.jitpack.io' }
+        mavenCentral()
+        google()
+    }
+}
+
+rootProject.name = "AGameKit_Emulator"
+include ':app'
+//SwiftKit
+include ':SwiftKit'
+project(':SwiftKit').projectDir = new File("D:\\WorkSpace\\GitHub\\SwiftKit")
+include ':SwiftKit:basick'
+include ':SwiftKit:xmlk'
+//ATaskKit_WorkManager
+include ':ATaskKit_WorkManager'
+project(':ATaskKit_WorkManager').projectDir = new File("D:\\WorkSpace\\GitHub\\ATaskKit_WorkManager")
+include ':ATaskKit_WorkManager:taskk_workmanager'
+//ANavigateKit_Navigation
+include ':ANavigateKit_Navigation'
+project(':ANavigateKit_Navigation').projectDir = new File("D:\\WorkSpace\\GitHub\\ANavigateKit_Navigation")
+include ':ANavigateKit_Navigation:navigatek_navigation'
+include ':gamek_emulator_basic'
