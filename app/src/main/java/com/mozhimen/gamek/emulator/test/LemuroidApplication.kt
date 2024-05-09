@@ -3,16 +3,17 @@ package com.mozhimen.gamek.emulator.test
 import android.annotation.SuppressLint
 import android.content.Context
 import androidx.work.Configuration
+import androidx.work.ListenableWorker
 import androidx.work.WorkManager
 import com.mozhimen.basick.BuildConfig
-import com.mozhimen.basick.elemk.android.app.bases.BaseApplication
-import com.mozhimen.basick.lintk.optins.OApiMultiDex_InApplication
-import dagger.hilt.android.HiltAndroidApp
+import com.mozhimen.gamek.emulator.basic.injection.HasWorkerInjector
+import dagger.android.AndroidInjector
+import dagger.android.DaggerApplication
+import dagger.android.DispatchingAndroidInjector
 import timber.log.Timber
+import javax.inject.Inject
 
-@OptIn(OApiMultiDex_InApplication::class)
-@HiltAndroidApp
-class LemuroidApplication : BaseApplication()/*, HasWorkerInjector*/ {
+class LemuroidApplication : DaggerApplication(), HasWorkerInjector {
     companion object {
         fun get(context: Context) = context.applicationContext as LemuroidApplication
     }
@@ -24,8 +25,8 @@ class LemuroidApplication : BaseApplication()/*, HasWorkerInjector*/ {
     @Inject
     lateinit var gdriveStorageProvider: GDriveStorageProvider*/
 
-//    @Inject
-//    lateinit var workerInjector: DispatchingAndroidInjector<ListenableWorker>
+    @Inject
+    lateinit var workerInjector: DispatchingAndroidInjector<ListenableWorker>
 
     @SuppressLint("CheckResult")
     override fun onCreate() {
@@ -64,9 +65,9 @@ class LemuroidApplication : BaseApplication()/*, HasWorkerInjector*/ {
         WorkManager.initialize(this, config)
     }
 
-//    override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
-//        return DaggerLemuroidApplicationComponent.builder().create(this)
-//    }
-//
-//    override fun workerInjector(): AndroidInjector<ListenableWorker> = workerInjector
+    override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
+        return DaggerLemuroidApplicationComponent.builder().create(this)
+    }
+
+    override fun workerInjector(): AndroidInjector<ListenableWorker> = workerInjector
 }

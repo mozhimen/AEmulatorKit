@@ -1,4 +1,4 @@
-package com.mozhimen.gamek.emulator.basic.db.mos
+package com.mozhimen.gamek.emulator.basic.library.db.mos
 
 /**
  * @ClassName GameLibraryCounts

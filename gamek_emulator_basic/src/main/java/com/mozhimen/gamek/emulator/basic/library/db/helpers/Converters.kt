@@ -1,4 +1,4 @@
-package com.mozhimen.gamek.emulator.basic.db.helpers
+package com.mozhimen.gamek.emulator.basic.library.db.helpers
 
 import android.net.Uri
 import androidx.room.TypeConverter

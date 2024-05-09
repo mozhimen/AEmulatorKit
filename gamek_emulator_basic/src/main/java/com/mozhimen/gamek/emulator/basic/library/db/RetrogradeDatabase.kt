@@ -1,10 +1,12 @@
-package com.mozhimen.gamek.emulator.basic.db
+package com.mozhimen.gamek.emulator.basic.library.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.mozhimen.gamek.emulator.basic.db.helpers.Converters
-import com.mozhimen.gamek.emulator.basic.db.mos.Game
+import com.mozhimen.gamek.emulator.basic.library.db.commons.GameDao
+import com.mozhimen.gamek.emulator.basic.library.db.commons.GameSearchDao
+import com.mozhimen.gamek.emulator.basic.library.db.helpers.Converters
+import com.mozhimen.gamek.emulator.basic.library.db.mos.Game
 
 /**
  * @ClassName RetrogradeDatabase

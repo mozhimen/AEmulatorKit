@@ -1,3 +1,37 @@
 <resources>
     <string name="app_name">AGameKit_Emulator</string>
+
+    <string name="title_home">Home</string>
+    <string name="title_search">Search</string>
+    <string name="title_systems">Systems</string>
+    <string name="title_games">Games</string>
+    <string name="title_settings">Settings</string>
+    <string name="recent">Recents</string>
+    <string name="favorites">Favorites</string>
+    <string name="discover">Discover</string>
+    <string name="rescan">Rescan</string>
+    <string name="none">None</string>
+    <string name="directory">Directory</string>
+    <string name="simulate_display">Simulate display</string>
+    <string name="graphics">Graphics</string>
+    <string name="roms">ROMs</string>
+
+    <string name="add_to_favorites">Add to favorites</string>
+    <string name="remove_from_favorites">Remove from favorites</string>
+    <string name="play">Play</string>
+    <string name="restart">Restart</string>
+    <string name="quick_save">Quick save</string>
+    <string name="quick_load">Quick load</string>
+    <string name="close_without_saving">Close without saving</string>
+    <string name="reset">Reset</string>
+
+    <string name="home_empty_title">Select ROMs directory</string>
+    <string name="home_empty_message">Lemuroid needs to scan a directory containing ROM files.\nThis might take up to a few minutes.</string>
+    <string name="home_empty_action">Select Directory</string>
+
+    <string name="empty_view_default">No Items</string>
+
+    <string name="notification_channel_name">All notifications</string>
+    <string name="library_index_notification_title">ROMs scanning</string>
+    <string name="library_index_notification_message"></string>
 </resources>

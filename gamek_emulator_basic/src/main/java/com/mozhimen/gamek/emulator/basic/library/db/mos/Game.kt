@@ -1,4 +1,4 @@
-package com.mozhimen.gamek.emulator.basic.db.mos
+package com.mozhimen.gamek.emulator.basic.library.db.mos
 
 import android.net.Uri
 import androidx.recyclerview.widget.DiffUtil

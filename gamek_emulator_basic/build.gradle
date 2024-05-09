@@ -9,7 +9,7 @@ android {
     compileSdk 34
 
     defaultConfig {
-        minSdk 19
+        minSdk 21
         multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -33,6 +33,14 @@ android {
 
 dependencies {
     implementation project(":SwiftKit:basick")
+    implementation project(":APagingKit_Paging:pagingk_paging2_basic")
+    implementation project(":AAbilityKit_Jetpack:leanback")
+    implementation project(':KUtilKit:utilk_kotlin')
+    implementation project(':ATaskKit:taskk_workmanager')
+    implementation project(':AInjectKit:injectk_dagger')
+    implementation project(':ANetKit:netk_retrofit2')
+
+    implementation "com.jakewharton.timber:timber:4.7.1"
 
     kapt 'androidx.room:room-compiler:2.5.2'
 
