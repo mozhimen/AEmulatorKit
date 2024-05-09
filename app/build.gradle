@@ -36,14 +36,15 @@ android {
 }
 
 dependencies {
+    implementation project(':emulatork_basic')
+
+    implementation project(':ALogKit:logk_timber')
     implementation project(':AInjectKit:injectk_dagger')
-    implementation project(':gamek_emulator_basic')
     implementation project(":ATaskKit:taskk_workmanager")
     implementation project(":ATaskKit:taskk_rxjava2")
     implementation project(":ATaskKit:taskk_autodispose")
 
     implementation "com.airbnb.android:epoxy:3.8.0"
-    implementation "com.jakewharton.timber:timber:4.7.1"
     implementation "me.zhanghai.android.materialprogressbar:library:1.6.1"
     implementation "com.github.Swordfish90:LibretroDroid:a52b6dadf1"
 
