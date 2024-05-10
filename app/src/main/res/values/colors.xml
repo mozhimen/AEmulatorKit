@@ -5,4 +5,7 @@
 
     <color name="colorSecondary">@color/colorPrimary</color>
     <color name="colorSecondaryVariant">@color/colorPrimaryVariant</color>
+
+    <color name="lemuroid_launcher_background">#00C64E</color>
+    <color name="system_background">#22000000</color>
 </resources>

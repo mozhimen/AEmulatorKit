@@ -1,9 +1,13 @@
 package com.mozhimen.emulatork.input.views
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.MotionEvent
 import com.jakewharton.rxrelay2.PublishRelay
+import com.mozhimen.emulatork.input.events.ViewEvent
+import com.mozhimen.emulatork.input.interfaces.StickEventsSource
+import io.github.controlwear.virtual.joystick.android.JoystickView
 import io.reactivex.Observable
 import kotlin.math.cos
 import kotlin.math.sin
@@ -27,6 +31,7 @@ class Stick @JvmOverloads constructor(
         setOnMoveListener(this::handleMoveEvent, 16)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         // We send a dummy haptic event. This should performs vibration when the stick is pressed the first time.
         if (event.action == MotionEvent.ACTION_DOWN) {

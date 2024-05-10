@@ -87,7 +87,7 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.5" />
 
-    <Stick
+    <com.mozhimen.emulatork.input.views.Stick
         android:id="@+id/leftanalog"
         style="@style/default_stick"
         android:layout_width="@dimen/size_stick"
@@ -100,7 +100,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <com.swordfish.touchinput.views.DirectionPad
+    <com.mozhimen.emulatork.input.views.DirectionPad
         android:id="@+id/cbuttons"
         style="@style/default_directionpad"
         android:layout_width="@dimen/size_stick"

@@ -33,14 +33,14 @@ android {
 
 dependencies {
     implementation project(":SwiftKit:basick")
-    implementation project(":APagingKit_Paging:pagingk_paging2_basic")
+    implementation project(":APagingKit:pagingk_paging2_basic")
     implementation project(":AAbilityKit_Jetpack:leanback")
-    implementation project(':KUtilKit:utilk_kotlin')
-    implementation project(':ATaskKit:taskk_workmanager')
+    implementation project(':KUtilKit:utilk_koptional')
+    implementation project(':ATaskKit:taskk_work')
+    implementation project(':ARxKit:rxk_rxrelay2')
     implementation project(':AInjectKit:injectk_dagger')
     implementation project(':ANetKit:netk_retrofit2')
-
-    implementation "com.jakewharton.timber:timber:4.7.1"
+    implementation project(':ALogKit:logk_timber')
 
     kapt 'androidx.room:room-compiler:2.5.2'
 

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.mozhimen.emulatork.test.shared.SquaredMaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cardview"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:focusable="true">
+
+    <include layout="@layout/layout_game_grid_content" />
+
+</com.mozhimen.emulatork.test.shared.SquaredMaterialCardView>

@@ -1,14 +1,16 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'kotlin-kapt'
+    id "androidx.navigation.safeargs.kotlin"
 }
 
 android {
-    namespace 'com.mozhimen.gamek.emulator.test'
+    namespace 'com.mozhimen.emulatork.test'
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.mozhimen.gamek.emulator.test"
+        applicationId "com.mozhimen.emulatork.test"
         minSdk 21
         targetSdk 34
         versionCode 1
@@ -37,17 +39,47 @@ android {
 
 dependencies {
     implementation project(':emulatork_basic')
+    implementation project(':emulatork_input')
+    implementation project(':emulatork_libretro')
+
+    implementation project(':KUtilKit:utilk_koptional')
+    implementation project(':KUtilKit:utilk_koptional_rxjava2')
+
+    implementation project(':SwiftKit:basick')
+    implementation project(':AAbilityKit_Jetpack:room_rxjava2')
 
     implementation project(':ALogKit:logk_timber')
     implementation project(':AInjectKit:injectk_dagger')
-    implementation project(":ATaskKit:taskk_workmanager")
-    implementation project(":ATaskKit:taskk_rxjava2")
-    implementation project(":ATaskKit:taskk_autodispose")
 
-    implementation "com.airbnb.android:epoxy:3.8.0"
+    implementation project(":ATaskKit:taskk_work")
+    implementation project(":ATaskKit:taskk_work_rxjava2")
+
+    implementation project(":ARxKit:rxk_rxjava2")
+    implementation project(":ARxKit:rxk_autodispose")
+    implementation project(':ARxKit:rxk_epoxy')
+    implementation project(':ARxKit:rxk_rxbinding3')
+    implementation project(':ARxKit:rxk_rxpermissions2')
+    implementation project(':ARxKit:rxk_rxrelay2')
+
+    implementation project(':ANetKit:netk_retrofit2')
+    implementation project(':ANetKit:netk_retrofit2_rxjava2')
+    implementation project(':ANetKit:netk_okio2')
+
+    implementation project(':ACacheKit:cachek_rx_preferences2')
+    implementation project(':ANavigateKit:navigatek_navigation')
+    implementation project(':AAbilityKit_Jetpack:preference')
+
+    implementation project(":APagingKit:pagingk_paging2_basic")
+    implementation project(":APagingKit:pagingk_paging2_rxjava2")
+    implementation project(":APagingKit:pagingk_epoxy")
+
+    implementation project(":AImageKit:imagek_picasso")
+    implementation project(":AXmlKit:recyclerk")
+
+    kapt "com.airbnb.android:epoxy-processor:3.8.0"
+    kapt "com.google.dagger:dagger-android-processor:2.19"
+    kapt "com.google.dagger:dagger-compiler:2.19"
+
     implementation "me.zhanghai.android.materialprogressbar:library:1.6.1"
     implementation "com.github.Swordfish90:LibretroDroid:a52b6dadf1"
-
-    implementation project(':ANavigateKit_Navigation:navigatek_navigation')
-    implementation project(':SwiftKit:basick')
 }

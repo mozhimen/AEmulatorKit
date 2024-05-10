@@ -32,10 +32,12 @@ android {
 
 dependencies {
     implementation project(":ALogKit:logk_timber")
-    implementation project(':ATaskKit:taskk_rxjava2')
-    implementation project(':ATaskKit:taskk_rxrelay2')
+    implementation project(':ARxKit:rxk_rxjava2')
+    implementation project(':ARxKit:rxk_rxrelay2')
     implementation project(':SwiftKit:xmlk')
     implementation project(':SwiftKit:basick')
+
+    implementation 'io.github.controlwear:virtualjoystick:1.10.1'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

@@ -4,7 +4,13 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.KeyEvent
 import com.mozhimen.emulatork.input.R
+import com.mozhimen.emulatork.input.events.EventsTransformers
 import com.mozhimen.emulatork.input.events.PadEvent
+import com.mozhimen.emulatork.input.views.ActionButtons
+import com.mozhimen.emulatork.input.views.DirectionPad
+import com.mozhimen.emulatork.input.views.LargeSingleButton
+import com.mozhimen.emulatork.input.views.SmallSingleButton
+import com.mozhimen.emulatork.input.views.Stick
 import io.reactivex.Observable
 
 /**

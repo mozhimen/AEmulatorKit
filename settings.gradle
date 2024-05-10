@@ -23,6 +23,7 @@ rootProject.name = "AEmulatorKit"
 include ':app'
 include ':emulatork_basic'
 include ':emulatork_input'
+include ':emulatork_libretro'
 //SwiftKit
 include ':SwiftKit'
 project(':SwiftKit').projectDir = new File("D:\\WorkSpace\\GitHub\\SwiftKit")
@@ -31,26 +32,29 @@ include ':SwiftKit:xmlk'
 //ATaskKit
 include ':ATaskKit'
 project(':ATaskKit').projectDir = new File("D:\\WorkSpace\\GitHub\\ATaskKit")
-include ':ATaskKit:taskk_workmanager'
-include ':ATaskKit:taskk_rxjava2'
-include ':ATaskKit:taskk_rxrelay2'
-include ':ATaskKit:taskk_autodispose'
-//ANavigateKit_Navigation
-include ':ANavigateKit_Navigation'
-project(':ANavigateKit_Navigation').projectDir = new File("D:\\WorkSpace\\GitHub\\ANavigateKit_Navigation")
-include ':ANavigateKit_Navigation:navigatek_navigation'
-//APagingKit_Paging
-include ':APagingKit_Paging'
-project(':APagingKit_Paging').projectDir = new File("D:\\WorkSpace\\GitHub\\APagingKit_Paging")
-include ':APagingKit_Paging:pagingk_paging2_basic'
+include ':ATaskKit:taskk_work'
+include ':ATaskKit:taskk_work_rxjava2'
+//ANavigateKit
+include ':ANavigateKit'
+project(':ANavigateKit').projectDir = new File("D:\\WorkSpace\\GitHub\\ANavigateKit")
+include ':ANavigateKit:navigatek_navigation'
+//APagingKit
+include ':APagingKit'
+project(':APagingKit').projectDir = new File("D:\\WorkSpace\\GitHub\\APagingKit")
+include ':APagingKit:pagingk_paging2_basic'
+include ':APagingKit:pagingk_paging2_rxjava2'
+include ':APagingKit:pagingk_epoxy'
 //AAbilityKit_Jetpack
 include ':AAbilityKit_Jetpack'
 project(':AAbilityKit_Jetpack').projectDir = new File("D:\\WorkSpace\\GitHub\\AAbilityKit_Jetpack")
 include ':AAbilityKit_Jetpack:leanback'
+include ':AAbilityKit_Jetpack:preference'
+include ':AAbilityKit_Jetpack:room_rxjava2'
 //KUtilKit
 include ':KUtilKit'
 project(':KUtilKit').projectDir = new File("D:\\WorkSpace\\GitHub\\KUtilKit")
-include ':KUtilKit:utilk_kotlin'
+include ':KUtilKit:utilk_koptional'
+include ':KUtilKit:utilk_koptional_rxjava2'
 //AInjectKit
 include ':AInjectKit'
 project(':AInjectKit').projectDir = new File("D:\\WorkSpace\\GitHub\\AInjectKit")
@@ -59,8 +63,33 @@ include ':AInjectKit:injectk_dagger'
 include ':ANetKit'
 project(':ANetKit').projectDir = new File("D:\\WorkSpace\\GitHub\\ANetKit")
 include ':ANetKit:netk_retrofit2'
+include ':ANetKit:netk_retrofit2_rxjava2'
 include ':ANetKit:netk_okhttp3'
+include ':ANetKit:netk_okio2'
 //ALogKit
 include ':ALogKit'
 project(':ALogKit').projectDir = new File("D:\\WorkSpace\\GitHub\\ALogKit")
 include ':ALogKit:logk_timber'
+//ACacheKit
+include ':ACacheKit'
+project(':ACacheKit').projectDir = new File("D:\\WorkSpace\\GitHub\\ACacheKit")
+include ':ACacheKit:cachek_rx_preferences2'
+//AImageKit
+include ':AImageKit'
+project(':AImageKit').projectDir = new File("D:\\WorkSpace\\GitHub\\AImageKit")
+include ':AImageKit:imagek_picasso'
+//AImageKit
+include ':AXmlKit'
+project(':AXmlKit').projectDir = new File("D:\\WorkSpace\\GitHub\\AXmlKit")
+include ':AXmlKit:recyclerk'
+include ':AXmlKit:vhk'
+//ARxKit
+include ':ARxKit'
+project(':ARxKit').projectDir = new File("D:\\WorkSpace\\GitHub\\ARxKit")
+include ':ARxKit:rxk_rxjava2'
+include ':ARxKit:rxk_rxrelay2'
+include ':ARxKit:rxk_autodispose'
+include ':ARxKit:rxk_epoxy'
+include ':ARxKit:rxk_rxbinding3'
+include ':ARxKit:rxk_rxpermissions2'
+
