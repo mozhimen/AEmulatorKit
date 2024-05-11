@@ -20,5 +20,4 @@
 
     <dimen name="button_radius">3dp</dimen>
 
-    <integer name="item_viewportsize">30</integer>
 </resources>

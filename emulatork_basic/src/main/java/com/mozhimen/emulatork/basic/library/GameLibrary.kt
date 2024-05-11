@@ -8,7 +8,7 @@ import com.mozhimen.emulatork.basic.library.db.mos.Game
 import com.mozhimen.emulatork.basic.storage.StorageFile
 import com.mozhimen.emulatork.basic.storage.StorageProvider
 import com.mozhimen.emulatork.basic.storage.StorageProviderRegistry
-import com.mozhimen.utilk.gojuno.koptional.toSingleAsOptional
+import com.mozhimen.utilk.koptional.utils.toSingleAsOptional
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single

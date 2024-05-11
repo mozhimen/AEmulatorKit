@@ -2,6 +2,7 @@ package com.mozhimen.emulatork.test.shared
 
 import android.content.Context
 import com.mozhimen.emulatork.basic.library.db.RetrogradeDatabase
+import com.mozhimen.emulatork.basic.library.db.commons.updateAsync
 import com.mozhimen.emulatork.basic.library.db.mos.Game
 import com.mozhimen.emulatork.test.feature.game.GameLauncherActivity
 

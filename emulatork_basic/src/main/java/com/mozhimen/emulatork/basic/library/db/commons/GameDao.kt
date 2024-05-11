@@ -9,8 +9,10 @@ import androidx.room.Query
 import androidx.room.Update
 import com.mozhimen.emulatork.basic.library.db.mos.Game
 import com.mozhimen.emulatork.basic.library.db.mos.GameLibraryCounts
+import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
 import org.intellij.lang.annotations.Language
 
 /**
@@ -81,3 +83,7 @@ interface GameDao {
     @Update
     fun update(games: List<Game>)
 }
+
+fun GameDao.updateAsync(game: Game): Completable = Completable.fromCallable {
+    update(game)
+}.subscribeOn(Schedulers.io())

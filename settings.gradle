@@ -50,6 +50,7 @@ project(':AAbilityKit_Jetpack').projectDir = new File("D:\\WorkSpace\\GitHub\\AA
 include ':AAbilityKit_Jetpack:leanback'
 include ':AAbilityKit_Jetpack:preference'
 include ':AAbilityKit_Jetpack:room_rxjava2'
+include ':AAbilityKit_Jetpack:collection'
 //KUtilKit
 include ':KUtilKit'
 project(':KUtilKit').projectDir = new File("D:\\WorkSpace\\GitHub\\KUtilKit")
@@ -87,6 +88,7 @@ include ':AXmlKit:vhk'
 include ':ARxKit'
 project(':ARxKit').projectDir = new File("D:\\WorkSpace\\GitHub\\ARxKit")
 include ':ARxKit:rxk_rxjava2'
+include ':ARxKit:rxk_rxkotlin2'
 include ':ARxKit:rxk_rxrelay2'
 include ':ARxKit:rxk_autodispose'
 include ':ARxKit:rxk_epoxy'
