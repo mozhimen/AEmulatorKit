@@ -1,6 +1,8 @@
 package com.mozhimen.emulatork.basic.storage
 
 import android.net.Uri
+import com.mozhimen.basick.utilk.kotlin.UtilKStrFile
+import com.mozhimen.emulatork.basic.library.SystemID
 
 /**
  * @ClassName StorageFile
@@ -17,9 +19,18 @@ data class StorageFile(
 
     val crc: String? = null,
 
-    val uri: Uri
+    val serial: String? = null,
+
+    val uri: Uri,
+
+    val path: String? = null,
+
+    val systemID: SystemID? = null
 ) {
 
     val extension: String
-        get() = name.substringAfterLast('.', "")
+        get() = UtilKStrFile.extractExtension(name)
+
+    val extensionlessName: String
+        get() = UtilKStrFile.discardExtension(name)
 }

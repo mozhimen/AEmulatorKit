@@ -32,17 +32,18 @@ android {
 }
 
 dependencies {
+    implementation project(':emulatork_util')
+    implementation project(':emulatork_input')
     implementation project(":SwiftKit:basick")
 
     implementation project(':AAbilityKit_Jetpack:collection')
     implementation project(":AAbilityKit_Jetpack:leanback")
     implementation project(":AAbilityKit_Jetpack:room_rxjava2")
+    implementation project(':AAbilityKit_Jetpack:documentfile')
 
     implementation project(':ATaskKit:taskk_work')
-    implementation project(':ATaskKit:taskk_work_rxjava2')
 
-    implementation project(":APagingKit:pagingk_paging2_basic")
-    implementation project(":APagingKit:pagingk_paging2_rxjava2")
+    implementation project(":APagingKit:pagingk_paging3_basic")
 
     implementation project(':ARxKit:rxk_autodispose')
     implementation project(':ARxKit:rxk_rxrelay2')
@@ -56,6 +57,7 @@ dependencies {
     implementation project(':ANetKit:netk_retrofit2_rxjava2')
     implementation project(':ANetKit:netk_okio2')
 
+    implementation project(':ACacheKit:cachek_harmony')
     implementation project(':AInjectKit:injectk_dagger')
     implementation project(':ALogKit:logk_timber')
 

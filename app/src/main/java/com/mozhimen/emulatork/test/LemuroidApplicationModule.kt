@@ -16,7 +16,7 @@ import com.mozhimen.emulatork.basic.logging.RxTimberTree
 import com.mozhimen.emulatork.basic.storage.DirectoriesManager
 import com.mozhimen.emulatork.basic.storage.StorageProvider
 import com.mozhimen.emulatork.basic.storage.StorageProviderRegistry
-import com.mozhimen.emulatork.basic.storage.accessframework.StorageAccessFrameworkProvider
+import com.mozhimen.emulatork.basic.storage.local.StorageAccessFrameworkProvider
 import com.mozhimen.emulatork.basic.storage.local.LocalStorageProvider
 import com.mozhimen.emulatork.test.feature.game.GameActivity
 import com.mozhimen.emulatork.test.feature.game.GameLauncherActivity

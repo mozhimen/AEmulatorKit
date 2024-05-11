@@ -12,19 +12,32 @@ import java.io.File
  */
 class DirectoriesManager(private val appContext: Context) {
 
-    fun getStatesDirectory() = File(appContext.filesDir, "states").apply {
+    @Deprecated("Use the external states directory")
+    fun getInternalStatesDirectory(): File = File(appContext.filesDir, "states").apply {
         mkdirs()
     }
 
-    fun getCoresDirectory() = File(appContext.filesDir, "cores").apply {
+    fun getCoresDirectory(): File = File(appContext.filesDir, "cores").apply {
         mkdirs()
     }
 
-    fun getSystemDirectory() = File(appContext.filesDir, "system").apply {
+    fun getSystemDirectory(): File = File(appContext.filesDir, "system").apply {
         mkdirs()
     }
 
-    fun getSavesDirectory() = File(appContext.filesDir, "saves").apply {
+    fun getStatesDirectory(): File = File(appContext.getExternalFilesDir(null), "states").apply {
+        mkdirs()
+    }
+
+    fun getStatesPreviewDirectory(): File = File(appContext.getExternalFilesDir(null), "state-previews").apply {
+        mkdirs()
+    }
+
+    fun getSavesDirectory(): File = File(appContext.getExternalFilesDir(null), "saves").apply {
+        mkdirs()
+    }
+
+    fun getInternalRomsDirectory(): File = File(appContext.getExternalFilesDir(null), "roms").apply {
         mkdirs()
     }
 }

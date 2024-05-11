@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import java.io.Serializable
 
 /**
  * @ClassName Game
@@ -29,7 +30,7 @@ data class Game(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val fileName: String,
-    val fileUri: Uri,
+    val fileUri: String,
     val title: String,
     val systemId: String,
     val developer: String?,
@@ -37,7 +38,7 @@ data class Game(
     val lastIndexedAt: Long,
     val lastPlayedAt: Long? = null,
     val isFavorite: Boolean = false
-) {
+) : Serializable {
     companion object {
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Game>() {
             override fun areItemsTheSame(oldItem: Game, newItem: Game): Boolean {

@@ -1,13 +1,17 @@
 package com.mozhimen.emulatork.basic.storage
 
+import android.net.Uri
 import androidx.leanback.preference.LeanbackPreferenceFragment
 import com.gojuno.koptional.Optional
+import com.mozhimen.emulatork.basic.library.db.mos.DataFile
 import com.mozhimen.emulatork.basic.library.db.mos.Game
 import com.mozhimen.emulatork.basic.library.metadata.GameMetadataProvider
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
+import kotlinx.coroutines.flow.Flow
 import java.io.File
+import java.io.InputStream
 
 /**
  * @ClassName StorageProvider
@@ -26,15 +30,17 @@ interface StorageProvider {
 
     val prefsFragmentClass: Class<out LeanbackPreferenceFragment>?
 
-    val metadataProvider: GameMetadataProvider
-
     val enabledByDefault: Boolean
 
-    fun listFiles(): Observable<StorageFile>
+    fun listBaseStorageFiles(): Flow<List<BaseStorageFile>>
 
-    fun getGameRom(game: Game): Single<File>
+    fun getInputStream(uri: Uri): InputStream?
 
-    fun getGameSave(game: Game): Single<Optional<ByteArray>>
+    fun getStorageFile(baseStorageFile: BaseStorageFile): StorageFile?
 
-    fun setGameSave(game: Game, data: ByteArray): Completable
+    fun getGameRomFiles(
+        game: Game,
+        dataFiles: List<DataFile>,
+        allowVirtualFiles: Boolean
+    ): RomFiles
 }

@@ -2,28 +2,17 @@ package com.mozhimen.emulatork.test
 
 import android.annotation.SuppressLint
 import android.content.Context
-import androidx.work.Configuration
+import androidx.startup.AppInitializer
 import androidx.work.ListenableWorker
-import androidx.work.WorkManager
-import com.mozhimen.basick.BuildConfig
+import com.google.android.material.color.DynamicColors
+import com.mozhimen.basick.utilk.android.content.isMainProcess
 import com.mozhimen.emulatork.basic.injection.HasWorkerInjector
+import com.mozhimen.emulatork.test.shared.MainProcessInitializer
 import dagger.android.AndroidInjector
-import dagger.android.DaggerApplication
 import dagger.android.DispatchingAndroidInjector
-import timber.log.Timber
 import javax.inject.Inject
 
-class LemuroidApplication : DaggerApplication(), HasWorkerInjector {
-    companion object {
-        fun get(context: Context) = context.applicationContext as LemuroidApplication
-    }
-
-    /*@Inject
-    lateinit var rxTimberTree: RxTimberTree
-    @Inject
-    lateinit var rxPrefs: RxSharedPreferences
-    @Inject
-    lateinit var gdriveStorageProvider: GDriveStorageProvider*/
+class LemuroidApplication : dagger.android.support.DaggerApplication(), HasWorkerInjector {
 
     @Inject
     lateinit var workerInjector: DispatchingAndroidInjector<ListenableWorker>
@@ -32,40 +21,23 @@ class LemuroidApplication : DaggerApplication(), HasWorkerInjector {
     override fun onCreate() {
         super.onCreate()
 
-        initializeWorkManager()
+        val initializeComponent = if (isMainProcess()) {
+            MainProcessInitializer::class.java
+        } else {
+            GameProcessInitializer::class.java
+        }
 
-        if (BuildConfig.DEBUG) {
-            Timber.plant(Timber.DebugTree())
-        } /*else {
-            Bugsnag.init(this)
-        }*/
+        AppInitializer.getInstance(this).initializeComponent(initializeComponent)
 
-        // var isPlanted = false
-        /* rxPrefs.getBoolean(getString(R.string.pref_key_flags_logging)).asObservable()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { value ->
-                    gdriveStorageProvider.loggingEnabled = value
-                    if (value) {
-                        Timber.plant(rxTimberTree)
-                        isPlanted = true
-                    } else {
-                        if (isPlanted) {
-                            Timber.uproot(rxTimberTree)
-                            isPlanted = false
-                        }
-                    }
-                }*/
+        DynamicColors.applyToActivitiesIfAvailable(this)
     }
 
-    private fun initializeWorkManager() {
-        val config = Configuration.Builder()
-                .setMinimumLoggingLevel(android.util.Log.INFO)
-                .build()
-
-        WorkManager.initialize(this, config)
+    override fun attachBaseContext(base: Context) {
+        super.attachBaseContext(base)
+        ContextHandler.attachBaseContext(base)
     }
 
-    override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
+    override fun applicationInjector(): AndroidInjector<out dagger.android.support.DaggerApplication> {
         return DaggerLemuroidApplicationComponent.builder().create(this)
     }
 

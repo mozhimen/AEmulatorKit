@@ -1,6 +1,7 @@
 package com.mozhimen.emulatork.test.feature.library
 
 import android.content.Context
+import androidx.work.CoroutineWorker
 import androidx.work.ExistingWorkPolicy
 import androidx.work.ForegroundInfo
 import androidx.work.ListenableWorker
@@ -16,6 +17,8 @@ import dagger.Binds
 import dagger.android.AndroidInjector
 import dagger.multibindings.IntoMap
 import io.reactivex.Single
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -26,34 +29,37 @@ import javax.inject.Inject
  * @Date 2024/5/9
  * @Version 1.0
  */
-class LibraryIndexWork(context: Context, workerParams: WorkerParameters) : RxWorker(context, workerParams) {
-    @Inject
-    lateinit var gameLibrary: GameLibrary
+class LibraryIndexWork(context: Context, workerParams: WorkerParameters) :
+    CoroutineWorker(context, workerParams) {
 
-    override fun createWork(): Single<Result> {
+    @Inject
+    lateinit var lemuroidLibrary: LemuroidLibrary
+
+    override suspend fun doWork(): Result {
         AndroidWorkerInjection.inject(this)
 
         val notificationsManager = NotificationsManager(applicationContext)
 
-        setForegroundAsync(ForegroundInfo(notificationsManager.getIndexingNotification()))
-        return gameLibrary.indexGames()
-            .toSingleDefault(Result.success())
-            .doOnError { Timber.e("Library indexing failed with exception: $it") }
-            .onErrorReturn { Result.success() } // We need to return success or the Work chain will die forever.
-    }
+        val foregroundInfo = ForegroundInfo(
+            NotificationsManager.LIBRARY_INDEXING_NOTIFICATION_ID,
+            notificationsManager.libraryIndexingNotification()
+        )
 
+        setForegroundAsync(foregroundInfo)
 
-
-    companion object {
-        val UNIQUE_WORK_ID: String = LibraryIndexWork::class.java.simpleName
-
-        fun enqueueUniqueWork(applicationContext: Context) {
-            WorkManager.getInstance(applicationContext).enqueueUniqueWork(
-                UNIQUE_WORK_ID,
-                ExistingWorkPolicy.APPEND,
-                OneTimeWorkRequestBuilder<LibraryIndexWork>().build()
-            )
+        val result = withContext(Dispatchers.IO) {
+            kotlin.runCatching {
+                lemuroidLibrary.indexLibrary()
+            }
         }
+
+        result.exceptionOrNull()?.let {
+            Timber.e("Library indexing work terminated with an exception:", it)
+        }
+
+        LibraryIndexScheduler.scheduleCoreUpdate(applicationContext)
+
+        return Result.success()
     }
 
     @dagger.Module(subcomponents = [Subcomponent::class])

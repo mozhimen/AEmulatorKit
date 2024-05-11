@@ -24,6 +24,8 @@ include ':app'
 include ':emulatork_basic'
 include ':emulatork_input'
 include ':emulatork_libretro'
+include ':emulatork_util'
+include ':emulatork_ext'
 //SwiftKit
 include ':SwiftKit'
 project(':SwiftKit').projectDir = new File("D:\\WorkSpace\\GitHub\\SwiftKit")
@@ -33,7 +35,6 @@ include ':SwiftKit:xmlk'
 include ':ATaskKit'
 project(':ATaskKit').projectDir = new File("D:\\WorkSpace\\GitHub\\ATaskKit")
 include ':ATaskKit:taskk_work'
-include ':ATaskKit:taskk_work_rxjava2'
 //ANavigateKit
 include ':ANavigateKit'
 project(':ANavigateKit').projectDir = new File("D:\\WorkSpace\\GitHub\\ANavigateKit")
@@ -41,8 +42,7 @@ include ':ANavigateKit:navigatek_navigation'
 //APagingKit
 include ':APagingKit'
 project(':APagingKit').projectDir = new File("D:\\WorkSpace\\GitHub\\APagingKit")
-include ':APagingKit:pagingk_paging2_basic'
-include ':APagingKit:pagingk_paging2_rxjava2'
+include ':APagingKit:pagingk_paging3_basic'
 include ':APagingKit:pagingk_epoxy'
 //AAbilityKit_Jetpack
 include ':AAbilityKit_Jetpack'
@@ -51,6 +51,7 @@ include ':AAbilityKit_Jetpack:leanback'
 include ':AAbilityKit_Jetpack:preference'
 include ':AAbilityKit_Jetpack:room_rxjava2'
 include ':AAbilityKit_Jetpack:collection'
+include ':AAbilityKit_Jetpack:documentfile'
 //KUtilKit
 include ':KUtilKit'
 project(':KUtilKit').projectDir = new File("D:\\WorkSpace\\GitHub\\KUtilKit")
@@ -74,7 +75,8 @@ include ':ALogKit:logk_timber'
 //ACacheKit
 include ':ACacheKit'
 project(':ACacheKit').projectDir = new File("D:\\WorkSpace\\GitHub\\ACacheKit")
-include ':ACacheKit:cachek_rx_preferences2'
+include ':ACacheKit:cachek_flow_preferences'
+include ':ACacheKit:cachek_harmony'
 //AImageKit
 include ':AImageKit'
 project(':AImageKit').projectDir = new File("D:\\WorkSpace\\GitHub\\AImageKit")

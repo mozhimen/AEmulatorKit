@@ -38,6 +38,7 @@ android {
 }
 
 dependencies {
+    implementation project(':emulatork_ext')
     implementation project(':emulatork_basic')
     implementation project(':emulatork_input')
     implementation project(':emulatork_libretro')
@@ -52,7 +53,6 @@ dependencies {
     implementation project(':AInjectKit:injectk_dagger')
 
     implementation project(":ATaskKit:taskk_work")
-    implementation project(":ATaskKit:taskk_work_rxjava2")
 
     implementation project(":ARxKit:rxk_rxjava2")
     implementation project(":ARxKit:rxk_autodispose")
@@ -65,12 +65,11 @@ dependencies {
     implementation project(':ANetKit:netk_retrofit2_rxjava2')
     implementation project(':ANetKit:netk_okio2')
 
-    implementation project(':ACacheKit:cachek_rx_preferences2')
+    implementation project(':ACacheKit:cachek_flow_preferences')
     implementation project(':ANavigateKit:navigatek_navigation')
     implementation project(':AAbilityKit_Jetpack:preference')
 
-    implementation project(":APagingKit:pagingk_paging2_basic")
-    implementation project(":APagingKit:pagingk_paging2_rxjava2")
+    implementation project(":APagingKit:pagingk_paging3_basic")
     implementation project(":APagingKit:pagingk_epoxy")
 
     implementation project(":AImageKit:imagek_picasso")

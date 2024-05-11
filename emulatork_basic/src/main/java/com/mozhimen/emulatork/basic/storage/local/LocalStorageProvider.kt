@@ -3,20 +3,32 @@ package com.mozhimen.emulatork.basic.storage.local
 import android.content.Context
 import android.net.Uri
 import android.os.Environment
+import androidx.core.net.toUri
 import androidx.leanback.preference.LeanbackPreferenceFragment
 import com.gojuno.koptional.None
 import com.gojuno.koptional.Optional
 import com.gojuno.koptional.toOptional
 import com.mozhimen.basick.utilk.java.io.gerStrCrc_use
+import com.mozhimen.basick.utilk.java.io.isFileZipped
+import com.mozhimen.basick.utilk.java.util.extractEntryToFile_use
 import com.mozhimen.emulatork.basic.R
+import com.mozhimen.emulatork.basic.library.db.mos.DataFile
 import com.mozhimen.emulatork.basic.library.db.mos.Game
 import com.mozhimen.emulatork.basic.library.metadata.GameMetadataProvider
+import com.mozhimen.emulatork.basic.preferences.SharedPreferencesHelper
+import com.mozhimen.emulatork.basic.storage.BaseStorageFile
+import com.mozhimen.emulatork.basic.storage.DirectoriesManager
+import com.mozhimen.emulatork.basic.storage.RomFiles
 import com.mozhimen.emulatork.basic.storage.StorageFile
 import com.mozhimen.emulatork.basic.storage.StorageProvider
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import java.io.File
+import java.io.InputStream
+import java.util.zip.ZipInputStream
 
 /**
  * @ClassName LocalStorageProvider
@@ -25,13 +37,9 @@ import java.io.File
  * @Date 2024/5/10
  * @Version 1.0
  */
-// I'm keeping this class here only because it might be needed in the future, but we should rely on SAF now.
-
-@Deprecated("This class is no longer needed use the LocalStorageAccessFrameworkProvider class.")
 class LocalStorageProvider(
     private val context: Context,
-    override val metadataProvider: GameMetadataProvider,
-    private val searchOnlyPrivateDirectories: Boolean = false
+    private val directoriesManager: DirectoriesManager
 ) : StorageProvider {
 
     override val id: String = "local"
@@ -44,54 +52,77 @@ class LocalStorageProvider(
 
     override val enabledByDefault = true
 
-    override fun listFiles(): Observable<StorageFile> = Observable.empty()
-    /*Single.fromCallable {
-searchableDirectories()
-        .map { walkDirectory(it) }
-        .reduce { acc, iterable -> acc union iterable }
-}*/
+    override fun listBaseStorageFiles(): Flow<List<BaseStorageFile>> =
+        walkDirectory(getExternalFolder() ?: directoriesManager.getInternalRomsDirectory())
 
-    private fun searchableDirectories(): List<File> = if (searchOnlyPrivateDirectories) {
-        listOf(*context.getExternalFilesDirs(null))
-    } else {
-        listOf(Environment.getExternalStorageDirectory())
+    override fun getStorageFile(baseStorageFile: BaseStorageFile): StorageFile? {
+        return DocumentFileParser.parseDocumentFile(context, baseStorageFile)
     }
 
-    private fun walkDirectory(directory: File): Iterable<StorageFile> {
-        return directory.walk()
-            .filter { file -> file.isFile && file.name.startsWith(".").not() }
-            .map { file ->
-                StorageFile(
-                    name = file.name,
-                    size = file.length(),
-                    crc = file.gerStrCrc_use().toUpperCase(),
-                    uri = Uri.parse(file.toURI().toString()))
-            }
-            .asIterable()
+    private fun getExternalFolder(): File? {
+        val prefString = context.getString(R.string.pref_key_legacy_external_folder)
+        val preferenceManager = SharedPreferencesHelper.getLegacySharedPreferences(context)
+        return preferenceManager.getString(prefString, null)?.let { File(it) }
     }
 
-    override fun getGameRom(game: Game): Single<File> = Single.fromCallable {
-        File(game.fileUri.path)
-    }
+    private fun walkDirectory(rootDirectory: File): Flow<List<BaseStorageFile>> = flow {
+        val directories = mutableListOf(rootDirectory)
 
-    override fun getGameSave(game: Game): Single<Optional<ByteArray>> {
-        val saveFile = getSaveFile(game)
-        return if (saveFile.exists()) {
-            Single.just(saveFile.readBytes().toOptional())
-        } else {
-            Single.just(None)
+        while (directories.isNotEmpty()) {
+            val directory = directories.removeAt(0)
+            val groups = directory.listFiles()
+                ?.filterNot { it.name.startsWith(".") }
+                ?.groupBy { it.isDirectory } ?: mapOf()
+
+            val newDirectories = groups[true] ?: listOf()
+            val newFiles = groups[false] ?: listOf()
+
+            directories.addAll(newDirectories)
+            emit((newFiles.map { BaseStorageFile(it.name, it.length(), it.toUri(), it.path) }))
         }
     }
 
-    override fun setGameSave(game: Game, data: ByteArray): Completable = Completable.fromCallable {
-        val saveFile = getSaveFile(game)
-        saveFile.writeBytes(data)
+    // There is no need to handle anything. Data file have to be in the same directory for detection we expect them
+    // to still be there.
+    private fun getDataFile(dataFile: DataFile): File {
+        val dataFilePath = Uri.parse(dataFile.fileUri).path
+        return File(dataFilePath)
     }
 
-    private fun getSaveFile(game: Game): File {
-        val retrogradeDir = File(Environment.getExternalStorageDirectory(), "retrograde")
-        val savesDir = File(retrogradeDir, "saves")
-        savesDir.mkdirs()
-        return File(savesDir, "${game.fileName}.sram")
+    private fun getGameRom(game: Game): File {
+        val gamePath = Uri.parse(game.fileUri).path
+        val originalFile = File(gamePath)
+        if (!originalFile.isFileZipped() || originalFile.name == game.fileName) {
+            return originalFile
+        }
+
+        val cacheFile = GameCacheUtils.getCacheFileForGame(LOCAL_STORAGE_CACHE_SUBFOLDER, context, game)
+        if (cacheFile.exists()) {
+            return cacheFile
+        }
+
+        if (originalFile.isFileZipped()) {
+            val stream = ZipInputStream(originalFile.inputStream())
+            stream.extractEntryToFile_use(game.fileName, cacheFile)
+        }
+
+        return cacheFile
+    }
+
+    override fun getGameRomFiles(
+        game: Game,
+        dataFiles: List<DataFile>,
+        allowVirtualFiles: Boolean
+    ): RomFiles {
+        return RomFiles.Standard(listOf(getGameRom(game)) + dataFiles.map { getDataFile(it) })
+    }
+
+    override fun getInputStream(uri: Uri): InputStream {
+        return File(uri.path).inputStream()
+    }
+
+    companion object {
+        const val LOCAL_STORAGE_CACHE_SUBFOLDER = "local-storage-games"
     }
 }
+

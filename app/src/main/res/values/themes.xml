@@ -1,26 +1,37 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.AGameKit_Emulator" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.AGameKit_Emulator" parent="Theme.Material3.Dark.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/colorSecondary</item>
         <item name="colorSecondaryVariant">@color/colorSecondaryVariant</item>
-        <!-- Status bar color. -->
-        <item name="android:navigationBarColor">#242424</item>
-        <item name="android:statusBarColor">#212121</item>
         <!-- Customize your theme here. -->
-        <item name="android:windowTranslucentStatus">false</item>
-        <item name="android:windowTranslucentNavigation">false</item>
+        <item name="appBarLayoutStyle">@style/LemuroidMaterialStyle.AppBarLayoutStyle</item>
+        <item name="materialCardViewStyle">?attr/materialCardViewElevatedStyle</item>
+        <item name="alertDialogTheme">@style/LemuroidMaterialStyle.AlertDialogTheme</item>
+        <item name="android:statusBarColor">#212121</item>
+        <item name="android:navigationBarColor">#242424</item>
+        <item name="elevationOverlayColor">?attr/colorOnSurface</item>
     </style>
 
-    <style name="GameTheme" parent="Theme.MaterialComponents.NoActionBar">
-        <item name="android:windowBackground">@android:color/black</item>
-        <item name="android:navigationBarColor">@android:color/black</item>
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
-        <item name="colorSecondary">@color/colorSecondary</item>
-        <item name="colorSecondaryVariant">@color/colorSecondaryVariant</item>
+    <style name="GameTheme" parent="Theme.AGameKit_Emulator">
+        <item name="android:background">#00000000</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
+    <style name="LemuroidMaterialStyle.AppBarLayoutStyle" parent="@style/Widget.Material3.Toolbar.Surface">
+        <item name="elevation">3dp</item>
+    </style>
+
+    <style name="LemuroidMaterialStyle.AlertDialogTheme" parent="@style/ThemeOverlay.AppCompat.Dialog.Alert">
+        <item name="android:colorBackground">?attr/colorSurface</item>
     </style>
 </resources>
