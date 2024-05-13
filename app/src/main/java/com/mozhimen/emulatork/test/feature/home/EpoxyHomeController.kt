@@ -7,7 +7,13 @@ import com.mozhimen.emulatork.basic.library.db.mos.Game
 import com.mozhimen.emulatork.test.R
 import com.mozhimen.emulatork.test.feature.settings.SettingsInteractor
 import com.mozhimen.emulatork.test.shared.GameInteractor
+import com.mozhimen.emulatork.test.shared.covers.CoverLoader
+import com.mozhimen.emulatork.util.kotlin.lazySequenceOf
 import com.mozhimen.rxk.epoxy.utils.withModelsFrom
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.launch
 
 /**
  * @ClassName EpoxyHomeController
@@ -18,52 +24,65 @@ import com.mozhimen.rxk.epoxy.utils.withModelsFrom
  */
 class EpoxyHomeController(
     private val gameInteractor: GameInteractor,
-    private val settingsInteractor: SettingsInteractor
+    private val coverLoader: CoverLoader
 ) : AsyncEpoxyController() {
 
-    private var recentGames = listOf<Game>()
-    private var favoriteGames = listOf<Game>()
-    private var discoverGames = listOf<Game>()
-
-    private var libraryIndexingInProgress = false
-
-    fun updateRecents(games: List<Game>) {
-        recentGames = games
-        requestDelayedModelBuild(UPDATE_DELAY_TIME)
+    enum class HomeAction {
+        CHANGE_STORAGE_FOLDER,
+        ENABLE_NOTIFICATION_PERMISSION
     }
 
-    fun updateFavorites(games: List<Game>) {
-        favoriteGames = games
-        requestDelayedModelBuild(UPDATE_DELAY_TIME)
+    private var currentUIState = HomeViewModel.UIState()
+    private val actionsFlow = MutableSharedFlow<HomeAction>()
+
+    fun getActions(): Flow<HomeAction> {
+        return actionsFlow
     }
 
-    fun updateDiscover(games: List<Game>) {
-        discoverGames = games
-        requestDelayedModelBuild(UPDATE_DELAY_TIME)
-    }
-
-    fun updateLibraryIndexingInProgress(indexingInProgress: Boolean) {
-        libraryIndexingInProgress = indexingInProgress
-        requestDelayedModelBuild(UPDATE_DELAY_TIME)
+    fun updateState(viewState: HomeViewModel.UIState) {
+        currentUIState = viewState
+        requestModelBuild()
     }
 
     override fun buildModels() {
-        if (recentGames.isNotEmpty()) {
-            addCarousel("recent", R.string.recent, recentGames)
-        }
-
-        if (favoriteGames.isNotEmpty()) {
-            addCarousel("favorites", R.string.favorites, favoriteGames)
-        }
-
-        if (discoverGames.isNotEmpty()) {
-            addCarousel("discover", R.string.discover, discoverGames)
-        }
-
-        if (recentGames.isEmpty() && favoriteGames.isEmpty() && discoverGames.isEmpty()) {
+        if (displayEmptyView()) {
             addEmptyView()
         }
+
+        if (displayEnableNotifications()) {
+            addNotificationsView()
+        }
+
+        if (displayFavorites()) {
+            addCarousel("favorites", R.string.favorites, currentUIState.favoritesGames)
+        }
+
+        if (displayRecents()) {
+            addCarousel("recent", R.string.recent, currentUIState.recentGames)
+        }
+
+        if (displayDiscovery()) {
+            addCarousel("discover", R.string.discover, currentUIState.discoveryGames)
+        }
     }
+
+    private fun displayDiscovery() = currentUIState.discoveryGames.isNotEmpty()
+
+    private fun displayRecents() = currentUIState.recentGames.isNotEmpty()
+
+    private fun displayFavorites() = currentUIState.favoritesGames.isNotEmpty()
+
+    private fun displayEmptyView(): Boolean {
+        val conditions = lazySequenceOf(
+            { currentUIState.loading.not() },
+            { currentUIState.recentGames.isEmpty() },
+            { currentUIState.favoritesGames.isEmpty() },
+            { currentUIState.discoveryGames.isEmpty() },
+        )
+        return conditions.all { it }
+    }
+
+    private fun displayEnableNotifications() = currentUIState.notificationsEnabled.not()
 
     private fun addCarousel(id: String, titleId: Int, games: List<Game>) {
         epoxyHomeSection {
@@ -76,24 +95,38 @@ class EpoxyHomeController(
             withModelsFrom(games) { item ->
                 EpoxyGameView_()
                     .id(item.id)
-                    .title(item.title)
-                    .coverUrl(item.coverFrontUrl)
-                    .favorite(item.isFavorite)
-                    .onFavoriteChanged { gameInteractor.onFavoriteToggle(item, it) }
-                    .onClick { gameInteractor.onGamePlay(item) }
-                    .onRestart { gameInteractor.onGameRestart(item) }
+                    .game(item)
+                    .gameInteractor(this@EpoxyHomeController.gameInteractor)
+                    .coverLoader(this@EpoxyHomeController.coverLoader)
             }
         }
     }
 
+    private fun addNotificationsView() {
+        epoxyHomeNotification {
+            id("notifications")
+                .title(R.string.home_notification_title)
+                .message(R.string.home_notification_message)
+                .action(R.string.home_notification_action)
+                .actionEnabled(true)
+                .onClick { this@EpoxyHomeController.launchAction(HomeAction.ENABLE_NOTIFICATION_PERMISSION) }
+        }
+    }
+
     private fun addEmptyView() {
-        epoxyEmptyViewAction {
-            id("empty_home")
+        epoxyHomeNotification {
+            id("notification_empty")
                 .title(R.string.home_empty_title)
                 .message(R.string.home_empty_message)
                 .action(R.string.home_empty_action)
-                .actionEnabled(!libraryIndexingInProgress)
-                .onClick { settingsInteractor.changeLocalStorageFolder() }
+                .actionEnabled(!this@EpoxyHomeController.currentUIState.indexInProgress)
+                .onClick { this@EpoxyHomeController.launchAction(HomeAction.CHANGE_STORAGE_FOLDER) }
+        }
+    }
+
+    private fun launchAction(homeAction: HomeAction) {
+        GlobalScope.launch {
+            actionsFlow.emit(homeAction)
         }
     }
 
@@ -105,9 +138,5 @@ class EpoxyHomeController(
 
     override fun onExceptionSwallowed(exception: RuntimeException) {
         throw exception
-    }
-
-    companion object {
-        const val UPDATE_DELAY_TIME = 160
     }
 }

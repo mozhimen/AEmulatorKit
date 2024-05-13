@@ -82,3 +82,4 @@ class CoreUpdateWork(context: Context, workerParams: WorkerParameters) :
         abstract class Builder : AndroidInjector.Builder<CoreUpdateWork>()
     }
 }
+

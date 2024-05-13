@@ -7,9 +7,12 @@ import com.airbnb.epoxy.EpoxyAttribute
 import com.airbnb.epoxy.EpoxyHolder
 import com.airbnb.epoxy.EpoxyModelClass
 import com.airbnb.epoxy.EpoxyModelWithHolder
+import com.mozhimen.emulatork.basic.library.db.mos.Game
 import com.mozhimen.emulatork.test.R
 import com.mozhimen.emulatork.test.shared.GameContextMenuListener
-import com.squareup.picasso.Picasso
+import com.mozhimen.emulatork.test.shared.GameInteractor
+import com.mozhimen.emulatork.test.shared.covers.CoverLoader
+import com.mozhimen.emulatork.test.utils.games.GameUtils
 
 /**
  * @ClassName EpoxyGameView
@@ -22,43 +25,30 @@ import com.squareup.picasso.Picasso
 abstract class EpoxyGameView : EpoxyModelWithHolder<EpoxyGameView.Holder>() {
 
     @EpoxyAttribute
-    var title: String? = null
-
-    @EpoxyAttribute
-    var coverUrl: String? = null
-
-    @EpoxyAttribute
-    var favorite: Boolean? = null
+    lateinit var game: Game
 
     @EpoxyAttribute(EpoxyAttribute.Option.DoNotHash)
-    var onClick: (() -> Unit)? = null
+    lateinit var gameInteractor: GameInteractor
 
     @EpoxyAttribute(EpoxyAttribute.Option.DoNotHash)
-    var onRestart: (() -> Unit)? = null
-
-    @EpoxyAttribute(EpoxyAttribute.Option.DoNotHash)
-    var onFavoriteChanged: ((Boolean) -> Unit)? = null
+    lateinit var coverLoader: CoverLoader
 
     override fun bind(holder: Holder) {
-        holder.titleView?.text = title
-        Picasso.get()
-            .load(coverUrl)
-            .placeholder(R.drawable.ic_image_paceholder)
-            .into(holder.coverView)
-        holder.itemView?.setOnClickListener { onClick?.invoke() }
+        holder.titleView?.text = game.title
+        holder.subtitleView?.let { it.text = GameUtils.getGameSubtitle(it.context, game) }
+
+        coverLoader.loadCover(game, holder.coverView)
+
+        holder.itemView?.setOnClickListener { gameInteractor.onGamePlay(game) }
         holder.itemView?.setOnCreateContextMenuListener(
-            GameContextMenuListener(
-            favorite,
-            onClick,
-            onRestart,
-            onFavoriteChanged)
+            GameContextMenuListener(gameInteractor, game)
         )
     }
 
     override fun unbind(holder: Holder) {
         holder.itemView?.setOnClickListener(null)
         holder.coverView?.apply {
-            Picasso.get().cancelRequest(this)
+            coverLoader.cancelRequest(this)
         }
         holder.itemView?.setOnCreateContextMenuListener(null)
     }
@@ -66,11 +56,13 @@ abstract class EpoxyGameView : EpoxyModelWithHolder<EpoxyGameView.Holder>() {
     class Holder : EpoxyHolder() {
         var itemView: View? = null
         var titleView: TextView? = null
+        var subtitleView: TextView? = null
         var coverView: ImageView? = null
 
         override fun bindView(itemView: View) {
             this.itemView = itemView
             this.titleView = itemView.findViewById(R.id.text)
+            this.subtitleView = itemView.findViewById(R.id.subtext)
             this.coverView = itemView.findViewById(R.id.image)
         }
     }

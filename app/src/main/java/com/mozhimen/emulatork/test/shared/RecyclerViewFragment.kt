@@ -6,9 +6,13 @@ import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.paging.CombinedLoadStates
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.RecyclerView
 import com.mozhimen.emulatork.test.R
+import com.mozhimen.emulatork.util.kotlin.lazySequenceOf
 import dagger.android.support.AndroidSupportInjection
 
 /**
@@ -23,9 +27,11 @@ open class RecyclerViewFragment : Fragment() {
     protected var recyclerView: RecyclerView? = null
     protected var emptyView: View? = null
 
-    private var layoutManagerState: Parcelable? = null
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         super.onCreate(savedInstanceState)
         val root = inflater.inflate(R.layout.fragment_recyclerview, container, false)
         recyclerView = root.findViewById(R.id.recycler_view)
@@ -38,19 +44,17 @@ open class RecyclerViewFragment : Fragment() {
         super.onAttach(context)
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
+    fun updateEmptyViewVisibility(loadState: CombinedLoadStates, itemCount: Int) {
+        val emptyViewConditions = lazySequenceOf<Boolean>(
+            { loadState.source.refresh is LoadState.NotLoading },
+            { loadState.append.endOfPaginationReached },
+            { itemCount == 0 }
+        )
 
-        val parcelable = recyclerView?.layoutManager?.onSaveInstanceState()
-        outState.putParcelable("key", parcelable)
-    }
+        val emptyViewVisible = emptyViewConditions.all { it }
 
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-        layoutManagerState = savedInstanceState?.getParcelable("key")
-    }
-
-    protected fun restoreRecyclerViewState() {
-        recyclerView?.layoutManager?.onRestoreInstanceState(layoutManagerState)
+        recyclerView?.isVisible = !emptyViewVisible
+        emptyView?.isVisible = emptyViewVisible
     }
 }
+

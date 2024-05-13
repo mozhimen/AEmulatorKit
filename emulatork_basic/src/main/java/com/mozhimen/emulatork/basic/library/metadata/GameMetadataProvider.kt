@@ -14,5 +14,5 @@ import io.reactivex.ObservableTransformer
  */
 interface GameMetadataProvider {
 
-    fun transformer(startedAtMs: Long): ObservableTransformer<StorageFile, Optional<Game>>
+    suspend fun retrieveMetadata(storageFile: StorageFile): GameMetadata?
 }

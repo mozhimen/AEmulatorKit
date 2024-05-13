@@ -1,7 +1,9 @@
 package com.mozhimen.emulatork.test.feature.games
 
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import android.os.Bundle
+import android.view.View
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mozhimen.emulatork.basic.library.db.RetrogradeDatabase
@@ -9,6 +11,9 @@ import com.mozhimen.emulatork.test.R
 import com.mozhimen.emulatork.test.shared.GameInteractor
 import com.mozhimen.emulatork.test.shared.GamesAdapter
 import com.mozhimen.emulatork.test.shared.RecyclerViewFragment
+import com.mozhimen.emulatork.test.shared.covers.CoverLoader
+import com.mozhimen.emulatork.util.coroutines.launchOnState
+import com.swordfish.lemuroid.app.mobile.feature.games.GamesFragmentArgs
 import javax.inject.Inject
 
 /**
@@ -22,8 +27,12 @@ class GamesFragment : RecyclerViewFragment() {
 
     @Inject
     lateinit var retrogradeDb: RetrogradeDatabase
+
     @Inject
     lateinit var gameInteractor: GameInteractor
+
+    @Inject
+    lateinit var coverLoader: CoverLoader
 
     private val args: GamesFragmentArgs by navArgs()
 
@@ -31,27 +40,25 @@ class GamesFragment : RecyclerViewFragment() {
 
     private var gamesAdapter: GamesAdapter? = null
 
-    override fun onResume() {
-        super.onResume()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        gamesAdapter = GamesAdapter(R.layout.layout_game_list, gameInteractor)
+        gamesAdapter = GamesAdapter(R.layout.layout_game_list, gameInteractor, coverLoader)
 
-        gamesViewModel = ViewModelProviders.of(this, GamesViewModel.Factory(retrogradeDb))
-            .get(GamesViewModel::class.java)
-
-        gamesViewModel.games.observe(this, Observer { pagedList ->
-            gamesAdapter?.submitList(pagedList)
-        })
-
-        args.systemId?.let {
-            gamesViewModel.systemId.value = it
-        }
+        val factory = GamesViewModel.Factory(retrogradeDb)
+        gamesViewModel = ViewModelProvider(this, factory)[GamesViewModel::class.java]
 
         recyclerView?.apply {
             adapter = gamesAdapter
             layoutManager = LinearLayoutManager(context)
         }
-        restoreRecyclerViewState()
+
+        launchOnState(Lifecycle.State.RESUMED) {
+            gamesViewModel.games
+                .collect { gamesAdapter?.submitData(lifecycle, it) }
+        }
+
+        gamesViewModel.systemIds.value = (listOf(*args.systemIds))
     }
 
     @dagger.Module

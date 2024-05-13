@@ -2,7 +2,10 @@ package com.mozhimen.emulatork.test.shared
 
 import android.content.Context
 import androidx.startup.Initializer
+import androidx.work.WorkManagerInitializer
+import com.mozhimen.emulatork.test.shared.library.LibraryIndexScheduler
 import com.mozhimen.emulatork.test.shared.savesync.SaveSyncWork
+import com.mozhimen.emulatork.test.shared.startup.DebugInitializer
 import timber.log.Timber
 
 /**

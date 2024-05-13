@@ -16,7 +16,6 @@ import com.mozhimen.emulatork.test.feature.settings.SettingsFragment
 import com.mozhimen.emulatork.test.R
 import com.mozhimen.emulatork.test.feature.favorites.FavoritesFragment
 import com.mozhimen.emulatork.test.feature.games.GamesFragment
-import com.mozhimen.emulatork.test.feature.games.SystemsFragment
 import com.mozhimen.emulatork.test.feature.home.HomeFragment
 import com.mozhimen.emulatork.test.feature.search.SearchFragment
 import com.mozhimen.emulatork.test.feature.settings.SettingsInteractor

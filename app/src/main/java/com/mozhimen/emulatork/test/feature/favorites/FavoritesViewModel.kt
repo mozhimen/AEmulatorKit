@@ -1,12 +1,12 @@
 package com.mozhimen.emulatork.test.feature.favorites
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.paging.LivePagedListBuilder
-import androidx.paging.PagedList
+import androidx.paging.PagingData
 import com.mozhimen.emulatork.basic.library.db.RetrogradeDatabase
 import com.mozhimen.emulatork.basic.library.db.mos.Game
+import com.mozhimen.emulatork.util.paging.buildFlowPaging
+import kotlinx.coroutines.flow.Flow
 
 /**
  * @ClassName FavoritesViewModel
@@ -23,6 +23,6 @@ class FavoritesViewModel(retrogradeDb: RetrogradeDatabase) : ViewModel() {
         }
     }
 
-    val favorites: LiveData<PagedList<Game>> =
-        LivePagedListBuilder(retrogradeDb.gameDao().selectFavorites(), 20).build()
+    val favorites: Flow<PagingData<Game>> =
+        buildFlowPaging(20) { retrogradeDb.gameDao().selectFavorites() }
 }

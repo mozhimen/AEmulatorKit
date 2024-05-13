@@ -3,6 +3,7 @@ package com.mozhimen.emulatork.basic.library.db
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.mozhimen.emulatork.basic.library.db.commons.DataFileDao
 import com.mozhimen.emulatork.basic.library.db.commons.GameDao
 import com.mozhimen.emulatork.basic.library.db.commons.GameSearchDao
 import com.mozhimen.emulatork.basic.library.db.helpers.Converters

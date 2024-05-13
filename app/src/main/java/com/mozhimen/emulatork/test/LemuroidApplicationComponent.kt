@@ -4,6 +4,9 @@ import com.mozhimen.emulatork.basic.game.GameSaveWorker
 import com.mozhimen.emulatork.basic.injection.AndroidWorkerInjectionModule
 import com.mozhimen.emulatork.basic.injection.PerApp
 import com.mozhimen.emulatork.test.feature.library.LibraryIndexWork
+import com.mozhimen.emulatork.test.shared.library.CoreUpdateWork
+import com.mozhimen.emulatork.test.shared.savesync.SaveSyncWork
+import com.mozhimen.emulatork.test.shared.storage.cache.CacheCleanerWork
 import dagger.Component
 import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
@@ -15,15 +18,19 @@ import dagger.android.support.AndroidSupportInjectionModule
  * @Date 2024/5/9
  * @Version 1.0
  */
-@Component(modules = [
-    AndroidSupportInjectionModule::class,
-    AndroidWorkerInjectionModule::class,
-    LemuroidApplicationModule::class,
-    GameSaveWorker.Module::class,
-    LibraryIndexWork.Module::class
-    // GDriveApplicationModule::class,
-    // WebDavApplicationModule::class,
-])
+@Component(
+    modules = [
+        AndroidSupportInjectionModule::class,
+        AndroidWorkerInjectionModule::class,
+        LemuroidApplicationModule::class,
+        LibraryIndexWork.Module::class,
+        SaveSyncWork.Module::class,
+//        ChannelUpdateWork.Module::class,
+        CoreUpdateWork.Module::class,
+        CacheCleanerWork.Module::class,
+//        LemuroidTVApplicationModule::class
+    ]
+)
 @PerApp
 interface LemuroidApplicationComponent : AndroidInjector<LemuroidApplication> {
 

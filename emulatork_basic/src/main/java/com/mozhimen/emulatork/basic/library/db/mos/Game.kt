@@ -1,6 +1,5 @@
 package com.mozhimen.emulatork.basic.library.db.mos
 
-import android.net.Uri
 import androidx.recyclerview.widget.DiffUtil
 import androidx.room.Entity
 import androidx.room.Index

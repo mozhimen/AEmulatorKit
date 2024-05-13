@@ -2,6 +2,8 @@ plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
+    id "kotlinx-serialization"
+
 }
 
 android {
@@ -60,6 +62,8 @@ dependencies {
     implementation project(':ACacheKit:cachek_harmony')
     implementation project(':AInjectKit:injectk_dagger')
     implementation project(':ALogKit:logk_timber')
+
+    implementation "com.dinuscxj:multitouchgesturedetector:1.0.0"
 
     kapt 'androidx.room:room-compiler:2.5.2'
 

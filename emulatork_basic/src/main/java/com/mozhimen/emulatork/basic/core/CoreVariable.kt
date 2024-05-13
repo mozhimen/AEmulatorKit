@@ -10,3 +10,4 @@ import java.io.Serializable
  * @Version 1.0
  */
 data class CoreVariable(val key: String, val value: String) : Serializable
+

@@ -3,8 +3,10 @@ package com.mozhimen.emulatork.test.shared
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagedListAdapter
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import com.mozhimen.emulatork.basic.library.db.mos.Game
+import com.mozhimen.emulatork.test.shared.covers.CoverLoader
 
 /**
  * @ClassName GamesAdapter
@@ -15,26 +17,19 @@ import com.mozhimen.emulatork.basic.library.db.mos.Game
  */
 class GamesAdapter(
     private val baseLayout: Int,
-    private val gameInteractor: GameInteractor
-) : PagedListAdapter<Game, GameViewHolder>(DIFF_CALLBACK) {
+    private val gameInteractor: GameInteractor,
+    private val coverLoader: CoverLoader
+) : PagingDataAdapter<Game, GameViewHolder>(Game.DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameViewHolder {
         return GameViewHolder(LayoutInflater.from(parent.context).inflate(baseLayout, parent, false))
     }
 
     override fun onBindViewHolder(holder: GameViewHolder, position: Int) {
-        getItem(position)?.let { holder.bind(it, gameInteractor) }
+        getItem(position)?.let { holder.bind(it, gameInteractor, coverLoader) }
     }
 
     override fun onViewRecycled(holder: GameViewHolder) {
-        holder.unbind()
-    }
-
-    companion object {
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Game>() {
-            override fun areItemsTheSame(oldConcert: Game, newConcert: Game) = oldConcert.id == newConcert.id
-
-            override fun areContentsTheSame(oldConcert: Game, newConcert: Game) = oldConcert == newConcert
-        }
+        holder.unbind(coverLoader)
     }
 }

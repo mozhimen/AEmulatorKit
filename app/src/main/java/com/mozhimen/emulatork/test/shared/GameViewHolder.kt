@@ -1,15 +1,14 @@
 package com.mozhimen.emulatork.test.shared
 
-import android.annotation.SuppressLint
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.ToggleButton
 import androidx.recyclerview.widget.RecyclerView
-import com.mozhimen.emulatork.basic.library.GameSystem
 import com.mozhimen.emulatork.basic.library.db.mos.Game
 import com.mozhimen.emulatork.test.R
-import com.squareup.picasso.Picasso
+import com.mozhimen.emulatork.test.shared.covers.CoverLoader
+import com.mozhimen.emulatork.test.utils.games.GameUtils
 
 /**
  * @ClassName GameViewHolder
@@ -31,48 +30,24 @@ class GameViewHolder(parent: View) : RecyclerView.ViewHolder(parent) {
         favoriteToggle = itemView.findViewById(R.id.favorite_toggle)
     }
 
-    @SuppressLint("SetTextI18n")
-    fun bind(game: Game, gameInteractor: GameInteractor) {
-        val systemName = getSystemNameForGame(game)
-        val developerName = if (game.developer?.isNotBlank() == true) {
-            "- ${game.developer}"
-        } else {
-            ""
-        }
-
+    fun bind(game: Game, gameInteractor: GameInteractor, coverLoader: CoverLoader) {
         titleView?.text = game.title
-        subtitleView?.text = "$systemName $developerName"
+        subtitleView?.text = GameUtils.getGameSubtitle(itemView.context, game)
         favoriteToggle?.isChecked = game.isFavorite
 
-        Picasso.get()
-            .load(game.coverFrontUrl)
-            .placeholder(R.drawable.ic_image_paceholder)
-            .error(R.drawable.ic_image_paceholder)
-            .into(coverView)
+        coverLoader.loadCover(game, coverView)
 
         itemView.setOnClickListener { gameInteractor.onGamePlay(game) }
+        itemView.setOnCreateContextMenuListener(GameContextMenuListener(gameInteractor, game))
 
-        itemView.setOnCreateContextMenuListener(
-            GameContextMenuListener(
-                game.isFavorite,
-                { gameInteractor.onGamePlay(game) },
-                { gameInteractor.onGameRestart(game) },
-                { gameInteractor.onFavoriteToggle(game, !game.isFavorite) }
-            )
-        )
-
-        favoriteToggle?.setOnCheckedChangeListener { _, isChecked -> gameInteractor.onFavoriteToggle(game, isChecked) }
+        favoriteToggle?.setOnCheckedChangeListener { _, isChecked ->
+            gameInteractor.onFavoriteToggle(game, isChecked)
+        }
     }
 
-    private fun getSystemNameForGame(game: Game): String {
-        return GameSystem.findById(game.systemId)?.shortTitleResId?.let {
-            itemView.context.getString(it)
-        } ?: ""
-    }
-
-    fun unbind() {
+    fun unbind(coverLoader: CoverLoader) {
         coverView?.apply {
-            Picasso.get().cancelRequest(this)
+            coverLoader.cancelRequest(this)
             this.setImageDrawable(null)
         }
         itemView.setOnClickListener(null)

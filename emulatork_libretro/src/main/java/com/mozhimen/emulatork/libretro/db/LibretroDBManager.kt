@@ -13,22 +13,16 @@ import java.util.concurrent.ExecutorService
  * @Date 2024/5/10
  * @Version 1.0
  */
-class LibretroDBManager(context: Context, executorService: ExecutorService) {
+class LibretroDBManager(private val context: Context) {
 
     companion object {
         private const val DB_NAME = "libretro-db"
     }
 
-    private val dbRelay = BehaviorRelay.create<LibretroDatabase>()
-
-    val dbReady: Single<LibretroDatabase> = dbRelay.take(1).singleOrError()
-
-    init {
-        executorService.execute {
-            val db = Room.databaseBuilder(context, LibretroDatabase::class.java, DB_NAME)
-                .createFromAsset("libretro-db.sqlite")
-                .build()
-            dbRelay.accept(db)
-        }
+    val dbInstance: LibretroDatabase by lazy {
+        Room.databaseBuilder(context, LibretroDatabase::class.java, DB_NAME)
+            .createFromAsset("libretro-db.sqlite")
+            .fallbackToDestructiveMigration()
+            .build()
     }
 }

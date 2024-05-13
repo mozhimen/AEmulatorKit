@@ -1,10 +1,14 @@
 package com.mozhimen.emulatork.test.shared
 
-import android.content.Context
 import com.mozhimen.emulatork.basic.library.db.RetrogradeDatabase
-import com.mozhimen.emulatork.basic.library.db.commons.updateAsync
 import com.mozhimen.emulatork.basic.library.db.mos.Game
-import com.mozhimen.emulatork.test.feature.game.GameLauncherActivity
+import com.mozhimen.emulatork.test.R
+import com.mozhimen.emulatork.test.feature.shortcuts.ShortcutsGenerator
+import com.mozhimen.emulatork.test.shared.game.GameLauncher
+import com.mozhimen.emulatork.test.shared.main.BusyActivity
+import com.mozhimen.emulatork.util.xml.displayToast
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 /**
  * @ClassName GameInteractor
@@ -14,20 +18,41 @@ import com.mozhimen.emulatork.test.feature.game.GameLauncherActivity
  * @Version 1.0
  */
 class GameInteractor(
-    private val context: Context,
-    private val retrogradeDb: RetrogradeDatabase
+    private val activity: BusyActivity,
+    private val retrogradeDb: RetrogradeDatabase,
+    private val useLeanback: Boolean,
+    private val shortcutsGenerator: ShortcutsGenerator,
+    private val gameLauncher: GameLauncher
 ) {
     fun onGamePlay(game: Game) {
-        GameLauncherActivity.launchGame(context, game, true)
-        retrogradeDb.gameDao().updateAsync(game.copy(lastPlayedAt = System.currentTimeMillis())).subscribe()
+        if (activity.isBusy()) {
+            activity.activity().displayToast(R.string.game_interactory_busy)
+            return
+        }
+        gameLauncher.launchGameAsync(activity.activity(), game, true, useLeanback)
     }
 
     fun onGameRestart(game: Game) {
-        GameLauncherActivity.launchGame(context, game, false)
-        retrogradeDb.gameDao().updateAsync(game.copy(lastPlayedAt = System.currentTimeMillis())).subscribe()
+        if (activity.isBusy()) {
+            activity.activity().displayToast(R.string.game_interactory_busy)
+            return
+        }
+        gameLauncher.launchGameAsync(activity.activity(), game, false, useLeanback)
     }
 
     fun onFavoriteToggle(game: Game, isFavorite: Boolean) {
-        retrogradeDb.gameDao().updateAsync(game.copy(isFavorite = isFavorite)).subscribe()
+        GlobalScope.launch {
+            retrogradeDb.gameDao().update(game.copy(isFavorite = isFavorite))
+        }
+    }
+
+    fun onCreateShortcut(game: Game) {
+        GlobalScope.launch {
+            shortcutsGenerator.pinShortcutForGame(game)
+        }
+    }
+
+    fun supportShortcuts(): Boolean {
+        return shortcutsGenerator.supportShortcuts()
     }
 }

@@ -3,6 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id "androidx.navigation.safeargs.kotlin"
+    id "kotlinx-serialization"
 }
 
 android {
@@ -42,6 +43,7 @@ dependencies {
     implementation project(':emulatork_basic')
     implementation project(':emulatork_input')
     implementation project(':emulatork_libretro')
+    implementation project(':emulatork_util')
 
     implementation project(':KUtilKit:utilk_koptional')
     implementation project(':KUtilKit:utilk_koptional_rxjava2')
@@ -72,13 +74,15 @@ dependencies {
     implementation project(":APagingKit:pagingk_paging3_basic")
     implementation project(":APagingKit:pagingk_epoxy")
 
-    implementation project(":AImageKit:imagek_picasso")
+    implementation project(":AImageKit:imagek_coil1")
     implementation project(":AXmlKit:recyclerk")
+
+    implementation "com.github.Swordfish90:LibretroDroid:0.10.0"
+    implementation "com.github.Swordfish90:RadialGamePad:2.0.0"
 
     kapt "com.airbnb.android:epoxy-processor:3.8.0"
     kapt "com.google.dagger:dagger-android-processor:2.19"
     kapt "com.google.dagger:dagger-compiler:2.19"
 
     implementation "me.zhanghai.android.materialprogressbar:library:1.6.1"
-    implementation "com.github.Swordfish90:LibretroDroid:a52b6dadf1"
 }

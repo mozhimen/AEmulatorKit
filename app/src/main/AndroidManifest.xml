@@ -10,6 +10,7 @@
         android:name="android.hardware.gamepad"
         android:required="false" />
 
+    <uses-permission android:name="android.permission.VIBRATE" />
     <application
         android:name=".LemuroidApplication"
         android:allowBackup="true"
