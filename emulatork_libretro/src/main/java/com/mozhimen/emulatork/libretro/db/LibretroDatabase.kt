@@ -14,8 +14,9 @@ import com.mozhimen.emulatork.libretro.db.entities.LibretroRom
  */
 @Database(
     entities = [LibretroRom::class],
-    version = 1,
-    exportSchema = false)
+    version = 8,
+    exportSchema = false
+)
 abstract class LibretroDatabase : RoomDatabase() {
     abstract fun gameDao(): GameDao
 }

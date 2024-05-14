@@ -1,21 +1,30 @@
 package com.mozhimen.emulatork.test.feature.home
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.epoxy.Carousel
 import com.mozhimen.emulatork.basic.library.db.RetrogradeDatabase
 import com.mozhimen.emulatork.test.R
-import com.mozhimen.emulatork.test.feature.settings.SettingsInteractor
+import com.mozhimen.emulatork.test.shared.settings.SettingsInteractor
 import com.mozhimen.emulatork.test.shared.GameInteractor
+import com.mozhimen.emulatork.test.shared.covers.CoverLoader
+import com.mozhimen.emulatork.util.coroutines.launchOnState
+import com.mozhimen.emulatork.util.displayDetailsSettingsScreen
 import dagger.android.support.AndroidSupportInjection
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -26,56 +35,112 @@ import javax.inject.Inject
  * @Version 1.0
  */
 class HomeFragment : Fragment() {
+
     @Inject
     lateinit var retrogradeDb: RetrogradeDatabase
+
     @Inject
     lateinit var gameInteractor: GameInteractor
+
+    @Inject
+    lateinit var coverLoader: CoverLoader
+
     @Inject
     lateinit var settingsInteractor: SettingsInteractor
+
+    private lateinit var homeViewModel: HomeViewModel
+
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) {
+        handleNotificationPermissionResponse(it)
+    }
 
     override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
         super.onAttach(context)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        val homeViewModel =
-            ViewModelProviders.of(this,
-                HomeViewModel.Factory(requireContext().applicationContext, retrogradeDb)
-            ).get(HomeViewModel::class.java)
+        val factory = HomeViewModel.Factory(requireContext().applicationContext, retrogradeDb)
+        homeViewModel = ViewModelProvider(this, factory)[HomeViewModel::class.java]
 
         // Disable snapping in carousel view
         Carousel.setDefaultGlobalSnapHelperFactory(null)
 
-        val pagingController = EpoxyHomeController(gameInteractor, settingsInteractor)
+        val pagingController = EpoxyHomeController(gameInteractor, coverLoader)
 
-        val recyclerView = requireView().findViewById<RecyclerView>(R.id.home_recyclerview)
+        val recyclerView = view.findViewById<RecyclerView>(R.id.home_recyclerview)
         val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = pagingController.adapter
 
-        homeViewModel.recentGames.observe(this, Observer {
-            pagingController.updateRecents(it)
-        })
+        launchOnState(Lifecycle.State.RESUMED) {
+            pagingController.getActions().collect {
+                Timber.d("Received home view model action + $it")
+                handleEpoxyAction(it)
+            }
+        }
 
-        homeViewModel.favoriteGames.observe(this, Observer {
-            pagingController.updateFavorites(it)
-        })
+        launchOnState(Lifecycle.State.RESUMED) {
+            homeViewModel.getViewStates().collect {
+                pagingController.updateState(it)
+            }
+        }
+    }
 
-        homeViewModel.discoverGames.observe(this, Observer {
-            pagingController.updateDiscover(it)
-        })
+    private fun handleEpoxyAction(homeAction: EpoxyHomeController.HomeAction) {
+        when (homeAction) {
+            EpoxyHomeController.HomeAction.CHANGE_STORAGE_FOLDER -> handleChangeStorageFolder()
+            EpoxyHomeController.HomeAction.ENABLE_NOTIFICATION_PERMISSION -> handleNotificationPermissionRequest()
+        }
+    }
 
-        homeViewModel.indexingInProgress.observe(this, Observer {
-            pagingController.updateLibraryIndexingInProgress(it)
-        })
+    private fun handleChangeStorageFolder() {
+        settingsInteractor.changeLocalStorageFolder()
+    }
+
+    private fun handleNotificationPermissionRequest() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            return
+        }
+
+        requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+    }
+
+    private fun handleNotificationPermissionResponse(isGranted: Boolean) {
+        if (!isGranted) {
+            requireContext().displayDetailsSettingsScreen()
+        }
+    }
+
+    private fun isNotificationsPermissionGranted(): Boolean {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            return true
+        }
+
+        val permissionResult = ContextCompat.checkSelfPermission(
+            requireContext(),
+            Manifest.permission.POST_NOTIFICATIONS
+        )
+
+        return permissionResult == PackageManager.PERMISSION_GRANTED
+    }
+
+    override fun onResume() {
+        super.onResume()
+        homeViewModel.updateNotificationPermission(isNotificationsPermissionGranted())
     }
 
     @dagger.Module

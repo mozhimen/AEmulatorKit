@@ -7,9 +7,15 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.switchMap
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
+import androidx.paging.PagingData
 import com.mozhimen.emulatork.basic.library.db.RetrogradeDatabase
 import com.mozhimen.emulatork.basic.library.db.mos.Game
 import com.mozhimen.emulatork.test.utils.livedata.CombinedLiveData
+import com.mozhimen.emulatork.util.paging.buildFlowPaging
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
 
 /**
  * @ClassName SearchViewModel
@@ -18,6 +24,7 @@ import com.mozhimen.emulatork.test.utils.livedata.CombinedLiveData
  * @Date 2024/5/10
  * @Version 1.0
  */
+@OptIn(ExperimentalCoroutinesApi::class)
 class SearchViewModel(private val retrogradeDb: RetrogradeDatabase) : ViewModel() {
 
     class Factory(val retrogradeDb: RetrogradeDatabase) : ViewModelProvider.Factory {
@@ -26,13 +33,10 @@ class SearchViewModel(private val retrogradeDb: RetrogradeDatabase) : ViewModel(
         }
     }
 
-    val queryString = MutableLiveData<String>()
+    val queryString = MutableStateFlow("")
 
-    val searchResults: LiveData<PagedList<Game>> = queryString.switchMap {
-        LivePagedListBuilder(retrogradeDb.gameSearchDao().search(it), 20).build()
-    }
-
-    val emptyViewVisible = CombinedLiveData(queryString, searchResults) { query, results ->
-        query?.isNotBlank() == true && results?.isEmpty() == true
-    }
+    val searchResults: Flow<PagingData<Game>> = queryString
+        .flatMapLatest {
+            buildFlowPaging(20) { retrogradeDb.gameSearchDao().search(it) }
+        }
 }

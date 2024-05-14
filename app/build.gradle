@@ -45,34 +45,31 @@ dependencies {
     implementation project(':emulatork_libretro')
     implementation project(':emulatork_util')
 
-    implementation project(':KUtilKit:utilk_koptional')
-    implementation project(':KUtilKit:utilk_koptional_rxjava2')
-
     implementation project(':SwiftKit:basick')
-    implementation project(':AAbilityKit_Jetpack:room_rxjava2')
+    implementation project(':SwiftKit:xmlk')
 
     implementation project(':ALogKit:logk_timber')
     implementation project(':AInjectKit:injectk_dagger')
 
     implementation project(":ATaskKit:taskk_work")
 
-    implementation project(":ARxKit:rxk_rxjava2")
-    implementation project(":ARxKit:rxk_autodispose")
-    implementation project(':ARxKit:rxk_epoxy')
-    implementation project(':ARxKit:rxk_rxbinding3')
-    implementation project(':ARxKit:rxk_rxpermissions2')
-    implementation project(':ARxKit:rxk_rxrelay2')
+    implementation project(':ARxKit:rxk_epoxy4')
+    implementation project(":APagingKit:pagingk_epoxy4")
+    implementation project(":APagingKit:pagingk_paging3_basic")
 
     implementation project(':ANetKit:netk_retrofit2')
-    implementation project(':ANetKit:netk_retrofit2_rxjava2')
     implementation project(':ANetKit:netk_okio2')
 
     implementation project(':ACacheKit:cachek_flow_preferences')
+    implementation project(':ACacheKit:cachek_room_paging')
+    implementation project(':ACacheKit:cachek_harmony')
     implementation project(':ANavigateKit:navigatek_navigation')
-    implementation project(':AAbilityKit_Jetpack:preference')
 
-    implementation project(":APagingKit:pagingk_paging3_basic")
-    implementation project(":APagingKit:pagingk_epoxy")
+    implementation project(':AAbilityKit_Jetpack:preference')
+    implementation project(':AAbilityKit_Jetpack:collection')
+    implementation project(':AAbilityKit_Jetpack:documentfile')
+    implementation project(':AAbilityKit_Jetpack:startup')
+    implementation project(':AAbilityKit_Google:guava')
 
     implementation project(":AImageKit:imagek_coil1")
     implementation project(":AXmlKit:recyclerk")
@@ -80,7 +77,7 @@ dependencies {
     implementation "com.github.Swordfish90:LibretroDroid:0.10.0"
     implementation "com.github.Swordfish90:RadialGamePad:2.0.0"
 
-    kapt "com.airbnb.android:epoxy-processor:3.8.0"
+    kapt "com.airbnb.android:epoxy-processor:4.6.3-vinay-compose"
     kapt "com.google.dagger:dagger-android-processor:2.19"
     kapt "com.google.dagger:dagger-compiler:2.19"
 

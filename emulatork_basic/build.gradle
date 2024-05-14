@@ -12,7 +12,6 @@ android {
 
     defaultConfig {
         minSdk 21
-        multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -36,30 +35,23 @@ android {
 dependencies {
     implementation project(':emulatork_util')
     implementation project(':emulatork_input')
+
     implementation project(":SwiftKit:basick")
 
     implementation project(':AAbilityKit_Jetpack:collection')
-    implementation project(":AAbilityKit_Jetpack:leanback")
-    implementation project(":AAbilityKit_Jetpack:room_rxjava2")
     implementation project(':AAbilityKit_Jetpack:documentfile')
+    implementation project(':AAbilityKit_Jetpack:preference')
 
     implementation project(':ATaskKit:taskk_work')
 
     implementation project(":APagingKit:pagingk_paging3_basic")
 
-    implementation project(':ARxKit:rxk_autodispose')
-    implementation project(':ARxKit:rxk_rxrelay2')
-    implementation project(':ARxKit:rxk_rxjava2')
-    implementation project(':ARxKit:rxk_rxkotlin2')
-
-    implementation project(':KUtilKit:utilk_koptional')
-    implementation project(':KUtilKit:utilk_koptional_rxjava2')
-
     implementation project(':ANetKit:netk_retrofit2')
-    implementation project(':ANetKit:netk_retrofit2_rxjava2')
     implementation project(':ANetKit:netk_okio2')
 
     implementation project(':ACacheKit:cachek_harmony')
+    implementation project(':ACacheKit:cachek_room_paging')
+
     implementation project(':AInjectKit:injectk_dagger')
     implementation project(':ALogKit:logk_timber')
 

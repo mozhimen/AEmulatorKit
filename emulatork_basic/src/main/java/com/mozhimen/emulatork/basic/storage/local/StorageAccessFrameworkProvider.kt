@@ -4,30 +4,17 @@ import android.content.Context
 import android.net.Uri
 import android.provider.DocumentsContract
 import androidx.documentfile.provider.DocumentFile
-import androidx.leanback.preference.LeanbackPreferenceFragment
-import androidx.preference.PreferenceManager
-import com.gojuno.koptional.None
-import com.gojuno.koptional.Optional
-import com.gojuno.koptional.toOptional
 import com.mozhimen.abilityk.jetpack.documentfile.utils.isZipped
-import com.mozhimen.basick.utilk.android.database.cursor2sequence
-import com.mozhimen.basick.utilk.java.io.getStrCrc32_use
 import com.mozhimen.basick.utilk.java.io.inputStream2file_use_ofCopyTo
 import com.mozhimen.basick.utilk.java.util.extractEntryToFile_use
-import com.mozhimen.basick.utilk.kotlin.long2strCrc32
 import com.mozhimen.emulatork.basic.R
 import com.mozhimen.emulatork.basic.library.db.mos.DataFile
 import com.mozhimen.emulatork.basic.library.db.mos.Game
-import com.mozhimen.emulatork.basic.library.metadata.GameMetadataProvider
 import com.mozhimen.emulatork.basic.preferences.SharedPreferencesHelper
 import com.mozhimen.emulatork.basic.storage.BaseStorageFile
-import com.mozhimen.emulatork.basic.storage.DirectoriesManager
 import com.mozhimen.emulatork.basic.storage.RomFiles
 import com.mozhimen.emulatork.basic.storage.StorageFile
 import com.mozhimen.emulatork.basic.storage.StorageProvider
-import io.reactivex.Completable
-import io.reactivex.Observable
-import io.reactivex.Single
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flow
@@ -51,7 +38,7 @@ class StorageAccessFrameworkProvider(private val context: Context) : StorageProv
 
     override val uriSchemes = listOf("content")
 
-    override val prefsFragmentClass: Class<LeanbackPreferenceFragment>? = null
+//    override val prefsFragmentClass: Class<LeanbackPreferenceFragment>? = null
 
     override val enabledByDefault = true
 

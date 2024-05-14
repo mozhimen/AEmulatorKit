@@ -11,7 +11,7 @@ import com.mozhimen.emulatork.basic.controller.ControllerConfig
 import com.mozhimen.emulatork.basic.core.CoreVariablesManager
 import com.mozhimen.emulatork.basic.library.CoreID
 import com.mozhimen.emulatork.test.R
-import com.mozhimen.emulatork.test.feature.settings.ControllerConfigsManager
+import com.mozhimen.emulatork.test.shared.settings.ControllerConfigsManager
 
 /**
  * @ClassName CoreOptionsPreferenceHelper

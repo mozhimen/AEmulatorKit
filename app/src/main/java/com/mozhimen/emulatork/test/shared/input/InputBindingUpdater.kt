@@ -5,9 +5,6 @@ import android.content.Intent
 import android.view.InputDevice
 import android.view.KeyEvent
 import com.mozhimen.emulatork.test.R
-import com.mozhimen.emulatork.test.feature.input.InputDeviceManager
-import com.mozhimen.emulatork.test.feature.input.InputKey
-import com.mozhimen.emulatork.test.feature.input.RetroKey
 import com.mozhimen.emulatork.test.shared.settings.GamePadPreferencesHelper
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope

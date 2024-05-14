@@ -3,7 +3,6 @@ package com.mozhimen.emulatork.libretro.db.daos
 import androidx.room.Dao
 import androidx.room.Query
 import com.mozhimen.emulatork.libretro.db.entities.LibretroRom
-import io.reactivex.Maybe
 
 /**
  * @ClassName GameDao
@@ -14,10 +13,15 @@ import io.reactivex.Maybe
  */
 @Dao
 interface GameDao {
+    @Query("SELECT * FROM games WHERE romName LIKE :romName")
+    fun findByName(romName: String): List<LibretroRom>?
 
     @Query("SELECT * FROM games WHERE romName = :romName LIMIT 1")
-    fun findByFileName(romName: String): Maybe<LibretroRom>
+    fun findByFileName(romName: String): LibretroRom?
 
     @Query("SELECT * FROM games WHERE crc32 = :crc LIMIT 1")
-    fun findByCRC(crc: String): Maybe<LibretroRom>
+    fun findByCRC(crc: String): LibretroRom?
+
+    @Query("SELECT * FROM games WHERE serial = :serial LIMIT 1")
+    fun findBySerial(serial: String): LibretroRom?
 }

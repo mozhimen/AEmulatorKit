@@ -3,9 +3,12 @@ package com.mozhimen.emulatork.test.feature.settings
 import android.content.Context
 import android.content.SharedPreferences
 import com.fredporciuncula.flow.preferences.FlowSharedPreferences
+import com.mozhimen.emulatork.basic.storage.cache.CacheCleaner
 import com.mozhimen.emulatork.test.R
 import dagger.Lazy
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import kotlin.math.roundToInt
 

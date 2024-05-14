@@ -6,7 +6,7 @@ import com.mozhimen.emulatork.test.R
 import com.mozhimen.emulatork.test.feature.shortcuts.ShortcutsGenerator
 import com.mozhimen.emulatork.test.shared.game.GameLauncher
 import com.mozhimen.emulatork.test.shared.main.BusyActivity
-import com.mozhimen.emulatork.util.xml.displayToast
+import com.mozhimen.emulatork.util.displayToast
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 

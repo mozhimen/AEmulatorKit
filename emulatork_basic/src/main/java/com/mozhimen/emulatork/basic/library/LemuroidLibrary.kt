@@ -59,7 +59,9 @@ class LemuroidLibrary(
         val gameMetadata = gameMetadataProvider.get()
         val enabledProviders = storageProviderRegistry.get().enabledProviders
         enabledProviders.asFlow()
-            .flatMapConcat { indexSingleProvider(it, startedAtMs, gameMetadata) }
+            .flatMapConcat {
+                indexSingleProvider(it, startedAtMs, gameMetadata)
+            }
             .collect()
     }
 
@@ -72,7 +74,9 @@ class LemuroidLibrary(
         return provider.listBaseStorageFiles()
             .flatMapConcat { StorageFilesMerger.mergeDataFiles(provider, it).asFlow() }
             .batchWithSizeAndTime(MAX_BUFFER_SIZE, MAX_TIME)
-            .flatMapMerge { processBatch(it, provider, startedAtMs, gameMetadata) }
+            .flatMapMerge {
+                processBatch(it, provider, startedAtMs, gameMetadata)
+            }
     }
 
     private suspend fun processBatch(
@@ -93,8 +97,8 @@ class LemuroidLibrary(
     }
 
     private fun fetchEntriesFromDatabase(storageFile: GroupedStorageFiles): ScanEntry {
-        Timber.d("Retrieving scan entry for uri: ${storageFile.primaryFile}")
         val game = retrogradedb.gameDao().selectByFileUri(storageFile.primaryFile.uri.toString())
+        Timber.d("Retrieving scan entry game $game for uri: ${storageFile.primaryFile}")
         return buildScanEntry(storageFile, game)
     }
 
@@ -273,14 +277,14 @@ class LemuroidLibrary(
     }
 
     private fun removeDeletedDataFiles(startedAtMs: Long) {
-        Timber.d("Deleting data files from db before: $startedAtMs")
         val dataFiles = retrogradedb.dataFileDao().selectByLastIndexedAtLessThan(startedAtMs)
+        Timber.d("Deleting data files from db before: $startedAtMs games $dataFiles")
         retrogradedb.dataFileDao().delete(dataFiles)
     }
 
     private fun removeDeletedGames(startedAtMs: Long) {
-        Timber.d("Deleting games from db before: $startedAtMs")
         val games = retrogradedb.gameDao().selectByLastIndexedAtLessThan(startedAtMs)
+        Timber.d("Deleting games from db before: $startedAtMs games $games")
         retrogradedb.gameDao().delete(games)
     }
 

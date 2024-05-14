@@ -13,7 +13,6 @@ import com.mozhimen.emulatork.test.shared.GamesAdapter
 import com.mozhimen.emulatork.test.shared.RecyclerViewFragment
 import com.mozhimen.emulatork.test.shared.covers.CoverLoader
 import com.mozhimen.emulatork.util.coroutines.launchOnState
-import com.swordfish.lemuroid.app.mobile.feature.games.GamesFragmentArgs
 import javax.inject.Inject
 
 /**

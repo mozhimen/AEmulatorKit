@@ -15,8 +15,9 @@ import androidx.room.PrimaryKey
 @Entity(
     tableName = "games",
     indices = [
-        Index(name = "romNameIndex", value = ["romName"]),
-        Index(name = "crc32Index", value = ["crc32"])
+        Index("romName"),
+        Index("crc32"),
+        Index("serial")
     ]
 )
 data class LibretroRom(
@@ -37,5 +38,8 @@ data class LibretroRom(
     val developer: String?,
 
     @ColumnInfo(name = "crc32")
-    val crc32: String?
+    val crc32: String?,
+
+    @ColumnInfo(name = "serial")
+    val serial: String?
 )

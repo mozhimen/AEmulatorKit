@@ -7,7 +7,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.preference.PreferenceFragmentCompat
 import com.mozhimen.emulatork.basic.preferences.SharedPreferencesHelper
 import com.mozhimen.emulatork.test.R
-import com.mozhimen.emulatork.test.feature.input.InputDeviceManager
+import com.mozhimen.emulatork.test.shared.input.InputDeviceManager
 import com.mozhimen.emulatork.test.shared.GameMenuContract
 import com.mozhimen.emulatork.test.shared.coreoptions.LemuroidCoreOption
 import com.mozhimen.emulatork.util.coroutines.launchOnState

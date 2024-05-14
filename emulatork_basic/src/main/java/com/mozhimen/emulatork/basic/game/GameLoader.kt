@@ -2,13 +2,10 @@ package com.mozhimen.emulatork.basic.game
 
 import android.content.Context
 import android.os.Build
-import com.gojuno.koptional.None
-import com.gojuno.koptional.Optional
 import com.mozhimen.emulatork.basic.bios.BiosManager
 import com.mozhimen.emulatork.basic.core.CoreVariable
 import com.mozhimen.emulatork.basic.core.CoreVariablesManager
 import com.mozhimen.emulatork.basic.library.CoreID
-import com.mozhimen.emulatork.basic.library.GameLibrary
 import com.mozhimen.emulatork.basic.library.GameSystem
 import com.mozhimen.emulatork.basic.library.LemuroidLibrary
 import com.mozhimen.emulatork.basic.library.SystemCoreConfig
@@ -20,10 +17,6 @@ import com.mozhimen.emulatork.basic.saves.SavesManager
 import com.mozhimen.emulatork.basic.saves.StatesManager
 import com.mozhimen.emulatork.basic.storage.DirectoriesManager
 import com.mozhimen.emulatork.basic.storage.RomFiles
-import io.reactivex.Maybe
-import io.reactivex.Single
-import io.reactivex.functions.Function3
-import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import timber.log.Timber

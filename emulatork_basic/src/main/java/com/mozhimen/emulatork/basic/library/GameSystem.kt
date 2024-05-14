@@ -3,6 +3,7 @@ package com.mozhimen.emulatork.basic.library
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.mozhimen.emulatork.basic.R
+import com.mozhimen.emulatork.basic.core.CoreVariable
 import java.util.Locale
 
 /**

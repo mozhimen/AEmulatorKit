@@ -8,7 +8,7 @@ import com.google.android.material.color.DynamicColors
 import com.mozhimen.basick.utilk.android.content.isMainProcess
 import com.mozhimen.emulatork.basic.injection.HasWorkerInjector
 import com.mozhimen.emulatork.ext.context.ContextHandler
-import com.mozhimen.emulatork.test.shared.MainProcessInitializer
+import com.mozhimen.emulatork.test.shared.startup.MainProcessInitializer
 import com.mozhimen.emulatork.test.shared.startup.GameProcessInitializer
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector

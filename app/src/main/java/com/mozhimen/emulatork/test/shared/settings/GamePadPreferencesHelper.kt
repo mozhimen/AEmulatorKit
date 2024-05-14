@@ -11,11 +11,10 @@ import androidx.preference.PreferenceScreen
 import androidx.preference.SwitchPreference
 import com.mozhimen.emulatork.test.R
 import com.mozhimen.emulatork.test.feature.input.GamePadBindingActivity
-import com.mozhimen.emulatork.test.feature.input.InputDeviceManager
-import com.mozhimen.emulatork.test.feature.input.InputKey
-import com.mozhimen.emulatork.test.feature.input.RetroKey
-import com.mozhimen.emulatork.test.feature.input.lemuroiddevice.getLemuroidInputDevice
-import com.mozhimen.emulatork.test.feature.settings.GameMenuShortcut
+import com.mozhimen.emulatork.test.shared.input.InputDeviceManager
+import com.mozhimen.emulatork.test.shared.input.InputKey
+import com.mozhimen.emulatork.test.shared.input.RetroKey
+import com.mozhimen.emulatork.test.shared.input.lemuroiddevice.getLemuroidInputDevice
 import com.mozhimen.emulatork.test.shared.input.InputBindingUpdater
 import java.util.Locale
 

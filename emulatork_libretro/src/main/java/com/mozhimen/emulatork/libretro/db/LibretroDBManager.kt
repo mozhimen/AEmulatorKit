@@ -2,9 +2,6 @@ package com.mozhimen.emulatork.libretro.db
 
 import android.content.Context
 import androidx.room.Room
-import com.jakewharton.rxrelay2.BehaviorRelay
-import io.reactivex.Single
-import java.util.concurrent.ExecutorService
 
 /**
  * @ClassName LibretroDBManager

@@ -1,29 +1,57 @@
 package com.mozhimen.emulatork.test.feature.main
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import android.text.Html
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.ProgressBar
+import androidx.appcompat.app.AlertDialog
+import androidx.core.view.isVisible
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.mozhimen.basick.utilk.android.view.applyVisibleIfElseGone
+import com.google.android.material.elevation.SurfaceColors
+import com.mozhimen.emulatork.basic.android.RetrogradeAppCompatActivity
 import com.mozhimen.emulatork.basic.injection.PerActivity
 import com.mozhimen.emulatork.basic.injection.PerFragment
+import com.mozhimen.emulatork.basic.library.SystemID
 import com.mozhimen.emulatork.basic.library.db.RetrogradeDatabase
+import com.mozhimen.emulatork.basic.savesync.SaveSyncManager
+import com.mozhimen.emulatork.basic.storage.DirectoriesManager
+import com.mozhimen.emulatork.ext.review.ReviewManager
 import com.mozhimen.emulatork.test.feature.settings.SettingsFragment
 import com.mozhimen.emulatork.test.R
 import com.mozhimen.emulatork.test.feature.favorites.FavoritesFragment
 import com.mozhimen.emulatork.test.feature.games.GamesFragment
 import com.mozhimen.emulatork.test.feature.home.HomeFragment
 import com.mozhimen.emulatork.test.feature.search.SearchFragment
-import com.mozhimen.emulatork.test.feature.settings.SettingsInteractor
+import com.mozhimen.emulatork.test.feature.settings.AdvancedSettingsFragment
+import com.mozhimen.emulatork.test.feature.settings.BiosSettingsFragment
+import com.mozhimen.emulatork.test.feature.settings.CoresSelectionFragment
+import com.mozhimen.emulatork.test.feature.settings.GamepadSettingsFragment
+import com.mozhimen.emulatork.test.feature.settings.SaveSyncFragment
+import com.mozhimen.emulatork.test.shared.settings.SettingsInteractor
+import com.mozhimen.emulatork.test.feature.shortcuts.ShortcutsGenerator
+import com.mozhimen.emulatork.test.feature.systems.MetaSystemsFragment
 import com.mozhimen.emulatork.test.shared.GameInteractor
-import com.tbruyelle.rxpermissions2.RxPermissions
+import com.mozhimen.emulatork.test.shared.game.BaseGameActivity
+import com.mozhimen.emulatork.test.shared.game.GameLauncher
+import com.mozhimen.emulatork.test.shared.input.InputDeviceManager
+import com.mozhimen.emulatork.test.shared.main.BusyActivity
+import com.mozhimen.emulatork.test.shared.main.GameLaunchTaskHandler
+import com.mozhimen.emulatork.test.shared.savesync.SaveSyncWork
+import com.mozhimen.emulatork.test.shared.settings.GamePadPreferencesHelper
+import com.mozhimen.emulatork.util.coroutines.safeLaunch
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
-import me.zhanghai.android.materialprogressbar.MaterialProgressBar
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import javax.inject.Inject
 
 /**
  * @ClassName MainActivity
@@ -32,15 +60,35 @@ import me.zhanghai.android.materialprogressbar.MaterialProgressBar
  * @Date 2024/5/7
  * @Version 1.0
  */
-class MainActivity : com.mozhimen.emulatork.basic.android.RetrogradeAppCompatActivity(){
+@OptIn(DelicateCoroutinesApi::class)
+class MainActivity : RetrogradeAppCompatActivity(), BusyActivity {
+
+    @Inject
+    lateinit var gameLaunchTaskHandler: GameLaunchTaskHandler
+
+    @Inject
+    lateinit var saveSyncManager: SaveSyncManager
+
+    private val reviewManager = ReviewManager()
+    private var mainViewModel: MainViewModel? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.navigationBarColor = SurfaceColors.SURFACE_2.getColor(this)
+        window.statusBarColor = SurfaceColors.SURFACE_2.getColor(this)
         setContentView(R.layout.activity_main)
         initializeActivity()
     }
 
+    override fun activity(): Activity = this
+    override fun isBusy(): Boolean = mainViewModel?.displayProgress?.value ?: false
+
     private fun initializeActivity() {
         setSupportActionBar(findViewById(R.id.toolbar))
+
+        GlobalScope.safeLaunch {
+            reviewManager.initialize(applicationContext)
+        }
 
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         val navController = findNavController(R.id.nav_host_fragment)
@@ -57,12 +105,62 @@ class MainActivity : com.mozhimen.emulatork.basic.android.RetrogradeAppCompatAct
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        val mainViewModel = ViewModelProviders.of(this, MainViewModel.Factory(applicationContext))
-            .get(MainViewModel::class.java)
+        val factory = MainViewModel.Factory(applicationContext)
+        mainViewModel = ViewModelProvider(this, factory)[MainViewModel::class.java]
 
-        mainViewModel.indexingInProgress.observe(this, Observer { isRunning ->
-            findViewById<MaterialProgressBar>(R.id.progress).applyVisibleIfElseGone(isRunning)
-        })
+        mainViewModel?.displayProgress?.observe(this) { isRunning ->
+            findViewById<ProgressBar>(R.id.progress).isVisible = isRunning
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        when (requestCode) {
+            BaseGameActivity.REQUEST_PLAY_GAME -> {
+                GlobalScope.safeLaunch {
+                    gameLaunchTaskHandler.handleGameFinish(true, this@MainActivity, resultCode, data)
+                }
+            }
+        }
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
+        val isSupported = saveSyncManager.isSupported()
+        val isConfigured = saveSyncManager.isConfigured()
+        menu.findItem(R.id.menu_options_sync)?.isVisible = isSupported && isConfigured
+        return super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_mobile_settings, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.menu_options_help -> {
+                displayLemuroidHelp()
+                true
+            }
+            R.id.menu_options_sync -> {
+                SaveSyncWork.enqueueManualWork(this)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun displayLemuroidHelp() {
+        val systemFolders = SystemID.values()
+            .map { it.dbname }
+            .map { "<i>$it</i>" }
+            .joinToString(", ")
+
+        val message = getString(R.string.lemuroid_help_content).replace("\$SYSTEMS", systemFolders)
+        AlertDialog.Builder(this)
+            .setMessage(Html.fromHtml(message))
+            .show()
     }
 
     override fun onSupportNavigateUp() = findNavController(R.id.nav_host_fragment).navigateUp()
@@ -79,8 +177,8 @@ class MainActivity : com.mozhimen.emulatork.basic.android.RetrogradeAppCompatAct
         abstract fun gamesFragment(): GamesFragment
 
         @PerFragment
-        @ContributesAndroidInjector(modules = [SystemsFragment.Module::class])
-        abstract fun systemsFragment(): SystemsFragment
+        @ContributesAndroidInjector(modules = [MetaSystemsFragment.Module::class])
+        abstract fun systemsFragment(): MetaSystemsFragment
 
         @PerFragment
         @ContributesAndroidInjector(modules = [HomeFragment.Module::class])
@@ -94,25 +192,51 @@ class MainActivity : com.mozhimen.emulatork.basic.android.RetrogradeAppCompatAct
         @ContributesAndroidInjector(modules = [FavoritesFragment.Module::class])
         abstract fun favoritesFragment(): FavoritesFragment
 
+        @PerFragment
+        @ContributesAndroidInjector(modules = [GamepadSettingsFragment.Module::class])
+        abstract fun gamepadSettings(): GamepadSettingsFragment
+
+        @PerFragment
+        @ContributesAndroidInjector(modules = [BiosSettingsFragment.Module::class])
+        abstract fun biosInfoFragment(): BiosSettingsFragment
+
+        @PerFragment
+        @ContributesAndroidInjector(modules = [AdvancedSettingsFragment.Module::class])
+        abstract fun advancedSettingsFragment(): AdvancedSettingsFragment
+
+        @PerFragment
+        @ContributesAndroidInjector(modules = [SaveSyncFragment.Module::class])
+        abstract fun saveSyncFragment(): SaveSyncFragment
+
+        @PerFragment
+        @ContributesAndroidInjector(modules = [CoresSelectionFragment.Module::class])
+        abstract fun coresSelectionFragment(): CoresSelectionFragment
+
         @dagger.Module
         companion object {
 
             @Provides
             @PerActivity
             @JvmStatic
-            fun settingsInteractor(activity: MainActivity) =
-                SettingsInteractor(activity)
+            fun settingsInteractor(activity: MainActivity, directoriesManager: DirectoriesManager) =
+                SettingsInteractor(activity, directoriesManager)
 
             @Provides
             @PerActivity
             @JvmStatic
-            fun gameInteractor(activity: MainActivity, retrogradeDb: RetrogradeDatabase) =
-                GameInteractor(activity, retrogradeDb)
+            fun gamePadPreferencesHelper(inputDeviceManager: InputDeviceManager) =
+                GamePadPreferencesHelper(inputDeviceManager, false)
 
             @Provides
             @PerActivity
             @JvmStatic
-            fun rxPermissions(activity: MainActivity): RxPermissions = RxPermissions(activity)
+            fun gameInteractor(
+                activity: MainActivity,
+                retrogradeDb: RetrogradeDatabase,
+                shortcutsGenerator: ShortcutsGenerator,
+                gameLauncher: GameLauncher
+            ) =
+                GameInteractor(activity, retrogradeDb, false, shortcutsGenerator, gameLauncher)
         }
     }
 }

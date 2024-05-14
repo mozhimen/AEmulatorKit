@@ -35,10 +35,10 @@
         </activity>
 
         <activity
-            android:name=".feature.game.GameLauncherActivity"
+            android:name=".shared.game.ExternalGameLauncherActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="true"
-            android:theme="@style/GameTheme">
+            android:theme="@style/Theme.AGameKit_Emulator.Game">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -54,32 +54,32 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleInstance"
             android:process=":game"
-            android:theme="@style/GameTheme" />
+            android:theme="@style/Theme.AGameKit_Emulator.Game" />
 
         <service
-            android:name=".app.mobile.feature.game.GameService"
+            android:name=".feature.game.GameService"
             android:process=":game" />
 
         <activity
-            android:name="com.swordfish.lemuroid.app.mobile.feature.gamemenu.GameMenuActivity"
+            android:name=".feature.gamemenu.GameMenuActivity"
             android:process=":game"
-            android:theme="@style/LemuroidMaterialTheme.Menu" />
+            android:theme="@style/Theme.AGameKit_Emulator.Menu" />
 
         <activity
-            android:name="com.swordfish.lemuroid.app.mobile.feature.input.GamePadBindingActivity"
-            android:theme="@style/LemuroidMaterialTheme.Invisible" />
+            android:name=".feature.input.GamePadBindingActivity"
+            android:theme="@style/Theme.AGameKit_Emulator.Invisible" />
 
         <activity
-            android:name=".feature.settings.StorageFrameworkPickerLauncher"
-            android:theme="@style/LemuroidMaterialTheme.Invisible" />
+            android:name=".shared.settings.StorageFrameworkPickerLauncher"
+            android:theme="@style/Theme.AGameKit_Emulator.Invisible" />
 
         <activity
-            android:name=".app.shared.gamecrash.GameCrashActivity"
-            android:theme="@style/LemuroidMaterialTheme.Game" />
+            android:name=".shared.gamecrash.GameCrashActivity"
+            android:theme="@style/Theme.AGameKit_Emulator.Game" />
 
-        <receiver android:name=".app.shared.library.LibraryIndexBroadcastReceiver" />
+        <receiver android:name=".shared.library.LibraryIndexBroadcastReceiver" />
 
-        <receiver android:name=".app.shared.library.CoreUpdateBroadcastReceiver" />
+        <receiver android:name=".shared.library.CoreUpdateBroadcastReceiver" />
 
         <provider
             android:name="androidx.startup.InitializationProvider"

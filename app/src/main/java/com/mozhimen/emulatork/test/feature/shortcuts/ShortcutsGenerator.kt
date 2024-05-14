@@ -85,3 +85,4 @@ class ShortcutsGenerator(
         suspend fun downloadThumbnail(@Url url: String): Response<InputStream>
     }
 }
+

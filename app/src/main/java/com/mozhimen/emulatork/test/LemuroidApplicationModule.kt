@@ -26,7 +26,7 @@ import com.mozhimen.emulatork.basic.storage.StorageProvider
 import com.mozhimen.emulatork.basic.storage.StorageProviderRegistry
 import com.mozhimen.emulatork.basic.storage.local.LocalStorageProvider
 import com.mozhimen.emulatork.basic.storage.local.StorageAccessFrameworkProvider
-import com.mozhimen.emulatork.ext.review.CoreUpdaterImpl
+import com.mozhimen.emulatork.ext.core.CoreUpdaterImpl
 import com.mozhimen.emulatork.ext.review.ReviewManager
 import com.mozhimen.emulatork.ext.savesync.SaveSyncManagerImpl
 import com.mozhimen.emulatork.libretro.LibretroDBMetadataProvider
@@ -34,9 +34,9 @@ import com.mozhimen.emulatork.libretro.db.LibretroDBManager
 import com.mozhimen.emulatork.test.feature.game.GameActivity
 import com.mozhimen.emulatork.test.feature.gamemenu.GameMenuActivity
 import com.mozhimen.emulatork.test.feature.input.GamePadBindingActivity
-import com.mozhimen.emulatork.test.feature.input.InputDeviceManager
+import com.mozhimen.emulatork.test.shared.input.InputDeviceManager
 import com.mozhimen.emulatork.test.feature.main.MainActivity
-import com.mozhimen.emulatork.test.feature.settings.ControllerConfigsManager
+import com.mozhimen.emulatork.test.shared.settings.ControllerConfigsManager
 import com.mozhimen.emulatork.test.feature.settings.SettingsManager
 import com.mozhimen.emulatork.test.feature.shortcuts.ShortcutsGenerator
 import com.mozhimen.emulatork.test.shared.covers.CoverLoader

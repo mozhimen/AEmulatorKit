@@ -3,7 +3,7 @@ package com.mozhimen.emulatork.test.feature.main
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.mozhimen.emulatork.test.feature.library.LibraryIndexMonitor
+import com.mozhimen.emulatork.test.shared.library.PendingOperationsMonitor
 
 /**
  * @ClassName MainViewModel
@@ -20,5 +20,5 @@ class MainViewModel(appContext: Context) : ViewModel() {
         }
     }
 
-    val indexingInProgress = LibraryIndexMonitor(appContext).getLiveData()
+    val displayProgress = PendingOperationsMonitor(appContext).anyOperationInProgress()
 }

@@ -9,7 +9,6 @@ android {
 
     defaultConfig {
         minSdk 21
-        multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -33,8 +32,8 @@ android {
 dependencies {
     implementation project(':emulatork_basic')
     implementation project(':emulatork_util')
+
     implementation project(':SwiftKit:basick')
-    implementation project(':ANetKit:netk_retrofit2')
     implementation project(':ANetKit:netk_retrofit2')
     implementation project(':ALogKit:logk_timber')
 

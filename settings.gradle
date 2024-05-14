@@ -43,20 +43,18 @@ include ':ANavigateKit:navigatek_navigation'
 include ':APagingKit'
 project(':APagingKit').projectDir = new File("D:\\WorkSpace\\GitHub\\APagingKit")
 include ':APagingKit:pagingk_paging3_basic'
-include ':APagingKit:pagingk_epoxy'
+include ':APagingKit:pagingk_epoxy4'
 //AAbilityKit_Jetpack
 include ':AAbilityKit_Jetpack'
 project(':AAbilityKit_Jetpack').projectDir = new File("D:\\WorkSpace\\GitHub\\AAbilityKit_Jetpack")
-include ':AAbilityKit_Jetpack:leanback'
 include ':AAbilityKit_Jetpack:preference'
-include ':AAbilityKit_Jetpack:room_rxjava2'
 include ':AAbilityKit_Jetpack:collection'
 include ':AAbilityKit_Jetpack:documentfile'
-//KUtilKit
-include ':KUtilKit'
-project(':KUtilKit').projectDir = new File("D:\\WorkSpace\\GitHub\\KUtilKit")
-include ':KUtilKit:utilk_koptional'
-include ':KUtilKit:utilk_koptional_rxjava2'
+include ':AAbilityKit_Jetpack:startup'
+//AAbilityKit_Google
+include ':AAbilityKit_Google'
+project(':AAbilityKit_Google').projectDir = new File("D:\\WorkSpace\\GitHub\\AAbilityKit_Google")
+include ':AAbilityKit_Google:guava'
 //AInjectKit
 include ':AInjectKit'
 project(':AInjectKit').projectDir = new File("D:\\WorkSpace\\GitHub\\AInjectKit")
@@ -65,7 +63,6 @@ include ':AInjectKit:injectk_dagger'
 include ':ANetKit'
 project(':ANetKit').projectDir = new File("D:\\WorkSpace\\GitHub\\ANetKit")
 include ':ANetKit:netk_retrofit2'
-include ':ANetKit:netk_retrofit2_rxjava2'
 include ':ANetKit:netk_okhttp3'
 include ':ANetKit:netk_okio2'
 //ALogKit
@@ -77,6 +74,7 @@ include ':ACacheKit'
 project(':ACacheKit').projectDir = new File("D:\\WorkSpace\\GitHub\\ACacheKit")
 include ':ACacheKit:cachek_flow_preferences'
 include ':ACacheKit:cachek_harmony'
+include ':ACacheKit:cachek_room_paging'
 //AImageKit
 include ':AImageKit'
 project(':AImageKit').projectDir = new File("D:\\WorkSpace\\GitHub\\AImageKit")
@@ -89,11 +87,5 @@ include ':AXmlKit:vhk'
 //ARxKit
 include ':ARxKit'
 project(':ARxKit').projectDir = new File("D:\\WorkSpace\\GitHub\\ARxKit")
-include ':ARxKit:rxk_rxjava2'
-include ':ARxKit:rxk_rxkotlin2'
-include ':ARxKit:rxk_rxrelay2'
-include ':ARxKit:rxk_autodispose'
-include ':ARxKit:rxk_epoxy'
-include ':ARxKit:rxk_rxbinding3'
-include ':ARxKit:rxk_rxpermissions2'
+include ':ARxKit:rxk_epoxy4'
 

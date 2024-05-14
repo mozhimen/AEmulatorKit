@@ -17,8 +17,8 @@ import com.mozhimen.emulatork.test.shared.main.GameLaunchTaskHandler
 import com.mozhimen.emulatork.test.utils.android.displayErrorDialog
 import com.mozhimen.emulatork.util.coroutines.launchOnState
 import com.mozhimen.emulatork.util.coroutines.safeLaunch
-import com.mozhimen.emulatork.util.xml.animationDuration
-import com.mozhimen.emulatork.util.xml.longAnimationDuration
+import com.mozhimen.emulatork.util.animationDuration
+import com.mozhimen.emulatork.util.longAnimationDuration
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay

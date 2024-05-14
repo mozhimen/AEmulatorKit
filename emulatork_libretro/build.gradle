@@ -9,8 +9,7 @@ android {
     compileSdk 34
 
     defaultConfig {
-        minSdk 19
-        multiDexEnabled true
+        minSdk 21
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -33,16 +32,9 @@ android {
 
 dependencies {
     implementation project(':emulatork_basic')
+    implementation project(':emulatork_util')
 
     implementation project(':SwiftKit:basick')
-    implementation project(':AAbilityKit_Jetpack:room_rxjava2')
-
-    implementation project(':KUtilKit:utilk_koptional')
-    implementation project(':KUtilKit:utilk_koptional_rxjava2')
-
-    implementation project(':ARxKit:rxk_rxjava2')
-    implementation project(':ARxKit:rxk_rxrelay2')
-
     implementation project(':ALogKit:logk_timber')
 
     kapt 'androidx.room:room-compiler:2.5.2'

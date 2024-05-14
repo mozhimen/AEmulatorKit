@@ -5,6 +5,7 @@ import android.view.KeyEvent
 import androidx.appcompat.app.AlertDialog
 import com.mozhimen.emulatork.basic.android.RetrogradeActivity
 import com.mozhimen.emulatork.test.shared.input.InputBindingUpdater
+import com.mozhimen.emulatork.test.shared.input.InputDeviceManager
 import javax.inject.Inject
 
 /**

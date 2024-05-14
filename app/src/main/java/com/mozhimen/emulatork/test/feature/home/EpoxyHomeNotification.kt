@@ -40,7 +40,6 @@ abstract class EpoxyHomeNotification : EpoxyModelWithHolder<EpoxyHomeNotificatio
         action?.let { holder.buttonView?.setText(it) }
         actionEnabled?.let { holder.buttonView?.isEnabled = it }
 
-        "".contains()
         holder.buttonView?.setOnClickListener { onClick?.invoke() }
     }
 

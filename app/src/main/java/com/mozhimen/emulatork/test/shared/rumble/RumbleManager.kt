@@ -6,7 +6,7 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import android.view.InputDevice
 import com.mozhimen.emulatork.basic.library.SystemCoreConfig
-import com.mozhimen.emulatork.test.feature.input.InputDeviceManager
+import com.mozhimen.emulatork.test.shared.input.InputDeviceManager
 import com.mozhimen.emulatork.test.feature.settings.SettingsManager
 import com.mozhimen.emulatork.util.coroutines.safeCollect
 import com.swordfish.libretrodroid.RumbleEvent

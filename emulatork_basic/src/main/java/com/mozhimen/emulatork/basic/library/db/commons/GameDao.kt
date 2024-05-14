@@ -1,7 +1,5 @@
 package com.mozhimen.emulatork.basic.library.db.commons
 
-import androidx.lifecycle.LiveData
-import androidx.paging.DataSource
 import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Delete
@@ -9,13 +7,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import com.mozhimen.emulatork.basic.library.db.mos.Game
-import com.mozhimen.emulatork.basic.library.db.mos.GameLibraryCounts
-import io.reactivex.Completable
-import io.reactivex.Maybe
-import io.reactivex.Single
-import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.flow.Flow
-import org.intellij.lang.annotations.Language
 
 /**
  * @ClassName GameDao
@@ -28,7 +20,7 @@ import org.intellij.lang.annotations.Language
 interface GameDao {
 
     @Query("SELECT * FROM games WHERE id = :id")
-    suspend fun selectById(id: Int): Game?
+    fun selectById(id: Int): Game?
 
     @Query("SELECT * FROM games WHERE fileUri = :fileUri")
     fun selectByFileUri(fileUri: String): Game?
@@ -50,7 +42,7 @@ interface GameDao {
     fun selectFirstFavoritesRecents(limit: Int): Flow<List<Game>>
 
     @Query("SELECT * FROM games WHERE lastPlayedAt IS NOT NULL ORDER BY lastPlayedAt DESC LIMIT :limit")
-    suspend fun asyncSelectFirstRecents(limit: Int): List<Game>
+    fun asyncSelectFirstRecents(limit: Int): List<Game>
 
     @Query("SELECT * FROM games WHERE isFavorite = 1 ORDER BY lastPlayedAt DESC LIMIT :limit")
     fun selectFirstFavorites(limit: Int): Flow<List<Game>>
@@ -65,7 +57,7 @@ interface GameDao {
     fun selectBySystems(systemIds: List<String>): PagingSource<Int, Game>
 
     @Query("SELECT DISTINCT systemId FROM games ORDER BY systemId ASC")
-    suspend fun selectSystems(): List<String>
+    fun selectSystems(): List<String>
 
     @Query("SELECT count(*) count, systemId systemId FROM games GROUP BY systemId")
     fun selectSystemsWithCount(): Flow<List<SystemCount>>
@@ -77,7 +69,7 @@ interface GameDao {
     fun delete(games: List<Game>)
 
     @Update
-    suspend fun update(game: Game)
+    fun update(game: Game)
 
     @Update
     fun update(games: List<Game>)

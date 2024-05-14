@@ -2,28 +2,18 @@ package com.mozhimen.emulatork.basic.storage.local
 
 import android.content.Context
 import android.net.Uri
-import android.os.Environment
 import androidx.core.net.toUri
-import androidx.leanback.preference.LeanbackPreferenceFragment
-import com.gojuno.koptional.None
-import com.gojuno.koptional.Optional
-import com.gojuno.koptional.toOptional
-import com.mozhimen.basick.utilk.java.io.gerStrCrc_use
 import com.mozhimen.basick.utilk.java.io.isFileZipped
 import com.mozhimen.basick.utilk.java.util.extractEntryToFile_use
 import com.mozhimen.emulatork.basic.R
 import com.mozhimen.emulatork.basic.library.db.mos.DataFile
 import com.mozhimen.emulatork.basic.library.db.mos.Game
-import com.mozhimen.emulatork.basic.library.metadata.GameMetadataProvider
 import com.mozhimen.emulatork.basic.preferences.SharedPreferencesHelper
 import com.mozhimen.emulatork.basic.storage.BaseStorageFile
 import com.mozhimen.emulatork.basic.storage.DirectoriesManager
 import com.mozhimen.emulatork.basic.storage.RomFiles
 import com.mozhimen.emulatork.basic.storage.StorageFile
 import com.mozhimen.emulatork.basic.storage.StorageProvider
-import io.reactivex.Completable
-import io.reactivex.Observable
-import io.reactivex.Single
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.io.File
@@ -48,7 +38,7 @@ class LocalStorageProvider(
 
     override val uriSchemes = listOf("file")
 
-    override val prefsFragmentClass: Class<LeanbackPreferenceFragment>? = null
+//    override val prefsFragmentClass: Class<LeanbackPreferenceFragment>? = null
 
     override val enabledByDefault = true
 
