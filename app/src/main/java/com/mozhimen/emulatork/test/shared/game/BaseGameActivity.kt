@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.PointF
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.InputDevice
 import android.view.KeyEvent
@@ -17,6 +18,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import com.mozhimen.basick.utilk.commons.IUtilK
 import com.mozhimen.emulatork.basic.controller.ControllerConfig
 import com.mozhimen.emulatork.basic.core.CoreVariable
 import com.mozhimen.emulatork.basic.core.CoreVariablesManager
@@ -104,7 +106,7 @@ import kotlin.system.exitProcess
  * @Version 1.0
  */
 @OptIn(FlowPreview::class, DelicateCoroutinesApi::class)
-abstract class BaseGameActivity : ImmersiveActivity() {
+abstract class BaseGameActivity : ImmersiveActivity(), IUtilK {
 
     protected lateinit var game: Game
     private lateinit var system: GameSystem
@@ -347,6 +349,7 @@ abstract class BaseGameActivity : ImmersiveActivity() {
                 is RomFiles.Standard -> {
                     gameFilePath = gameFiles.files.first().absolutePath
                 }
+
                 is RomFiles.Virtual -> {
                     gameVirtualFiles = gameFiles.files
                         .map { VirtualFile(it.filePath, it.fd) }

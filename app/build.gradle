@@ -17,6 +17,10 @@ android {
         versionCode 1
         versionName "1.0"
 
+        ndk {
+            abiFilters 'arm64-v8a', 'x86' /*'armeabi-v7a'*/
+        }
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -25,6 +29,12 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+    }
+    // Stripping created some issues with some libretro cores such as ppsspp
+    packagingOptions {
+        doNotStrip("*/*/*_libretro_android.so")
+        exclude("META-INF/DEPENDENCIES")
+        exclude("META-INF/library_release.kotlin_module")
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -36,6 +46,10 @@ android {
     buildFeatures{
         buildConfig = true
     }
+    lintOptions {
+        checkReleaseBuilds = false
+        abortOnError = false
+    }
 }
 
 dependencies {
@@ -44,6 +58,7 @@ dependencies {
     implementation project(':emulatork_input')
     implementation project(':emulatork_libretro')
     implementation project(':emulatork_util')
+//    implementation project(':emulatork_core')
 
     implementation project(':SwiftKit:basick')
     implementation project(':SwiftKit:xmlk')
@@ -74,8 +89,8 @@ dependencies {
     implementation project(":AImageKit:imagek_coil1")
     implementation project(":AXmlKit:recyclerk")
 
-    implementation "com.github.Swordfish90:LibretroDroid:0.10.0"
     implementation "com.github.Swordfish90:RadialGamePad:2.0.0"
+    implementation project(":AEmulatorKit_LibretroDroid:libretrodroid")
 
     kapt "com.airbnb.android:epoxy-processor:4.6.3-vinay-compose"
     kapt "com.google.dagger:dagger-android-processor:2.19"

@@ -26,6 +26,7 @@ include ':emulatork_input'
 include ':emulatork_libretro'
 include ':emulatork_util'
 include ':emulatork_ext'
+include ':emulatork_core'
 //SwiftKit
 include ':SwiftKit'
 project(':SwiftKit').projectDir = new File("D:\\WorkSpace\\GitHub\\SwiftKit")
@@ -88,4 +89,8 @@ include ':AXmlKit:vhk'
 include ':ARxKit'
 project(':ARxKit').projectDir = new File("D:\\WorkSpace\\GitHub\\ARxKit")
 include ':ARxKit:rxk_epoxy4'
+//AEmulatorKit_LibretroDroid
+include ':AEmulatorKit_LibretroDroid'
+project(':AEmulatorKit_LibretroDroid').projectDir = new File("D:\\WorkSpace\\GitHub\\AEmulatorKit_LibretroDroid")
+include ':AEmulatorKit_LibretroDroid:libretrodroid'
 

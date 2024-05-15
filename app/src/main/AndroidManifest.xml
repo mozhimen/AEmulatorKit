@@ -11,6 +11,8 @@
         android:required="false" />
 
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <application
         android:name=".LemuroidApplication"
         android:allowBackup="true"

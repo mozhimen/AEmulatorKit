@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
  * @Date 2024/5/13
  * @Version 1.0
  */
-class GameLauncher(
+class GameLauncher constructor(
     private val coresSelection: CoresSelection,
     private val gameLaunchTaskHandler: GameLaunchTaskHandler
 ) {

@@ -1,5 +1,6 @@
 package com.mozhimen.emulatork.basic.library
 
+import android.util.Log
 import com.mozhimen.emulatork.basic.bios.BiosManager
 import com.mozhimen.emulatork.basic.library.db.RetrogradeDatabase
 import com.mozhimen.emulatork.basic.library.db.mos.DataFile
@@ -103,6 +104,7 @@ class LemuroidLibrary(
     }
 
     private fun buildScanEntry(storageFile: GroupedStorageFiles, game: Game?): ScanEntry {
+        Timber.w("buildScanEntry $game")
         return if (game != null) {
             ScanEntry.GameFile(storageFile, game)
         } else {
@@ -207,7 +209,9 @@ class LemuroidLibrary(
         startedAtMs: Long
     ): ScanEntry {
         val game = sortedFilesForScanning(groupedStorageFile).asFlow()
-            .mapNotNull { safeStorageFile(provider, it) }
+            .mapNotNull {
+                safeStorageFile(provider, it)
+            }
             .mapNotNull { storageFile ->
                 val metadata = metadataProvider.retrieveMetadata(storageFile)
                 convertGameMetadataToGame(groupedStorageFile, storageFile, metadata, startedAtMs)
@@ -221,7 +225,11 @@ class LemuroidLibrary(
         provider: StorageProvider,
         baseStorageFile: BaseStorageFile
     ): StorageFile? {
-        return runCatching { provider.getStorageFile(baseStorageFile) }
+        return runCatching {
+            provider.getStorageFile(baseStorageFile)
+        }.apply {
+            Log.w("Library>>>>>", "safeStorageFile $this")
+        }
             .getOrNull()
     }
 

@@ -2,6 +2,8 @@ package com.mozhimen.emulatork.basic.game
 
 import android.content.Context
 import android.os.Build
+import com.mozhimen.basick.utilk.android.util.UtilKLogWrapper
+import com.mozhimen.basick.utilk.commons.IUtilK
 import com.mozhimen.emulatork.basic.bios.BiosManager
 import com.mozhimen.emulatork.basic.core.CoreVariable
 import com.mozhimen.emulatork.basic.core.CoreVariablesManager
@@ -38,7 +40,7 @@ class GameLoader(
     private val savesCoherencyEngine: SavesCoherencyEngine,
     private val directoriesManager: DirectoriesManager,
     private val biosManager: BiosManager
-) {
+) : IUtilK {
     sealed class LoadingState {
         object LoadingCore : LoadingState()
         object LoadingGame : LoadingState()
@@ -63,7 +65,9 @@ class GameLoader(
 
             val coreLibrary = runCatching {
                 findLibrary(appContext, systemCoreConfig.coreID)!!.absolutePath
-            }.getOrElse { throw GameLoaderException(GameLoaderError.LoadCore) }
+            }.getOrElse {
+                throw GameLoaderException(GameLoaderError.LoadCore)
+            }
 
             emit(LoadingState.LoadingGame)
 
@@ -110,7 +114,7 @@ class GameLoader(
                         coreVariables,
                         systemDirectory,
                         savesDirectory
-                    )
+                    ).also { UtilKLogWrapper.w(TAG, "GameData $it") }
                 )
             )
         } catch (e: GameLoaderException) {
@@ -133,13 +137,16 @@ class GameLoader(
             context.filesDir
         )
 
+        for (file in files){
+            UtilKLogWrapper.w(TAG, "findLibrary files ${file.listFiles()?.joinToString { it.absolutePath+"\n" }}")
+        }
         return files
             .flatMap { it.walkBottomUp() }
             .firstOrNull { it.name == coreID.libretroFileName }
     }
 
     @Suppress("ArrayInDataClass")
-    data class GameData(
+    data class GameData constructor(
         val game: Game,
         val coreLibrary: String,
         val gameFiles: RomFiles,
