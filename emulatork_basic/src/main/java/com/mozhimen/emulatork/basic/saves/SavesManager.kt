@@ -1,8 +1,8 @@
 package com.mozhimen.emulatork.basic.saves
 
+import com.mozhimen.basick.utilk.kotlin.UtilKResult
 import com.mozhimen.emulatork.basic.library.db.mos.Game
 import com.mozhimen.emulatork.basic.storage.DirectoriesManager
-import com.mozhimen.emulatork.util.kotlin.runCatchingWithRetry
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -17,7 +17,7 @@ import java.io.File
 class SavesManager(private val directoriesManager: DirectoriesManager) {
 
     suspend fun getSaveRAM(game: Game): ByteArray? = withContext(Dispatchers.IO) {
-        val result = runCatchingWithRetry(FILE_ACCESS_RETRIES) {
+        val result = UtilKResult.runCatching_ofRetry(FILE_ACCESS_RETRIES) {
             val saveFile = getSaveFile(getSaveRAMFileName(game))
             if (saveFile.exists() && saveFile.length() > 0) {
                 saveFile.readBytes()
@@ -29,9 +29,9 @@ class SavesManager(private val directoriesManager: DirectoriesManager) {
     }
 
     suspend fun setSaveRAM(game: Game, data: ByteArray): Unit = withContext(Dispatchers.IO) {
-        val result = runCatchingWithRetry(FILE_ACCESS_RETRIES) {
+        val result = UtilKResult.runCatching_ofRetry(FILE_ACCESS_RETRIES) {
             if (data.isEmpty())
-                return@runCatchingWithRetry
+                return@runCatching_ofRetry
 
             val saveFile = getSaveFile(getSaveRAMFileName(game))
             saveFile.writeBytes(data)

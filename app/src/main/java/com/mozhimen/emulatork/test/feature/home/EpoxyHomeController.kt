@@ -3,11 +3,11 @@ package com.mozhimen.emulatork.test.feature.home
 import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.epoxy.carousel
 import com.mozhimen.basick.BuildConfig
+import com.mozhimen.basick.utilk.kotlin.sequences.UtilKSequence
 import com.mozhimen.emulatork.basic.library.db.mos.Game
 import com.mozhimen.emulatork.test.R
 import com.mozhimen.emulatork.test.shared.GameInteractor
 import com.mozhimen.emulatork.test.shared.covers.CoverLoader
-import com.mozhimen.emulatork.util.kotlin.lazySequenceOf
 import com.mozhimen.rxk.epoxy4.util.withModelsFrom
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
@@ -72,7 +72,7 @@ class EpoxyHomeController(
     private fun displayFavorites() = currentUIState.favoritesGames.isNotEmpty()
 
     private fun displayEmptyView(): Boolean {
-        val conditions = lazySequenceOf(
+        val conditions = UtilKSequence.lazySequenceOf(
             { currentUIState.loading.not() },
             { currentUIState.recentGames.isEmpty() },
             { currentUIState.favoritesGames.isEmpty() },

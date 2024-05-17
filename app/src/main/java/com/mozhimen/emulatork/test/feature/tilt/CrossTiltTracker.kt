@@ -1,6 +1,7 @@
 package com.mozhimen.emulatork.test.feature.tilt
 
-import com.mozhimen.emulatork.util.math.MathUtils
+import com.mozhimen.basick.utilk.kotlin.math.UtilKMathPoint
+import com.mozhimen.emulatork.ui.dagger.feature.tilt.TiltTracker
 import com.swordfish.radialgamepad.library.RadialGamePad
 
 /**
@@ -17,9 +18,9 @@ class CrossTiltTracker(val id: Int) : TiltTracker {
         yTilt: Float,
         pads: Sequence<RadialGamePad>
     ) {
-        if (MathUtils.distance(xTilt, 0.5f, yTilt, 0.5f) > ACTIVATION_THRESHOLD) {
+        if (UtilKMathPoint.distance(xTilt, 0.5f, yTilt, 0.5f) > ACTIVATION_THRESHOLD) {
             pads.forEach { it.simulateMotionEvent(id, xTilt, yTilt) }
-        } else if (MathUtils.distance(xTilt, 0.5f, yTilt, 0.5f) < DEACTIVATION_THRESHOLD) {
+        } else if (UtilKMathPoint.distance(xTilt, 0.5f, yTilt, 0.5f) < DEACTIVATION_THRESHOLD) {
             pads.forEach { it.simulateMotionEvent(id, 0.5f, 0.5f) }
         }
     }

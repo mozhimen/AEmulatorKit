@@ -3,7 +3,6 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id "androidx.navigation.safeargs.kotlin"
-    id "kotlinx-serialization"
 }
 
 android {
@@ -53,20 +52,18 @@ android {
 }
 
 dependencies {
-    implementation project(':emulatork_ext')
+    implementation project(':emulatork_ui_dagger')
     implementation project(':emulatork_basic')
     implementation project(':emulatork_input')
     implementation project(':emulatork_libretro')
-    implementation project(':emulatork_util')
-//    implementation project(':emulatork_core')
+    implementation project(':emulatork_cores')
+    implementation project(':emulatork_basic_dagger')
 
     implementation project(':SwiftKit:basick')
     implementation project(':SwiftKit:xmlk')
 
     implementation project(':ALogKit:logk_timber')
     implementation project(':AInjectKit:injectk_dagger')
-
-    implementation project(":ATaskKit:taskk_work")
 
     implementation project(':ARxKit:rxk_epoxy4')
     implementation project(":APagingKit:pagingk_epoxy4")
@@ -75,12 +72,9 @@ dependencies {
     implementation project(':ANetKit:netk_retrofit2')
     implementation project(':ANetKit:netk_okio2')
 
-    implementation project(':ACacheKit:cachek_flow_preferences')
     implementation project(':ACacheKit:cachek_room_paging')
     implementation project(':ACacheKit:cachek_harmony')
-    implementation project(':ANavigateKit:navigatek_navigation')
 
-    implementation project(':AAbilityKit_Jetpack:preference')
     implementation project(':AAbilityKit_Jetpack:collection')
     implementation project(':AAbilityKit_Jetpack:documentfile')
     implementation project(':AAbilityKit_Jetpack:startup')
@@ -88,9 +82,7 @@ dependencies {
 
     implementation project(":AImageKit:imagek_coil1")
     implementation project(":AXmlKit:recyclerk")
-
-    implementation "com.github.Swordfish90:RadialGamePad:2.0.0"
-    implementation project(":AEmulatorKit_LibretroDroid:libretrodroid")
+    implementation project(":AXmlKit:drawablek")
 
     kapt "com.airbnb.android:epoxy-processor:4.6.3-vinay-compose"
     kapt "com.google.dagger:dagger-android-processor:2.19"

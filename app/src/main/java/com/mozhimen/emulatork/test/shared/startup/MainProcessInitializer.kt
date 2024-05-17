@@ -3,7 +3,7 @@ package com.mozhimen.emulatork.test.shared.startup
 import android.content.Context
 import androidx.startup.Initializer
 import androidx.work.WorkManagerInitializer
-import com.mozhimen.emulatork.test.shared.library.LibraryIndexScheduler
+import com.mozhimen.emulatork.ui.dagger.shared.library.LibraryIndexScheduler
 import com.mozhimen.emulatork.test.shared.savesync.SaveSyncWork
 import timber.log.Timber
 

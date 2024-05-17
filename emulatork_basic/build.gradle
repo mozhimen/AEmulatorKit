@@ -33,7 +33,6 @@ android {
 }
 
 dependencies {
-    implementation project(':emulatork_util')
     implementation project(':emulatork_input')
 
     implementation project(":SwiftKit:basick")
@@ -52,7 +51,6 @@ dependencies {
     implementation project(':ACacheKit:cachek_harmony')
     implementation project(':ACacheKit:cachek_room_paging')
 
-    implementation project(':AInjectKit:injectk_dagger')
     implementation project(':ALogKit:logk_timber')
 
     implementation "com.dinuscxj:multitouchgesturedetector:1.0.0"

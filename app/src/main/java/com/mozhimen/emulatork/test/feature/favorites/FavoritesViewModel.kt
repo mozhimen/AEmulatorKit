@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.paging.PagingData
 import com.mozhimen.emulatork.basic.library.db.RetrogradeDatabase
 import com.mozhimen.emulatork.basic.library.db.mos.Game
-import com.mozhimen.emulatork.util.paging.buildFlowPaging
+import com.mozhimen.pagingk.paging3.basic.utils.Paging3Util
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -24,5 +24,5 @@ class FavoritesViewModel(retrogradeDb: RetrogradeDatabase) : ViewModel() {
     }
 
     val favorites: Flow<PagingData<Game>> =
-        buildFlowPaging(20) { retrogradeDb.gameDao().selectFavorites() }
+        Paging3Util.getPagerFlow(20) { retrogradeDb.gameDao().selectFavorites() }
 }

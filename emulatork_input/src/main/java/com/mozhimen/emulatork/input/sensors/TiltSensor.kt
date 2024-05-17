@@ -7,8 +7,8 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.view.Surface
 import android.view.WindowManager
-import com.mozhimen.emulatork.util.kotlin.CustomDelegates
-import com.mozhimen.emulatork.util.math.linearInterpolation
+import com.mozhimen.basick.utilk.kotlin.math.UtilKMathInterpolation
+import com.mozhimen.basick.utilk.kotlin.properties.UtilKReadWriteProperty
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.filterNotNull
@@ -40,9 +40,9 @@ class TiltSensor(context: Context) : SensorEventListener {
     private var maxRotation: Float = MAX_MAX_ROTATION
     private var deadZone: Float = 0.1f * maxRotation
 
-    var shouldRun: Boolean by CustomDelegates.onChangeObservable(false) { onRunStateChanged() }
+    var shouldRun: Boolean by UtilKReadWriteProperty.onChangeObservable(false) { onRunStateChanged() }
 
-    var isAllowedToRun: Boolean by CustomDelegates.onChangeObservable(false) { onRunStateChanged() }
+    var isAllowedToRun: Boolean by UtilKReadWriteProperty.onChangeObservable(false) { onRunStateChanged() }
 
     init {
         setSensitivity(0.5f)
@@ -77,7 +77,7 @@ class TiltSensor(context: Context) : SensorEventListener {
     }
 
     fun setSensitivity(sensitivity: Float) {
-        maxRotation = linearInterpolation(sensitivity, MAX_MAX_ROTATION, MIN_MAX_ROTATION)
+        maxRotation = UtilKMathInterpolation.get_ofLinear(sensitivity, MAX_MAX_ROTATION, MIN_MAX_ROTATION)
         deadZone = maxRotation * 0.1f
         Timber.d("Setting tilt sensitivity max angle: ${Math.toDegrees(maxRotation.toDouble())}")
     }

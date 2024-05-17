@@ -1,11 +1,11 @@
 package com.mozhimen.emulatork.basic.saves
 
+import com.mozhimen.basick.utilk.java.io.file2bytes_use_ofUnzip
+import com.mozhimen.basick.utilk.kotlin.UtilKResult
+import com.mozhimen.basick.utilk.kotlin.bytes2file_ofGZip
 import com.mozhimen.emulatork.basic.library.CoreID
 import com.mozhimen.emulatork.basic.library.db.mos.Game
 import com.mozhimen.emulatork.basic.storage.DirectoriesManager
-import com.mozhimen.emulatork.util.kotlin.readBytesUncompressed
-import com.mozhimen.emulatork.util.kotlin.runCatchingWithRetry
-import com.mozhimen.emulatork.util.kotlin.writeBytesCompressed
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
@@ -77,11 +77,11 @@ class StatesManager(private val directoriesManager: DirectoriesManager) {
         fileName: String,
         coreName: String
     ): SaveState? {
-        return runCatchingWithRetry(FILE_ACCESS_RETRIES) {
+        return UtilKResult.runCatching_ofRetry(FILE_ACCESS_RETRIES) {
             val saveFile = getStateFileOrDeprecated(fileName, coreName)
             val metadataFile = getMetadataStateFile(fileName, coreName)
             if (saveFile.exists()) {
-                val byteArray = saveFile.readBytesUncompressed()
+                val byteArray = saveFile.file2bytes_use_ofUnzip()!!
                 val stateMetadata = runCatching {
                     Json.Default.decodeFromString(
                         SaveState.Metadata.serializer(),
@@ -100,7 +100,7 @@ class StatesManager(private val directoriesManager: DirectoriesManager) {
         coreName: String,
         saveState: SaveState
     ) {
-        runCatchingWithRetry(FILE_ACCESS_RETRIES) {
+        UtilKResult.runCatching_ofRetry(FILE_ACCESS_RETRIES) {
             writeStateToDisk(fileName, coreName, saveState.state)
             writeMetadataToDisk(fileName, coreName, saveState.metadata)
         }
@@ -121,7 +121,7 @@ class StatesManager(private val directoriesManager: DirectoriesManager) {
         stateArray: ByteArray
     ) {
         val saveFile = getStateFile(fileName, coreName)
-        saveFile.writeBytesCompressed(stateArray)
+        stateArray.bytes2file_ofGZip(saveFile)
     }
 
     @Deprecated("Using this folder collisions might happen across different systems.")

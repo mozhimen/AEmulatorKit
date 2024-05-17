@@ -8,11 +8,12 @@ import android.view.ViewConfiguration
 import android.widget.ImageView
 import androidx.core.view.isVisible
 import com.google.android.material.progressindicator.CircularProgressIndicator
+import com.mozhimen.basick.utilk.android.util.dp2pxI
 import com.mozhimen.emulatork.input.LemuroidTouchOverlayThemes
 import com.mozhimen.emulatork.test.R
-import com.mozhimen.emulatork.util.graphics.GraphicsUtils
-import com.mozhimen.emulatork.util.view.animateProgress
-import com.mozhimen.emulatork.util.view.animateVisibleOrGone
+import com.mozhimen.basick.utilk.android.widget.applyProgressAnimate
+import com.mozhimen.basick.utilk.android.view.applyVisibleIfElseGoneAnimate
+import com.mozhimen.emulatork.ui.dagger.feature.game.GameActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -21,7 +22,6 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.withContext
-import kotlin.math.roundToInt
 
 /**
  * @ClassName VirtualLongPressHandler
@@ -63,7 +63,7 @@ object VirtualLongPressHandler {
         return GradientDrawable().apply {
             shape = GradientDrawable.OVAL
             setColor(fillColor)
-            setStroke(GraphicsUtils.convertDpToPixel(strokeSize, context).roundToInt(), strokeColor)
+            setStroke(strokeSize.dp2pxI(), strokeColor)
         }
     }
 
@@ -111,12 +111,12 @@ object VirtualLongPressHandler {
         activity.findViewById<View>(R.id.long_press_foreground)
 
     private fun displayLongPressView(activity: GameActivity) {
-        longPressView(activity).animateVisibleOrGone(true, APPEAR_ANIMATION)
-        longPressProgressBar(activity).animateProgress(100, LONG_PRESS_TIMEOUT)
+        longPressView(activity).applyVisibleIfElseGoneAnimate(true, APPEAR_ANIMATION)
+        longPressProgressBar(activity).applyProgressAnimate(100, LONG_PRESS_TIMEOUT)
     }
 
     private fun hideLongPressView(activity: GameActivity) {
-        longPressView(activity).animateVisibleOrGone(false, DISAPPEAR_ANIMATION)
-        longPressProgressBar(activity).animateProgress(0, LONG_PRESS_TIMEOUT)
+        longPressView(activity).applyVisibleIfElseGoneAnimate(false, DISAPPEAR_ANIMATION)
+        longPressProgressBar(activity).applyProgressAnimate(0, LONG_PRESS_TIMEOUT)
     }
 }

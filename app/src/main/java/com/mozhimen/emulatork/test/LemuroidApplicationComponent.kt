@@ -1,9 +1,9 @@
 package com.mozhimen.emulatork.test
 
-import com.mozhimen.emulatork.basic.injection.AndroidWorkerInjectionModule
-import com.mozhimen.emulatork.basic.injection.PerApp
-import com.mozhimen.emulatork.test.shared.library.LibraryIndexWork
-import com.mozhimen.emulatork.test.shared.library.CoreUpdateWork
+import com.mozhimen.emulatork.basic.dagger.AndroidWorkerInjectionModule
+import com.mozhimen.emulatork.basic.dagger.PerApp
+import com.mozhimen.emulatork.ui.dagger.shared.library.LibraryIndexWork
+import com.mozhimen.emulatork.ui.dagger.shared.library.CoreUpdateWork
 import com.mozhimen.emulatork.test.shared.savesync.SaveSyncWork
 import com.mozhimen.emulatork.test.shared.storage.cache.CacheCleanerWork
 import dagger.Component

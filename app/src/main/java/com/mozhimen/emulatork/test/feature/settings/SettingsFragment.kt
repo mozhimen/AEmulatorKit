@@ -11,13 +11,13 @@ import androidx.navigation.fragment.findNavController
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.fredporciuncula.flow.preferences.FlowSharedPreferences
+import com.mozhimen.basick.utilk.androidx.fragment.runOnViewLifecycleState
 import com.mozhimen.emulatork.basic.preferences.SharedPreferencesHelper
 import com.mozhimen.emulatork.basic.savesync.SaveSyncManager
 import com.mozhimen.emulatork.basic.storage.DirectoriesManager
 import com.mozhimen.emulatork.test.R
-import com.mozhimen.emulatork.test.shared.library.LibraryIndexScheduler
+import com.mozhimen.emulatork.ui.dagger.shared.library.LibraryIndexScheduler
 import com.mozhimen.emulatork.test.shared.settings.SettingsInteractor
-import com.mozhimen.emulatork.util.coroutines.launchOnState
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
@@ -74,7 +74,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val displayBiosPreference: Preference? = findPreference(getString(R.string.pref_key_display_bios_info))
         val resetSettings: Preference? = findPreference(getString(R.string.pref_key_reset_settings))
 
-        launchOnState(Lifecycle.State.RESUMED) {
+        runOnViewLifecycleState(Lifecycle.State.RESUMED) {
             settingsViewModel.currentFolder
                 .collect {
                     currentDirectory?.summary = getDisplayNameForFolderUri(Uri.parse(it))

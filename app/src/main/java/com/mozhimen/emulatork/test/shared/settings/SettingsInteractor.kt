@@ -3,7 +3,7 @@ package com.mozhimen.emulatork.test.shared.settings
 import android.content.Context
 import com.mozhimen.emulatork.basic.preferences.SharedPreferencesHelper
 import com.mozhimen.emulatork.basic.storage.DirectoriesManager
-import com.mozhimen.emulatork.test.shared.library.LibraryIndexScheduler
+import com.mozhimen.emulatork.ui.dagger.shared.library.LibraryIndexScheduler
 import com.mozhimen.emulatork.test.shared.storage.cache.CacheCleanerWork
 
 /**

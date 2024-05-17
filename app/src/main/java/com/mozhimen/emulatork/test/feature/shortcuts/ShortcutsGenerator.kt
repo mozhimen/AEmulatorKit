@@ -8,11 +8,11 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.Icon
 import android.os.Build
+import com.mozhimen.basick.utilk.android.graphics.applyBitmapAnyCropSquare
+import com.mozhimen.basick.utilk.android.graphics.drawable2bitmap
 import com.mozhimen.emulatork.basic.library.db.mos.Game
 import com.mozhimen.emulatork.test.shared.covers.CoverLoader
 import com.mozhimen.emulatork.test.shared.deeplink.DeepLink
-import com.mozhimen.emulatork.util.bitmap.cropToSquare
-import com.mozhimen.emulatork.util.bitmap.toBitmap
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.Response
@@ -56,14 +56,14 @@ class ShortcutsGenerator(
     private suspend fun retrieveBitmap(game: Game): Bitmap = withContext(Dispatchers.IO) {
         val result = runCatching {
             val response = thumbnailsApi.downloadThumbnail(game.coverFrontUrl!!)
-            BitmapFactory.decodeStream(response.body()).cropToSquare()
+            BitmapFactory.decodeStream(response.body()).applyBitmapAnyCropSquare()
         }
         result.getOrElse { retrieveFallbackBitmap(game) }
     }
 
     private fun retrieveFallbackBitmap(game: Game): Bitmap {
         val desiredIconSize = getDesiredIconSize()
-        return CoverLoader.getFallbackDrawable(game).toBitmap(desiredIconSize, desiredIconSize)
+        return CoverLoader.getFallbackDrawable(game).drawable2bitmap(desiredIconSize, desiredIconSize)
     }
 
     private fun getDesiredIconSize(): Int {

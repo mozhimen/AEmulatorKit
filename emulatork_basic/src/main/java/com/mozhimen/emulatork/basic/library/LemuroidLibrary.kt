@@ -1,6 +1,7 @@
 package com.mozhimen.emulatork.basic.library
 
 import android.util.Log
+import com.mozhimen.basick.utilk.kotlinx.coroutines.batch_ofSizeTime
 import com.mozhimen.emulatork.basic.bios.BiosManager
 import com.mozhimen.emulatork.basic.library.db.RetrogradeDatabase
 import com.mozhimen.emulatork.basic.library.db.mos.DataFile
@@ -13,7 +14,6 @@ import com.mozhimen.emulatork.basic.storage.RomFiles
 import com.mozhimen.emulatork.basic.storage.StorageFile
 import com.mozhimen.emulatork.basic.storage.StorageProvider
 import com.mozhimen.emulatork.basic.storage.StorageProviderRegistry
-import com.mozhimen.emulatork.util.coroutines.batchWithSizeAndTime
 import dagger.Lazy
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
@@ -74,7 +74,7 @@ class LemuroidLibrary(
     ): Flow<Unit> {
         return provider.listBaseStorageFiles()
             .flatMapConcat { StorageFilesMerger.mergeDataFiles(provider, it).asFlow() }
-            .batchWithSizeAndTime(MAX_BUFFER_SIZE, MAX_TIME)
+            .batch_ofSizeTime(MAX_BUFFER_SIZE, MAX_TIME)
             .flatMapMerge {
                 processBatch(it, provider, startedAtMs, gameMetadata)
             }

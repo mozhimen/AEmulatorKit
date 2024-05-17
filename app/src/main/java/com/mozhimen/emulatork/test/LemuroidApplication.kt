@@ -6,8 +6,8 @@ import androidx.startup.AppInitializer
 import androidx.work.ListenableWorker
 import com.google.android.material.color.DynamicColors
 import com.mozhimen.basick.utilk.android.content.isMainProcess
-import com.mozhimen.emulatork.basic.injection.HasWorkerInjector
-import com.mozhimen.emulatork.ext.context.ContextHandler
+import com.mozhimen.emulatork.basic.dagger.HasWorkerInjector
+import com.mozhimen.emulatork.ui.context.ContextHandler
 import com.mozhimen.emulatork.test.shared.startup.MainProcessInitializer
 import com.mozhimen.emulatork.test.shared.startup.GameProcessInitializer
 import dagger.android.AndroidInjector
@@ -36,7 +36,7 @@ class LemuroidApplication : dagger.android.support.DaggerApplication(), HasWorke
 
     override fun attachBaseContext(base: Context) {
         super.attachBaseContext(base)
-        ContextHandler.attachBaseContext(base)
+        com.mozhimen.emulatork.ui.context.ContextHandler.attachBaseContext(base)
     }
 
     override fun applicationInjector(): AndroidInjector<out dagger.android.support.DaggerApplication> {

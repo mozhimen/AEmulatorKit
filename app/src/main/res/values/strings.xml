@@ -16,7 +16,6 @@
     <string name="display_filter">Display filter</string>
     <string name="roms">ROMs</string>
     <string name="ok">OK</string>
-    <string name="cancel">Cancel</string>
     <string name="settings">Settings</string>
     <string name="save_sync">Save Sync</string>
     <string name="show_all">Show All</string>
@@ -99,56 +98,18 @@
     <string name="home_empty_message">Lemuroid needs to scan a directory containing ROM files.\nThis might take up to a few minutes.</string>
     <string name="home_empty_action">Select Directory</string>
 
-    <string name="game_menu_save">Save</string>
-    <string name="game_menu_load">Load</string>
-    <string name="game_menu_restart">Restart</string>
-    <string name="game_menu_quit">Quit</string>
     <string name="game_menu_settings">Settings</string>
-    <string name="game_menu_state">State %1$s</string>
     <string name="game_menu_change_disk_button">Change Disk</string>
     <string name="game_menu_edit_touch_controls">Edit Controls</string>
     <string name="game_menu_mute_audio">Mute</string>
     <string name="game_menu_fast_forward">Fast-Forward</string>
-    <string name="game_menu_change_disk_disk">Disk %1$s</string>
 
-    <string name="game_loading_preparing_game">Preparing game…</string>
 
-    <string name="game_toast_settings_button_using_gamepad">Gamepad detected. Access settings menu with %1$s.</string>
-    <string name="game_toast_load_state_failed">Cannot load this state</string>
 
     <string name="empty_view_default">No Items</string>
 
-    <string name="core_settings_title">Core Settings</string>
-    <string name="core_settings_category_preferences">Preferences</string>
-    <string name="core_settings_category_controllers">Controllers</string>
-    <string name="core_settings_controller">Controller %1$s</string>
 
-    <string name="game_menu_title">Game menu</string>
 
-    <string name="notification_channel_name">All notifications</string>
-    <string name="library_index_notification_title">ROMs scanning in progress</string>
-    <string name="library_index_notification_message">This can take up to a few minutes</string>
-
-    <string name="save_sync_notification_title">Cloud save Sync in progress</string>
-    <string name="save_sync_notification_message">This can take up to a few minutes</string>
-
-    <string name="game_running_notification_title">%1$s is running</string>
-    <string name="game_running_notification_title_alternative">Game is running</string>
-    <string name="game_running_notification_message">Make sure to save your progress</string>
-
-    <string name="game_loader_error_gl_incompatible">This Core requires an OpenGL ES version which is not supported by your device.</string>
-    <string name="game_loader_error_load_game">Something bad happened while loading your game. Make sure the ROM is supported by Lemuroid and rescan your games.</string>
-    <string name="game_loader_error_save">Something bad happened with your save file. If the issue persists, try disabling auto-save.</string>
-    <string name="game_loader_error_unsupported_architecture">This Core is not supported by your device.</string>
-
-    <string name="game_loader_error_generic">Something bad happened. Try the following:\n
-        \n\u2022 Disable auto-save and re-run the game
-        \n\u2022 Go into Android settings and clear the app cache
-        \n\u2022 Go into Lemuroid settings and perform a Factory Reset
-        \n\nIf none of the above works, it might be possible that this Game/Core is not supported by this device.
-    </string>
-
-    <string name="game_loader_error_missing_bios">It looks like you\'re missing the required BIOS, put them in your ROMs directory and rescan. Required files: %1$s</string>
 
     <string name="game_shortcut_error">Something bad happened while loading your game. Please make sure this game still exists in your library.</string>
 
@@ -194,7 +155,6 @@
         \n\n If none of the above works, it might be possible that this Game/Core is not supported by this device.
     </string>
 
-    <string name="error_message_incompatible_state">This save state is not compatible with the current core version. Please load the latest in-game save or use a previous Lemuroid version.</string>
 
     <string name="shader_filter_names_auto">Auto</string>
     <string name="shader_filter_names_sharp">Sharp</string>

@@ -11,17 +11,16 @@ import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.mozhimen.basick.utilk.androidx.fragment.runOnViewLifecycleState
 import com.mozhimen.emulatork.basic.library.db.RetrogradeDatabase
 import com.mozhimen.emulatork.test.R
 import com.mozhimen.emulatork.test.shared.GameInteractor
 import com.mozhimen.emulatork.test.shared.GamesAdapter
 import com.mozhimen.emulatork.test.shared.RecyclerViewFragment
 import com.mozhimen.emulatork.test.shared.covers.CoverLoader
-import com.mozhimen.emulatork.util.coroutines.launchOnState
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 
 /**
@@ -57,12 +56,12 @@ class SearchFragment : RecyclerViewFragment() {
 
         val gamesAdapter = GamesAdapter(R.layout.layout_game_list, gameInteractor, coverLoader)
 
-        launchOnState(Lifecycle.State.RESUMED) {
+        runOnViewLifecycleState(Lifecycle.State.RESUMED) {
             searchViewModel.searchResults
                 .collect { gamesAdapter.submitData(viewLifecycleOwner.lifecycle, it) }
         }
 
-        launchOnState(Lifecycle.State.RESUMED) {
+        runOnViewLifecycleState(Lifecycle.State.RESUMED) {
             searchDebounce.debounce(1000)
                 .collect { searchViewModel.queryString.value = it }
         }

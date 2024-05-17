@@ -6,7 +6,7 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceScreen
 import com.mozhimen.emulatork.basic.core.CoresSelection
 import com.mozhimen.emulatork.basic.library.GameSystem
-import com.mozhimen.emulatork.test.shared.library.LibraryIndexScheduler
+import com.mozhimen.emulatork.ui.dagger.shared.library.LibraryIndexScheduler
 
 /**
  * @ClassName CoresSelectionPreferences

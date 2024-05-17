@@ -9,10 +9,10 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import com.mozhimen.emulatork.basic.injection.AndroidWorkerInjection
-import com.mozhimen.emulatork.basic.injection.WorkerKey
+import com.mozhimen.emulatork.basic.dagger.AndroidWorkerInjection
+import com.mozhimen.emulatork.basic.dagger.WorkerKey
 import com.mozhimen.emulatork.basic.storage.cache.CacheCleaner
-import com.mozhimen.emulatork.test.feature.settings.SettingsManager
+import com.mozhimen.emulatork.ui.dagger.feature.settings.SettingsManager
 import dagger.Binds
 import dagger.android.AndroidInjector
 import dagger.multibindings.IntoMap

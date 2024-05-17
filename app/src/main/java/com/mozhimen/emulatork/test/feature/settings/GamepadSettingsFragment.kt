@@ -8,12 +8,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import com.mozhimen.basick.utilk.androidx.fragment.runOnViewLifecycleState
 import com.mozhimen.emulatork.basic.preferences.SharedPreferencesHelper
 import com.mozhimen.emulatork.test.R
-import com.mozhimen.emulatork.test.shared.input.InputDeviceManager
+import com.mozhimen.emulatork.ui.dagger.shared.input.InputDeviceManager
 import com.mozhimen.emulatork.test.shared.settings.GamePadPreferencesHelper
-import com.mozhimen.emulatork.util.coroutines.launchOnState
-import com.mozhimen.emulatork.util.kotlin.NTuple2
+import com.mozhimen.basick.elemk.mos.NTuple2
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -49,7 +49,7 @@ class GamepadSettingsFragment : PreferenceFragmentCompat() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        launchOnState(Lifecycle.State.CREATED) {
+        runOnViewLifecycleState(Lifecycle.State.CREATED) {
             val gamePadStatus = combine(
                 inputDeviceManager.getGamePadsObservable(),
                 inputDeviceManager.getEnabledInputsObservable(),
@@ -61,7 +61,7 @@ class GamepadSettingsFragment : PreferenceFragmentCompat() {
                 .collect { (pads, enabledPads) -> addGamePads(pads, enabledPads) }
         }
 
-        launchOnState(Lifecycle.State.RESUMED) {
+        runOnViewLifecycleState(Lifecycle.State.RESUMED) {
             inputDeviceManager.getEnabledInputsObservable()
                 .distinctUntilChanged()
                 .collect { refreshGamePads(it) }

@@ -1,10 +1,10 @@
 package com.mozhimen.emulatork.basic.library
 
 import android.net.Uri
+import com.mozhimen.basick.utilk.java.io.inputStream2strs_use_ofBufferedReader_forEachLine
 import com.mozhimen.emulatork.basic.storage.BaseStorageFile
 import com.mozhimen.emulatork.basic.storage.GroupedStorageFiles
 import com.mozhimen.emulatork.basic.storage.StorageProvider
-import com.mozhimen.emulatork.util.files.readLines
 
 /**
  * @ClassName StorageFilesMerger
@@ -43,7 +43,7 @@ object StorageFilesMerger {
             .filter { it.extension == "m3u" }
             .forEach { m3uFile ->
                 val m3uFiles: List<String> = runCatching {
-                    storageProvider.getInputStream(m3uFile.uri)?.readLines()
+                    storageProvider.getInputStream(m3uFile.uri)?.inputStream2strs_use_ofBufferedReader_forEachLine()
                 }.getOrNull() ?: listOf()
 
                 val filesNames = allFiles[m3uFile]?.map { it.name } ?: listOf()
@@ -67,7 +67,7 @@ object StorageFilesMerger {
             .filter { it.extension == "m3u" }
             .forEach { m3uFile ->
                 val m3uFiles = runCatching {
-                    storageProvider.getInputStream(m3uFile.uri)?.readLines()
+                    storageProvider.getInputStream(m3uFile.uri)?.inputStream2strs_use_ofBufferedReader_forEachLine()
                 }.getOrNull() ?: listOf()
 
                 val dataFiles = allFiles.filter { it.key.name in m3uFiles }
@@ -126,7 +126,7 @@ object StorageFilesMerger {
 
     private fun extractBinFiles(storageProvider: StorageProvider, uri: Uri): List<String> {
         return runCatching {
-            storageProvider.getInputStream(uri)?.readLines()
+            storageProvider.getInputStream(uri)?.inputStream2strs_use_ofBufferedReader_forEachLine()
                 ?.mapNotNull { Regex("FILE \"(.*)\"").find(it)?.groupValues?.get(1) }
                 ?: listOf()
         }.getOrDefault(listOf())

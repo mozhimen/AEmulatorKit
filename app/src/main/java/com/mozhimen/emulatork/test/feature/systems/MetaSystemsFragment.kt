@@ -6,11 +6,11 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.mozhimen.basick.utilk.androidx.fragment.runOnViewLifecycleState
 import com.mozhimen.emulatork.basic.library.MetaSystemID
 import com.mozhimen.emulatork.basic.library.db.RetrogradeDatabase
 import com.mozhimen.emulatork.test.R
 import com.mozhimen.emulatork.test.shared.RecyclerViewFragment
-import com.mozhimen.emulatork.util.coroutines.launchOnState
 import com.mozhimen.xmlk.recyclerk.decoration.RecyclerKDecorationSpaceGrid
 import com.mozhimen.xmlk.recyclerk.manager.RecyclerKDynamicGridLayoutManager
 import javax.inject.Inject
@@ -39,7 +39,7 @@ class MetaSystemsFragment : RecyclerViewFragment() {
 
         metaSystemsAdapter = MetaSystemsAdapter { navigateToGames(it) }
 
-        launchOnState(Lifecycle.State.CREATED) {
+        runOnViewLifecycleState(Lifecycle.State.CREATED) {
             metaSystemsViewModel.availableMetaSystems.collect {
                 metaSystemsAdapter?.submitList(it)
                 emptyView?.isVisible = it.isEmpty()

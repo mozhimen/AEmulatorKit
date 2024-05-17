@@ -16,14 +16,13 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.elevation.SurfaceColors
-import com.mozhimen.emulatork.basic.android.RetrogradeAppCompatActivity
-import com.mozhimen.emulatork.basic.injection.PerActivity
-import com.mozhimen.emulatork.basic.injection.PerFragment
+import com.mozhimen.basick.utilk.kotlinx.coroutines.launchSafe
+import com.mozhimen.emulatork.basic.dagger.PerActivity
+import com.mozhimen.emulatork.basic.dagger.PerFragment
 import com.mozhimen.emulatork.basic.library.SystemID
 import com.mozhimen.emulatork.basic.library.db.RetrogradeDatabase
 import com.mozhimen.emulatork.basic.savesync.SaveSyncManager
 import com.mozhimen.emulatork.basic.storage.DirectoriesManager
-import com.mozhimen.emulatork.ext.review.ReviewManager
 import com.mozhimen.emulatork.test.feature.settings.SettingsFragment
 import com.mozhimen.emulatork.test.R
 import com.mozhimen.emulatork.test.feature.favorites.FavoritesFragment
@@ -39,14 +38,13 @@ import com.mozhimen.emulatork.test.shared.settings.SettingsInteractor
 import com.mozhimen.emulatork.test.feature.shortcuts.ShortcutsGenerator
 import com.mozhimen.emulatork.test.feature.systems.MetaSystemsFragment
 import com.mozhimen.emulatork.test.shared.GameInteractor
-import com.mozhimen.emulatork.test.shared.game.BaseGameActivity
 import com.mozhimen.emulatork.test.shared.game.GameLauncher
-import com.mozhimen.emulatork.test.shared.input.InputDeviceManager
+import com.mozhimen.emulatork.ui.dagger.shared.input.InputDeviceManager
 import com.mozhimen.emulatork.test.shared.main.BusyActivity
 import com.mozhimen.emulatork.test.shared.main.GameLaunchTaskHandler
 import com.mozhimen.emulatork.test.shared.savesync.SaveSyncWork
 import com.mozhimen.emulatork.test.shared.settings.GamePadPreferencesHelper
-import com.mozhimen.emulatork.util.coroutines.safeLaunch
+import com.mozhimen.emulatork.ui.dagger.shared.game.BaseGameActivity
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -69,7 +67,7 @@ class MainActivity : RetrogradeAppCompatActivity(), BusyActivity {
     @Inject
     lateinit var saveSyncManager: SaveSyncManager
 
-    private val reviewManager = ReviewManager()
+    private val reviewManager = com.mozhimen.emulatork.ui.review.ReviewManager()
     private var mainViewModel: MainViewModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,7 +84,7 @@ class MainActivity : RetrogradeAppCompatActivity(), BusyActivity {
     private fun initializeActivity() {
         setSupportActionBar(findViewById(R.id.toolbar))
 
-        GlobalScope.safeLaunch {
+        GlobalScope.launchSafe {
             reviewManager.initialize(applicationContext)
         }
 
@@ -118,7 +116,7 @@ class MainActivity : RetrogradeAppCompatActivity(), BusyActivity {
 
         when (requestCode) {
             BaseGameActivity.REQUEST_PLAY_GAME -> {
-                GlobalScope.safeLaunch {
+                GlobalScope.launchSafe {
                     gameLaunchTaskHandler.handleGameFinish(true, this@MainActivity, resultCode, data)
                 }
             }

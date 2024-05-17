@@ -14,12 +14,12 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import com.mozhimen.emulatork.basic.injection.AndroidWorkerInjection
-import com.mozhimen.emulatork.basic.injection.WorkerKey
+import com.mozhimen.emulatork.basic.dagger.AndroidWorkerInjection
+import com.mozhimen.emulatork.basic.dagger.WorkerKey
 import com.mozhimen.emulatork.basic.library.findByName
 import com.mozhimen.emulatork.basic.savesync.SaveSyncManager
-import com.mozhimen.emulatork.test.feature.settings.SettingsManager
-import com.mozhimen.emulatork.test.shared.NotificationsManager
+import com.mozhimen.emulatork.ui.dagger.feature.settings.SettingsManager
+import com.mozhimen.emulatork.ui.dagger.shared.NotificationsManager
 import dagger.Binds
 import dagger.android.AndroidInjector
 import dagger.multibindings.IntoMap

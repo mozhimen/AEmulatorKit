@@ -16,13 +16,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.epoxy.Carousel
+import com.mozhimen.basick.utilk.android.app.UtilKActivityStart
+import com.mozhimen.basick.utilk.androidx.fragment.runOnViewLifecycleState
 import com.mozhimen.emulatork.basic.library.db.RetrogradeDatabase
 import com.mozhimen.emulatork.test.R
 import com.mozhimen.emulatork.test.shared.settings.SettingsInteractor
 import com.mozhimen.emulatork.test.shared.GameInteractor
 import com.mozhimen.emulatork.test.shared.covers.CoverLoader
-import com.mozhimen.emulatork.util.coroutines.launchOnState
-import com.mozhimen.emulatork.util.displayDetailsSettingsScreen
 import dagger.android.support.AndroidSupportInjection
 import timber.log.Timber
 import javax.inject.Inject
@@ -86,14 +86,14 @@ class HomeFragment : Fragment() {
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = pagingController.adapter
 
-        launchOnState(Lifecycle.State.RESUMED) {
+        runOnViewLifecycleState(Lifecycle.State.RESUMED) {
             pagingController.getActions().collect {
                 Timber.d("Received home view model action + $it")
                 handleEpoxyAction(it)
             }
         }
 
-        launchOnState(Lifecycle.State.RESUMED) {
+        runOnViewLifecycleState(Lifecycle.State.RESUMED) {
             homeViewModel.getViewStates().collect {
                 pagingController.updateState(it)
             }
@@ -121,7 +121,7 @@ class HomeFragment : Fragment() {
 
     private fun handleNotificationPermissionResponse(isGranted: Boolean) {
         if (!isGranted) {
-            requireContext().displayDetailsSettingsScreen()
+            UtilKActivityStart.startApplicationDetailsSettings(requireContext())
         }
     }
 

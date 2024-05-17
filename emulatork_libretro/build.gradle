@@ -32,7 +32,6 @@ android {
 
 dependencies {
     implementation project(':emulatork_basic')
-    implementation project(':emulatork_util')
 
     implementation project(':SwiftKit:basick')
     implementation project(':ALogKit:logk_timber')

@@ -4,8 +4,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import com.frybits.harmony.getHarmonySharedPreferences
+import com.mozhimen.abilityk.jetpack.preference.SharedPreferencesPreferenceDataStore
 import com.mozhimen.emulatork.basic.R
-import com.mozhimen.emulatork.util.preferences.SharedPreferencesDataStore
 
 /**
  * @ClassName SharedPreferencesHelper
@@ -20,8 +20,8 @@ object SharedPreferencesHelper {
         return context.getHarmonySharedPreferences(context.getString(R.string.pref_file_harmony_options))
     }
 
-    fun getSharedPreferencesDataStore(context: Context): SharedPreferencesDataStore {
-        return SharedPreferencesDataStore(getSharedPreferences(context))
+    fun getSharedPreferencesDataStore(context: Context): SharedPreferencesPreferenceDataStore {
+        return SharedPreferencesPreferenceDataStore(getSharedPreferences(context))
     }
 
     /** Default shared preferences does not work with multi-process. It's currently used only for

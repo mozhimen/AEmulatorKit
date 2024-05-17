@@ -2,7 +2,6 @@ package com.mozhimen.emulatork.test.shared
 
 import android.content.Context
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +11,7 @@ import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.RecyclerView
 import com.mozhimen.emulatork.test.R
-import com.mozhimen.emulatork.util.kotlin.lazySequenceOf
+import com.mozhimen.basick.utilk.kotlin.sequences.UtilKSequence
 import dagger.android.support.AndroidSupportInjection
 
 /**
@@ -45,7 +44,7 @@ open class RecyclerViewFragment : Fragment() {
     }
 
     fun updateEmptyViewVisibility(loadState: CombinedLoadStates, itemCount: Int) {
-        val emptyViewConditions = lazySequenceOf<Boolean>(
+        val emptyViewConditions = UtilKSequence.lazySequenceOf<Boolean>(
             { loadState.source.refresh is LoadState.NotLoading },
             { loadState.append.endOfPaginationReached },
             { itemCount == 0 }

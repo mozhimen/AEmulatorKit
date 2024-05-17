@@ -5,9 +5,8 @@ import android.content.Context
 import android.content.Intent
 import com.mozhimen.emulatork.basic.library.db.RetrogradeDatabase
 import com.mozhimen.emulatork.basic.library.db.mos.Game
-import com.mozhimen.emulatork.ext.review.ReviewManager
 import com.mozhimen.emulatork.test.R
-import com.mozhimen.emulatork.test.shared.game.BaseGameActivity
+import com.mozhimen.emulatork.ui.dagger.shared.game.BaseGameActivity
 import com.mozhimen.emulatork.test.shared.gamecrash.GameCrashActivity
 import com.mozhimen.emulatork.test.shared.savesync.SaveSyncWork
 import com.mozhimen.emulatork.test.shared.storage.cache.CacheCleanerWork
@@ -21,7 +20,7 @@ import kotlinx.coroutines.delay
  * @Version 1.0
  */
 class GameLaunchTaskHandler(
-    private val reviewManager: ReviewManager,
+    private val reviewManager: com.mozhimen.emulatork.ui.review.ReviewManager,
     private val retrogradeDb: RetrogradeDatabase
 ) {
 

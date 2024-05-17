@@ -8,8 +8,8 @@ import com.mozhimen.emulatork.basic.core.CoreUpdater
 import com.mozhimen.emulatork.basic.core.CoreVariablesManager
 import com.mozhimen.emulatork.basic.core.CoresSelection
 import com.mozhimen.emulatork.basic.game.GameLoader
-import com.mozhimen.emulatork.basic.injection.PerActivity
-import com.mozhimen.emulatork.basic.injection.PerApp
+import com.mozhimen.emulatork.basic.dagger.PerActivity
+import com.mozhimen.emulatork.basic.dagger.PerApp
 import com.mozhimen.emulatork.basic.library.LemuroidLibrary
 import com.mozhimen.emulatork.basic.library.db.RetrogradeDatabase
 import com.mozhimen.emulatork.basic.library.db.commons.GameSearchDao
@@ -26,24 +26,21 @@ import com.mozhimen.emulatork.basic.storage.StorageProvider
 import com.mozhimen.emulatork.basic.storage.StorageProviderRegistry
 import com.mozhimen.emulatork.basic.storage.local.LocalStorageProvider
 import com.mozhimen.emulatork.basic.storage.local.StorageAccessFrameworkProvider
-import com.mozhimen.emulatork.ext.core.CoreUpdaterImpl
-import com.mozhimen.emulatork.ext.review.ReviewManager
-import com.mozhimen.emulatork.ext.savesync.SaveSyncManagerImpl
 import com.mozhimen.emulatork.libretro.LibretroDBMetadataProvider
 import com.mozhimen.emulatork.libretro.db.LibretroDBManager
-import com.mozhimen.emulatork.test.feature.game.GameActivity
-import com.mozhimen.emulatork.test.feature.gamemenu.GameMenuActivity
+import com.mozhimen.emulatork.ui.dagger.feature.game.GameActivity
+import com.mozhimen.emulatork.ui.dagger.feature.gamemenu.GameMenuActivity
 import com.mozhimen.emulatork.test.feature.input.GamePadBindingActivity
-import com.mozhimen.emulatork.test.shared.input.InputDeviceManager
+import com.mozhimen.emulatork.ui.dagger.shared.input.InputDeviceManager
 import com.mozhimen.emulatork.test.feature.main.MainActivity
-import com.mozhimen.emulatork.test.shared.settings.ControllerConfigsManager
-import com.mozhimen.emulatork.test.feature.settings.SettingsManager
+import com.mozhimen.emulatork.ui.dagger.shared.settings.ControllerConfigsManager
+import com.mozhimen.emulatork.ui.dagger.feature.settings.SettingsManager
 import com.mozhimen.emulatork.test.feature.shortcuts.ShortcutsGenerator
 import com.mozhimen.emulatork.test.shared.covers.CoverLoader
 import com.mozhimen.emulatork.test.shared.game.ExternalGameLauncherActivity
 import com.mozhimen.emulatork.test.shared.game.GameLauncher
 import com.mozhimen.emulatork.test.shared.main.GameLaunchTaskHandler
-import com.mozhimen.emulatork.test.shared.rumble.RumbleManager
+import com.mozhimen.emulatork.ui.dagger.shared.rumble.RumbleManager
 import com.mozhimen.emulatork.test.shared.settings.BiosPreferences
 import com.mozhimen.emulatork.test.shared.settings.CoresSelectionPreferences
 import com.mozhimen.emulatork.test.shared.settings.StorageFrameworkPickerLauncher
@@ -76,7 +73,7 @@ abstract class LemuroidApplicationModule {
     abstract fun context(app: LemuroidApplication): Context
 
     @Binds
-    abstract fun saveSyncManager(saveSyncManagerImpl: SaveSyncManagerImpl): SaveSyncManager
+    abstract fun saveSyncManager(saveSyncManagerImpl: com.mozhimen.emulatork.ui.savesync.SaveSyncManagerImpl): SaveSyncManager
 
     @PerActivity
     @ContributesAndroidInjector(modules = [MainActivity.Module::class])
@@ -224,7 +221,7 @@ abstract class LemuroidApplicationModule {
         fun coreManager(
             directoriesManager: DirectoriesManager,
             retrofit: Retrofit
-        ): CoreUpdater = CoreUpdaterImpl(directoriesManager, retrofit)
+        ): CoreUpdater = com.mozhimen.emulatork.ui.core.CoreUpdaterImpl(directoriesManager, retrofit)
 
         @Provides
         @PerApp
@@ -294,13 +291,13 @@ abstract class LemuroidApplicationModule {
         fun saveSyncManagerImpl(
             context: Context,
             directoriesManager: DirectoriesManager
-        ) = SaveSyncManagerImpl(context, directoriesManager)
+        ) = com.mozhimen.emulatork.ui.savesync.SaveSyncManagerImpl(context, directoriesManager)
 
         @Provides
         @PerApp
         @JvmStatic
         fun postGameHandler(retrogradeDatabase: RetrogradeDatabase) =
-            GameLaunchTaskHandler(ReviewManager(), retrogradeDatabase)
+            GameLaunchTaskHandler(com.mozhimen.emulatork.ui.review.ReviewManager(), retrogradeDatabase)
 
         @Provides
         @PerApp

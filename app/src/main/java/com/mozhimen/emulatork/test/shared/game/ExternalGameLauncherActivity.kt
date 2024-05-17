@@ -8,17 +8,18 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.lifecycleScope
+import com.mozhimen.basick.utilk.android.content.get_of_config_longAnimTime
+import com.mozhimen.basick.utilk.android.content.get_of_config_mediumAnimTime
+import com.mozhimen.basick.utilk.androidx.lifecycle.runOnLifecycleState
+import com.mozhimen.basick.utilk.kotlinx.coroutines.launchSafe
 import com.mozhimen.emulatork.basic.core.CoresSelection
 import com.mozhimen.emulatork.basic.library.db.RetrogradeDatabase
 import com.mozhimen.emulatork.test.R
-import com.mozhimen.emulatork.test.shared.ImmersiveActivity
+import com.mozhimen.emulatork.ui.dagger.ImmersiveActivity
 import com.mozhimen.emulatork.test.shared.library.PendingOperationsMonitor
 import com.mozhimen.emulatork.test.shared.main.GameLaunchTaskHandler
 import com.mozhimen.emulatork.test.utils.android.displayErrorDialog
-import com.mozhimen.emulatork.util.coroutines.launchOnState
-import com.mozhimen.emulatork.util.coroutines.safeLaunch
-import com.mozhimen.emulatork.util.animationDuration
-import com.mozhimen.emulatork.util.longAnimationDuration
+import com.mozhimen.emulatork.ui.dagger.shared.game.BaseGameActivity
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -76,7 +77,7 @@ class ExternalGameLauncherActivity : ImmersiveActivity() {
                 loadingState.value = false
             }
 
-            launchOnState(Lifecycle.State.RESUMED) {
+            runOnLifecycleState(Lifecycle.State.RESUMED) {
                 initializeLoadingFlow(loadingState)
             }
         }
@@ -84,7 +85,7 @@ class ExternalGameLauncherActivity : ImmersiveActivity() {
 
     private suspend fun initializeLoadingFlow(loadingSubject: MutableStateFlow<Boolean>) {
         loadingSubject
-            .debounce(longAnimationDuration().toLong())
+            .debounce(get_of_config_longAnimTime().toLong())
             .collect {
                 findViewById<View>(R.id.progressBar).isVisible = it
             }
@@ -96,7 +97,7 @@ class ExternalGameLauncherActivity : ImmersiveActivity() {
         val game = retrogradeDatabase.gameDao().selectById(gameId)
             ?: throw IllegalArgumentException("Game not found: $gameId")
 
-        delay(animationDuration().toLong())
+        delay(get_of_config_mediumAnimTime().toLong())
 
         gameLauncher.launchGameAsync(
             this,
@@ -128,7 +129,7 @@ false//            TVHelper.isTV(applicationContext)
             BaseGameActivity.REQUEST_PLAY_GAME -> {
                 val isLeanback = data?.extras?.getBoolean(BaseGameActivity.PLAY_GAME_RESULT_LEANBACK) == true
 
-                GlobalScope.safeLaunch {
+                GlobalScope.launchSafe {
                     if (isLeanback) {
 //                        ChannelUpdateWork.enqueue(applicationContext)
                     }

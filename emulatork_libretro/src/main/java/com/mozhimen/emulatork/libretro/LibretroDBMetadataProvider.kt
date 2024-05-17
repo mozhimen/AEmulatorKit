@@ -1,5 +1,6 @@
 package com.mozhimen.emulatork.libretro
 
+import com.mozhimen.basick.utilk.kotlin.filterNullable
 import com.mozhimen.emulatork.basic.library.GameSystem
 import com.mozhimen.emulatork.basic.library.SystemID
 import com.mozhimen.emulatork.basic.library.metadata.GameMetadata
@@ -8,7 +9,6 @@ import com.mozhimen.emulatork.basic.storage.StorageFile
 import com.mozhimen.emulatork.libretro.db.LibretroDBManager
 import com.mozhimen.emulatork.libretro.db.LibretroDatabase
 import com.mozhimen.emulatork.libretro.db.entities.LibretroRom
-import com.mozhimen.emulatork.util.kotlin.filterNullable
 import timber.log.Timber
 import java.util.Locale
 

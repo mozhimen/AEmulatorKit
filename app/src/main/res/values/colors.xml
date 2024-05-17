@@ -9,6 +9,5 @@
     <color name="lemuroid_launcher_background">#00C64E</color>
     <color name="system_background">#22000000</color>
 
-    <color name="edit_control_overlay">#99000000</color>
     <color name="imageview_background">#09ffffff</color>
 </resources>

@@ -6,13 +6,13 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.mozhimen.basick.utilk.androidx.fragment.runOnViewLifecycleState
 import com.mozhimen.emulatork.basic.library.db.RetrogradeDatabase
 import com.mozhimen.emulatork.test.R
 import com.mozhimen.emulatork.test.shared.GameInteractor
 import com.mozhimen.emulatork.test.shared.GamesAdapter
 import com.mozhimen.emulatork.test.shared.RecyclerViewFragment
 import com.mozhimen.emulatork.test.shared.covers.CoverLoader
-import com.mozhimen.emulatork.util.coroutines.launchOnState
 import javax.inject.Inject
 
 /**
@@ -52,7 +52,7 @@ class GamesFragment : RecyclerViewFragment() {
             layoutManager = LinearLayoutManager(context)
         }
 
-        launchOnState(Lifecycle.State.RESUMED) {
+        runOnViewLifecycleState(Lifecycle.State.RESUMED) {
             gamesViewModel.games
                 .collect { gamesAdapter?.submitData(lifecycle, it) }
         }

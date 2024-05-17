@@ -3,7 +3,7 @@ package com.mozhimen.emulatork.input
 import android.graphics.Color
 import android.view.View
 import com.google.android.material.color.MaterialColors
-import com.mozhimen.emulatork.util.graphics.GraphicsUtils
+import com.mozhimen.basick.utilk.android.util.UtilKTypedValue
 import com.swordfish.radialgamepad.library.config.RadialGamePadTheme
 
 /**
@@ -32,7 +32,7 @@ object LemuroidTouchOverlayThemes {
     }
 
     private fun buildTheme(view: View): RadialGamePadTheme {
-        val strokeSize = GraphicsUtils.getRawDpSize(view.context, R.dimen.touch_control_stroke_size)
+        val strokeSize = UtilKTypedValue.complexToFloat(view.context, R.dimen.touch_control_stroke_size)
         val colorOnSurface = MaterialColors.getColor(view, com.google.android.material.R.attr.colorOnSurface)
         val colorPrimary = MaterialColors.getColor(view, com.google.android.material.R.attr.colorPrimary)
         val colorSecondary = MaterialColors.getColor(view, com.google.android.material.R.attr.colorSecondary)

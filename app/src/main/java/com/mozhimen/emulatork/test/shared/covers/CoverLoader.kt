@@ -5,9 +5,9 @@ import android.widget.ImageView
 import coil.ImageLoader
 import coil.load
 import coil.util.CoilUtils
+import com.mozhimen.basick.utilk.kotlin.UtilKIntColor
 import com.mozhimen.emulatork.basic.library.db.mos.Game
-import com.mozhimen.emulatork.util.drawable.TextDrawable
-import com.mozhimen.emulatork.util.graphics.ColorUtils
+import com.mozhimen.xmlk.drawablek.DrawableKText
 import okhttp3.OkHttpClient
 
 /**
@@ -45,7 +45,7 @@ class CoverLoader(applicationContext: Context) {
 
     companion object {
         fun getFallbackDrawable(game: Game) =
-            TextDrawable(computeTitle(game), computeColor(game))
+            DrawableKText(computeTitle(game), computeColor(game))
 
         fun getFallbackRemoteUrl(game: Game): String {
             val color = Integer.toHexString(computeColor(game)).substring(2)
@@ -66,7 +66,7 @@ class CoverLoader(applicationContext: Context) {
         }
 
         private fun computeColor(game: Game): Int {
-            return ColorUtils.randomColor(game.title)
+            return UtilKIntColor.get_ofRandom(game.title)
         }
     }
 }

@@ -1,12 +1,12 @@
 package com.mozhimen.emulatork.test.shared
 
+import com.mozhimen.basick.utilk.android.widget.showToast
 import com.mozhimen.emulatork.basic.library.db.RetrogradeDatabase
 import com.mozhimen.emulatork.basic.library.db.mos.Game
 import com.mozhimen.emulatork.test.R
 import com.mozhimen.emulatork.test.feature.shortcuts.ShortcutsGenerator
 import com.mozhimen.emulatork.test.shared.game.GameLauncher
 import com.mozhimen.emulatork.test.shared.main.BusyActivity
-import com.mozhimen.emulatork.util.displayToast
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -26,7 +26,7 @@ class GameInteractor(
 ) {
     fun onGamePlay(game: Game) {
         if (activity.isBusy()) {
-            activity.activity().displayToast(R.string.game_interactory_busy)
+            R.string.game_interactory_busy.showToast()
             return
         }
         gameLauncher.launchGameAsync(activity.activity(), game, true, useLeanback)
@@ -34,7 +34,7 @@ class GameInteractor(
 
     fun onGameRestart(game: Game) {
         if (activity.isBusy()) {
-            activity.activity().displayToast(R.string.game_interactory_busy)
+            R.string.game_interactory_busy.showToast()
             return
         }
         gameLauncher.launchGameAsync(activity.activity(), game, false, useLeanback)

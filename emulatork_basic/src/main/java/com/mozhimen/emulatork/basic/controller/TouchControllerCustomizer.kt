@@ -11,8 +11,7 @@ import android.widget.Button
 import android.widget.PopupWindow
 import androidx.core.math.MathUtils
 import com.dinuscxj.gesture.MultiTouchGestureDetector
-import com.mozhimen.emulatork.basic.R
-import com.mozhimen.emulatork.util.graphics.GraphicsUtils
+import com.mozhimen.basick.utilk.android.util.dp2px
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -86,10 +85,7 @@ class TouchControllerCustomizer {
         touchDetector = MultiTouchGestureDetector(
             activity,
             object : MultiTouchGestureDetector.SimpleOnMultiTouchGestureListener() {
-                val moveScale: Float = GraphicsUtils.convertDpToPixel(
-                    TouchControllerSettingsManager.MAX_MARGINS,
-                    activity.applicationContext
-                )
+                val moveScale: Float = TouchControllerSettingsManager.MAX_MARGINS.dp2px()
 
                 val maxMarginY: Float = 1f
                 val minMarginY: Float = -insets.bottom / moveScale

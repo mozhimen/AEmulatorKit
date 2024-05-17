@@ -5,15 +5,10 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.preference.PreferenceManager
-import androidx.fragment.app.FragmentActivity
-import com.mozhimen.basick.utilk.android.widget.showToast
-import com.mozhimen.emulatork.basic.android.RetrogradeActivity
 import com.mozhimen.emulatork.basic.preferences.SharedPreferencesHelper
 import com.mozhimen.emulatork.basic.storage.DirectoriesManager
 import com.mozhimen.emulatork.test.R
-import com.mozhimen.emulatork.test.shared.library.LibraryIndexScheduler
-import com.mozhimen.emulatork.test.shared.library.LibraryIndexWork
+import com.mozhimen.emulatork.ui.dagger.shared.library.LibraryIndexScheduler
 import com.mozhimen.emulatork.test.utils.android.displayErrorDialog
 import javax.inject.Inject
 
@@ -24,7 +19,7 @@ import javax.inject.Inject
  * @Date 2024/5/13
  * @Version 1.0
  */
-class StorageFrameworkPickerLauncher : RetrogradeActivity() {
+class StorageFrameworkPickerLauncher : RetrogradeFragmentActivity() {
 
     @Inject
     lateinit var directoriesManager: DirectoriesManager
