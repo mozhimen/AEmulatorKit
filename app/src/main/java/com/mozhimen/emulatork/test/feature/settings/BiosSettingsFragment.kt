@@ -28,7 +28,7 @@ class BiosSettingsFragment : PreferenceFragmentCompat() {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         preferenceManager.preferenceDataStore = SafePreferenceDataStore
-        setPreferencesFromResource(R.xml.empty_preference_screen, rootKey)
+        setPreferencesFromResource(com.mozhimen.emulatork.ui.dagger.R.xml.empty_preference_screen, rootKey)
         biosPreferences.addBiosPreferences(preferenceScreen)
     }
 

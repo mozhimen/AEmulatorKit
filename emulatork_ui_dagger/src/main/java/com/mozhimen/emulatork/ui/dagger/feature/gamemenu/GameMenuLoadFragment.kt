@@ -1,4 +1,4 @@
-package com.mozhimen.emulatork.test.feature.gamemenu
+package com.mozhimen.emulatork.ui.dagger.feature.gamemenu
 
 import android.content.Context
 import android.os.Bundle
@@ -11,7 +11,7 @@ import com.mozhimen.emulatork.basic.library.SystemCoreConfig
 import com.mozhimen.emulatork.basic.library.db.mos.Game
 import com.mozhimen.emulatork.basic.saves.StatesManager
 import com.mozhimen.emulatork.basic.saves.StatesPreviewManager
-import com.mozhimen.emulatork.test.R
+import com.mozhimen.emulatork.ui.dagger.R
 import com.mozhimen.emulatork.ui.dagger.shared.GameMenuContract
 import com.mozhimen.emulatork.ui.dagger.shared.gamemenu.GameMenuHelper
 import com.mozhimen.abilityk.jetpack.preference.SafePreferenceDataStore
@@ -20,13 +20,13 @@ import java.security.InvalidParameterException
 import javax.inject.Inject
 
 /**
- * @ClassName GameMenuSaveFragment
+ * @ClassName GameMenuLoadFragment
  * @Description TODO
  * @Author Mozhimen & Kolin Zhao
  * @Date 2024/5/13
  * @Version 1.0
  */
-class GameMenuSaveFragment : PreferenceFragmentCompat() {
+class GameMenuLoadFragment : PreferenceFragmentCompat() {
 
     @Inject
     lateinit var statesManager: StatesManager
@@ -55,11 +55,11 @@ class GameMenuSaveFragment : PreferenceFragmentCompat() {
             ?: throw InvalidParameterException("Missing EXTRA_SYSTEM_CORE_CONFIG")
 
         runOnViewLifecycleState(Lifecycle.State.CREATED) {
-            setupSavePreference(game, systemCoreConfig)
+            setupLoadPreference(game, systemCoreConfig)
         }
     }
 
-    private suspend fun setupSavePreference(game: Game, systemCoreConfig: SystemCoreConfig) {
+    private suspend fun setupLoadPreference(game: Game, systemCoreConfig: SystemCoreConfig) {
         val slotsInfo = statesManager.getSavedSlotsInfo(game, systemCoreConfig.coreID)
 
         slotsInfo.forEachIndexed { index, saveInfo ->
@@ -72,7 +72,7 @@ class GameMenuSaveFragment : PreferenceFragmentCompat() {
                 index
             )
 
-            GameMenuHelper.addSavePreference(
+            GameMenuHelper.addLoadPreference(
                 preferenceScreen,
                 index,
                 saveInfo,

@@ -17,7 +17,7 @@ import com.mozhimen.emulatork.test.R
 object AdvancedSettingsPreferences {
 
     fun updateCachePreferences(preferenceScreen: PreferenceScreen) {
-        val cacheKey = preferenceScreen.context.getString(R.string.pref_key_max_cache_size)
+        val cacheKey = preferenceScreen.context.getString(com.mozhimen.emulatork.ui.R.string.pref_key_max_cache_size)
         preferenceScreen.findPreference<ListPreference>(cacheKey)?.apply {
             val supportedCacheValues = CacheCleaner.getSupportedCacheLimits()
 

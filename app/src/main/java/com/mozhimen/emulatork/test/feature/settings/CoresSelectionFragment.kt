@@ -29,7 +29,7 @@ class CoresSelectionFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         preferenceManager.preferenceDataStore =
             SharedPreferencesHelper.getSharedPreferencesDataStore(requireContext())
-        setPreferencesFromResource(R.xml.empty_preference_screen, rootKey)
+        setPreferencesFromResource(com.mozhimen.emulatork.ui.dagger.R.xml.empty_preference_screen, rootKey)
         coresSelectionPreferences.addCoresSelectionPreferences(preferenceScreen)
     }
 

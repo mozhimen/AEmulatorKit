@@ -39,7 +39,7 @@ class SaveSyncFragment : PreferenceFragmentCompat() {
             SharedPreferencesHelper.getSharedPreferencesDataStore(requireContext())
 
         saveSyncPreferences = SaveSyncPreferences(saveSyncManager)
-        setPreferencesFromResource(R.xml.empty_preference_screen, rootKey)
+        setPreferencesFromResource(com.mozhimen.emulatork.ui.dagger.R.xml.empty_preference_screen, rootKey)
         saveSyncPreferences.addSaveSyncPreferences(preferenceScreen)
     }
 

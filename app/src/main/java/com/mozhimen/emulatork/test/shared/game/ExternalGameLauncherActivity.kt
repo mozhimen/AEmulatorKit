@@ -8,6 +8,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.lifecycleScope
+import com.mozhimen.basick.utilk.android.app.showAlertDialog
 import com.mozhimen.basick.utilk.android.content.get_of_config_longAnimTime
 import com.mozhimen.basick.utilk.android.content.get_of_config_mediumAnimTime
 import com.mozhimen.basick.utilk.androidx.lifecycle.runOnLifecycleState
@@ -18,7 +19,6 @@ import com.mozhimen.emulatork.test.R
 import com.mozhimen.emulatork.ui.dagger.ImmersiveActivity
 import com.mozhimen.emulatork.test.shared.library.PendingOperationsMonitor
 import com.mozhimen.emulatork.test.shared.main.GameLaunchTaskHandler
-import com.mozhimen.emulatork.test.utils.android.displayErrorDialog
 import com.mozhimen.emulatork.ui.dagger.shared.game.BaseGameActivity
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.GlobalScope
@@ -115,7 +115,7 @@ false//            TVHelper.isTV(applicationContext)
     }
 
     private fun displayErrorMessage() {
-        displayErrorDialog(R.string.game_loader_error_load_game, R.string.ok) { finish() }
+        showAlertDialog(com.mozhimen.emulatork.ui.R.string.game_loader_error_load_game, R.string.ok) { finish() }
     }
 
     private fun getLoadingLiveData(): LiveData<Boolean> {

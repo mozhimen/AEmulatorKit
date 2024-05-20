@@ -66,10 +66,10 @@ class TouchControllerCustomizer {
         )
         editControlsWindow?.contentView?.findViewById<Button>(com.mozhimen.emulatork.input.R.id.edit_control_reset)
             ?.setOnClickListener {
-                scale = TouchControllerSettingsManager.DEFAULT_SCALE
-                rotation = TouchControllerSettingsManager.DEFAULT_ROTATION
-                marginX = TouchControllerSettingsManager.DEFAULT_MARGIN_X
-                marginY = TouchControllerSettingsManager.DEFAULT_MARGIN_Y
+                scale = ControllerParams.DEFAULT_SCALE
+                rotation = ControllerParams.DEFAULT_ROTATION
+                marginX = ControllerParams.DEFAULT_MARGIN_X
+                marginY = ControllerParams.DEFAULT_MARGIN_Y
 
                 events.value = Event.Margins(marginX, marginY)
                 events.value = Event.Rotation(rotation)
@@ -85,7 +85,7 @@ class TouchControllerCustomizer {
         touchDetector = MultiTouchGestureDetector(
             activity,
             object : MultiTouchGestureDetector.SimpleOnMultiTouchGestureListener() {
-                val moveScale: Float = TouchControllerSettingsManager.MAX_MARGINS.dp2px()
+                val moveScale: Float = ControllerParams.MAX_MARGINS.dp2px()
 
                 val maxMarginY: Float = 1f
                 val minMarginY: Float = -insets.bottom / moveScale
@@ -121,10 +121,10 @@ class TouchControllerCustomizer {
                 }
 
                 override fun onRotate(detector: MultiTouchGestureDetector) {
-                    val currentRotation = rotation * TouchControllerSettingsManager.MAX_ROTATION
+                    val currentRotation = rotation * ControllerParams.MAX_ROTATION
                     val nextRotation = currentRotation - invertXAxis * detector.rotation
                     rotation = MathUtils.clamp(
-                        nextRotation / TouchControllerSettingsManager.MAX_ROTATION,
+                        nextRotation / ControllerParams.MAX_ROTATION,
                         0f,
                         1f
                     )

@@ -1,12 +1,14 @@
-package com.mozhimen.emulatork.basic.controller
+package com.mozhimen.emulatork.ui.dagger.shared.controller
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.mozhimen.emulatork.basic.R
-import dagger.Lazy
+import com.mozhimen.emulatork.basic.controller.TouchControllerID
+import com.mozhimen.emulatork.basic.controller.ControllerParams
+import com.mozhimen.emulatork.input.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlin.math.roundToInt
+import dagger.Lazy
 
 /**
  * @ClassName TouchControllerSettingsManager
@@ -27,10 +29,10 @@ class TouchControllerSettingsManager(
     }
 
     data class Settings(
-        val scale: Float = DEFAULT_SCALE,
-        val rotation: Float = DEFAULT_ROTATION,
-        val marginX: Float = DEFAULT_MARGIN_X,
-        val marginY: Float = DEFAULT_MARGIN_Y
+        val scale: Float = ControllerParams.DEFAULT_SCALE,
+        val rotation: Float = ControllerParams.DEFAULT_ROTATION,
+        val marginX: Float = ControllerParams.DEFAULT_MARGIN_X,
+        val marginY: Float = ControllerParams.DEFAULT_MARGIN_Y
     )
 
     suspend fun retrieveSettings(): Settings = withContext(Dispatchers.IO) {
@@ -38,26 +40,26 @@ class TouchControllerSettingsManager(
         Settings(
             scale = indexToFloat(
                 sharedPreferences.getInt(
-                    getPreferenceString(com.mozhimen.emulatork.input.R.string.pref_key_virtual_pad_scale, orientation),
-                    floatToIndex(DEFAULT_SCALE)
+                    getPreferenceString(R.string.pref_key_virtual_pad_scale, orientation),
+                    floatToIndex(ControllerParams.DEFAULT_SCALE)
                 )
             ),
             rotation = indexToFloat(
                 sharedPreferences.getInt(
-                    getPreferenceString(com.mozhimen.emulatork.input.R.string.pref_key_virtual_pad_rotation, orientation),
-                    floatToIndex(DEFAULT_ROTATION)
+                    getPreferenceString(R.string.pref_key_virtual_pad_rotation, orientation),
+                    floatToIndex(ControllerParams.DEFAULT_ROTATION)
                 )
             ),
             marginX = indexToFloat(
                 sharedPreferences.getInt(
-                    getPreferenceString(com.mozhimen.emulatork.input.R.string.pref_key_virtual_pad_margin_x, orientation),
-                    floatToIndex(DEFAULT_MARGIN_X)
+                    getPreferenceString(R.string.pref_key_virtual_pad_margin_x, orientation),
+                    floatToIndex(ControllerParams.DEFAULT_MARGIN_X)
                 )
             ),
             marginY = indexToFloat(
                 sharedPreferences.getInt(
-                    getPreferenceString(com.mozhimen.emulatork.input.R.string.pref_key_virtual_pad_margin_y, orientation),
-                    floatToIndex(DEFAULT_MARGIN_Y)
+                    getPreferenceString(R.string.pref_key_virtual_pad_margin_y, orientation),
+                    floatToIndex(ControllerParams.DEFAULT_MARGIN_Y)
                 )
             )
         )
@@ -88,18 +90,7 @@ class TouchControllerSettingsManager(
 
     private fun floatToIndex(value: Float): Int = (value * 100).roundToInt()
 
-    companion object {
-        const val DEFAULT_SCALE = 0.5f
-        const val DEFAULT_ROTATION = 0.0f
-        const val DEFAULT_MARGIN_X = 0.0f
-        const val DEFAULT_MARGIN_Y = 0.0f
 
-        const val MAX_ROTATION = 45f
-        const val MIN_SCALE = 0.75f
-        const val MAX_SCALE = 1.5f
-
-        const val MAX_MARGINS = 96f
-    }
 
     private fun getPreferenceString(preferenceStringId: Int, orientation: Orientation): String {
         return "${context.getString(preferenceStringId)}_${controllerID}_${orientation.ordinal}"

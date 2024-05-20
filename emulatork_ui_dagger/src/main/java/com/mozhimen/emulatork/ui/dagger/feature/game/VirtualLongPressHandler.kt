@@ -1,4 +1,4 @@
-package com.mozhimen.emulatork.test.feature.game
+package com.mozhimen.emulatork.ui.dagger.feature.game
 
 import android.content.Context
 import android.graphics.drawable.Drawable
@@ -10,10 +10,9 @@ import androidx.core.view.isVisible
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.mozhimen.basick.utilk.android.util.dp2pxI
 import com.mozhimen.emulatork.input.LemuroidTouchOverlayThemes
-import com.mozhimen.emulatork.test.R
+import com.mozhimen.emulatork.ui.R
 import com.mozhimen.basick.utilk.android.widget.applyProgressAnimate
 import com.mozhimen.basick.utilk.android.view.applyVisibleIfElseGoneAnimate
-import com.mozhimen.emulatork.ui.dagger.feature.game.GameActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow

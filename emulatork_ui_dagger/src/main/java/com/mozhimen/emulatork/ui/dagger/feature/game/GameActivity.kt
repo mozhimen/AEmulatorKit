@@ -20,22 +20,21 @@ import com.mozhimen.basick.utilk.kotlinx.coroutines.collectSafe
 import com.mozhimen.basick.elemk.mos.NTuple2
 import com.mozhimen.basick.elemk.mos.NTuple3
 import com.mozhimen.basick.utilk.kotlin.math.UtilKMathInterpolation
+import com.mozhimen.basick.utilk.kotlinx.coroutines.batch_ofTime
 import com.mozhimen.emulatork.basic.controller.ControllerConfig
 import com.mozhimen.emulatork.basic.controller.TouchControllerCustomizer
-import com.mozhimen.emulatork.basic.controller.TouchControllerSettingsManager
+import com.mozhimen.emulatork.ui.dagger.shared.controller.TouchControllerSettingsManager
 import com.mozhimen.emulatork.input.LemuroidTouchConfigs
 import com.mozhimen.emulatork.input.LemuroidTouchOverlayThemes
 import com.mozhimen.emulatork.input.sensors.TiltSensor
 import com.mozhimen.emulatork.ui.R
-import com.mozhimen.emulatork.test.feature.gamemenu.GameMenuActivity
-import com.mozhimen.emulatork.test.feature.tilt.CrossTiltTracker
-import com.mozhimen.emulatork.test.feature.tilt.StickTiltTracker
-import com.mozhimen.emulatork.test.feature.tilt.TiltTracker
-import com.mozhimen.emulatork.test.feature.tilt.TwoButtonsTiltTracker
 import com.mozhimen.emulatork.ui.dagger.shared.GameMenuContract
 import com.mozhimen.emulatork.ui.dagger.shared.game.BaseGameActivity
-import com.mozhimen.basick.utilk.kotlinx.coroutines.batch_ofTime
+import com.mozhimen.emulatork.ui.dagger.feature.gamemenu.GameMenuActivity
 import com.mozhimen.emulatork.ui.dagger.feature.tilt.TiltTracker
+import com.mozhimen.emulatork.ui.dagger.feature.tilt.StickTiltTracker
+import com.mozhimen.emulatork.ui.dagger.feature.tilt.CrossTiltTracker
+import com.mozhimen.emulatork.ui.dagger.feature.tilt.TwoButtonsTiltTracker
 import com.swordfish.libretrodroid.GLRetroView
 import com.swordfish.radialgamepad.library.RadialGamePad
 import com.swordfish.radialgamepad.library.config.RadialGamePadTheme
@@ -203,7 +202,8 @@ class GameActivity : BaseGameActivity() {
 
     private fun getCurrentOrientation() = resources.configuration.orientation
 
-    override fun getDialogClass() = GameMenuActivity::class.java
+    override fun getDialogClass(): Class<GameMenuActivity> =
+        GameMenuActivity::class.java
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)

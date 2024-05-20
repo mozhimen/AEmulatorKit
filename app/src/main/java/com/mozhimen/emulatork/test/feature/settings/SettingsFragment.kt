@@ -148,7 +148,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 settingsInteractor.resetAllSettings()
                 reloadPreferences()
             }
-            .setNegativeButton(R.string.cancel) { _, _ -> }
+            .setNegativeButton(com.mozhimen.emulatork.ui.R.string.cancel) { _, _ -> }
             .show()
     }
 

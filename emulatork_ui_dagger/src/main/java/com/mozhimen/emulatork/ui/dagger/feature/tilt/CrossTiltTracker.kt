@@ -1,7 +1,6 @@
-package com.mozhimen.emulatork.test.feature.tilt
+package com.mozhimen.emulatork.ui.dagger.feature.tilt
 
 import com.mozhimen.basick.utilk.kotlin.math.UtilKMathPoint
-import com.mozhimen.emulatork.ui.dagger.feature.tilt.TiltTracker
 import com.swordfish.radialgamepad.library.RadialGamePad
 
 /**

@@ -74,6 +74,7 @@ dependencies {
 
     implementation project(':ACacheKit:cachek_room_paging')
     implementation project(':ACacheKit:cachek_harmony')
+    implementation project(':ACacheKit:cachek_flow_preferences')
 
     implementation project(':AAbilityKit_Jetpack:collection')
     implementation project(':AAbilityKit_Jetpack:documentfile')
@@ -83,6 +84,10 @@ dependencies {
     implementation project(":AImageKit:imagek_coil1")
     implementation project(":AXmlKit:recyclerk")
     implementation project(":AXmlKit:drawablek")
+
+    implementation project(':ANavigateKit:navigatek_navigation')
+    implementation project(':AAbilityKit_Jetpack:preference')
+    implementation project(':ATaskKit:taskk_work')
 
     kapt "com.airbnb.android:epoxy-processor:4.6.3-vinay-compose"
     kapt "com.google.dagger:dagger-android-processor:2.19"

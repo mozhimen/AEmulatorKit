@@ -139,7 +139,7 @@ class SaveSyncPreferences(private val saveSyncManager: SaveSyncManager) {
     }
 
     private fun keySyncEnabled(context: Context) =
-        context.getString(R.string.pref_key_save_sync_enable)
+        context.getString(com.mozhimen.emulatork.ui.R.string.pref_key_save_sync_enable)
 
     private fun keyForceSync(context: Context) =
         context.getString(R.string.pref_key_save_sync_force_refresh)
@@ -148,10 +148,10 @@ class SaveSyncPreferences(private val saveSyncManager: SaveSyncManager) {
         context.getString(R.string.pref_key_save_sync_configure)
 
     private fun keyAutoSync(context: Context) =
-        context.getString(R.string.pref_key_save_sync_auto)
+        context.getString(com.mozhimen.emulatork.ui.R.string.pref_key_save_sync_auto)
 
     private fun keySyncCores(context: Context) =
-        context.getString(R.string.pref_key_save_sync_cores)
+        context.getString(com.mozhimen.emulatork.ui.R.string.pref_key_save_sync_cores)
 
     private fun handleSaveSyncConfigure(activity: Activity?) {
         activity?.startActivity(

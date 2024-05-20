@@ -5,11 +5,12 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import com.mozhimen.basick.utilk.android.app.showAlertDialog
+import com.mozhimen.emulatork.basic.dagger.android.RetrogradeFragmentActivity
 import com.mozhimen.emulatork.basic.preferences.SharedPreferencesHelper
 import com.mozhimen.emulatork.basic.storage.DirectoriesManager
 import com.mozhimen.emulatork.test.R
 import com.mozhimen.emulatork.ui.dagger.shared.library.LibraryIndexScheduler
-import com.mozhimen.emulatork.test.utils.android.displayErrorDialog
 import javax.inject.Inject
 
 /**
@@ -45,7 +46,7 @@ class StorageFrameworkPickerLauncher : RetrogradeFragmentActivity() {
     private fun showStorageAccessFrameworkNotSupportedDialog() {
         val message = getString(R.string.dialog_saf_not_found, directoriesManager.getInternalRomsDirectory())
         val actionLabel = getString(R.string.ok)
-        displayErrorDialog(message, actionLabel) { finish() }
+        showAlertDialog(message, actionLabel) { finish() }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, resultData: Intent?) {

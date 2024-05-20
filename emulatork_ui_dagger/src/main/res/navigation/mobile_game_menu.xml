@@ -16,12 +16,12 @@
 
     <fragment
         android:id="@+id/game_menu_save"
-        android:name="com.mozhimen.emulatork.test.feature.gamemenu.GameMenuSaveFragment"
+        android:name="com.mozhimen.emulatork.ui.dagger.feature.gamemenu.GameMenuSaveFragment"
         android:label="@string/game_menu_save"/>
 
     <fragment
         android:id="@+id/game_menu_load"
-        android:name="com.mozhimen.emulatork.test.feature.gamemenu.GameMenuLoadFragment"
+        android:name="com.mozhimen.emulatork.ui.dagger.feature.gamemenu.GameMenuLoadFragment"
         android:label="@string/game_menu_load"/>
 
 </navigation>
