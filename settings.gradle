@@ -20,7 +20,7 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "AEmulatorKit"
-include ':app'
+include ':dagger'
 include ':emulatork_basic'
 include ':emulatork_input'
 include ':emulatork_libretro'

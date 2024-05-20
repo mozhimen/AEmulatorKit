@@ -4,7 +4,6 @@ import android.content.SharedPreferences
 import com.mozhimen.emulatork.basic.library.GameSystem
 import com.mozhimen.emulatork.basic.library.SystemCoreConfig
 import com.mozhimen.emulatork.basic.library.SystemID
-import dagger.Lazy
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -22,7 +21,7 @@ class CoresSelection(private val sharedPreferences: Lazy<SharedPreferences>) {
     }
 
     private fun fetchSystemCoreConfig(system: GameSystem): SystemCoreConfig {
-        val setting = sharedPreferences.get()
+        val setting = sharedPreferences.value
             .getString(computeSystemPreferenceKey(system.id), null)
 
         return system.systemCoreConfigs.firstOrNull { it.coreID.coreName == setting }

@@ -4,7 +4,7 @@ import com.mozhimen.basick.utilk.java.io.file2bytes_use_ofUnzip
 import com.mozhimen.basick.utilk.kotlin.UtilKResult
 import com.mozhimen.basick.utilk.kotlin.bytes2file_ofGZip
 import com.mozhimen.emulatork.basic.library.CoreID
-import com.mozhimen.emulatork.basic.library.db.mos.Game
+import com.mozhimen.emulatork.basic.library.db.entities.Game
 import com.mozhimen.emulatork.basic.storage.DirectoriesManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

@@ -1,7 +1,7 @@
 package com.mozhimen.emulatork.basic.saves
 
 import com.mozhimen.emulatork.basic.library.CoreID
-import com.mozhimen.emulatork.basic.library.db.mos.Game
+import com.mozhimen.emulatork.basic.library.db.entities.Game
 
 /**
  * @ClassName SavesCoherencyEngine

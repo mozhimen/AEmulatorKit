@@ -12,7 +12,7 @@ import com.mozhimen.emulatork.basic.library.GameSystem
 import com.mozhimen.emulatork.basic.library.LemuroidLibrary
 import com.mozhimen.emulatork.basic.library.SystemCoreConfig
 import com.mozhimen.emulatork.basic.library.db.RetrogradeDatabase
-import com.mozhimen.emulatork.basic.library.db.mos.Game
+import com.mozhimen.emulatork.basic.library.db.entities.Game
 import com.mozhimen.emulatork.basic.saves.SaveState
 import com.mozhimen.emulatork.basic.saves.SavesCoherencyEngine
 import com.mozhimen.emulatork.basic.saves.SavesManager

@@ -4,7 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.ThumbnailUtils
 import com.mozhimen.emulatork.basic.library.CoreID
-import com.mozhimen.emulatork.basic.library.db.mos.Game
+import com.mozhimen.emulatork.basic.library.db.entities.Game
 import com.mozhimen.emulatork.basic.storage.DirectoriesManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

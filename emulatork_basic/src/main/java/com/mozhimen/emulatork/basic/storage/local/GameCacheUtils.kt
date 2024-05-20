@@ -1,8 +1,8 @@
 package com.mozhimen.emulatork.basic.storage.local
 
 import android.content.Context
-import com.mozhimen.emulatork.basic.library.db.mos.DataFile
-import com.mozhimen.emulatork.basic.library.db.mos.Game
+import com.mozhimen.emulatork.basic.library.db.entities.DataFile
+import com.mozhimen.emulatork.basic.library.db.entities.Game
 import java.io.File
 
 /**

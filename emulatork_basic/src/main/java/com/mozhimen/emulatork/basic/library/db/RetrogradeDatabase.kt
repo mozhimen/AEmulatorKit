@@ -2,11 +2,11 @@ package com.mozhimen.emulatork.basic.library.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.mozhimen.emulatork.basic.library.db.commons.DataFileDao
-import com.mozhimen.emulatork.basic.library.db.commons.GameDao
-import com.mozhimen.emulatork.basic.library.db.commons.GameSearchDao
-import com.mozhimen.emulatork.basic.library.db.mos.DataFile
-import com.mozhimen.emulatork.basic.library.db.mos.Game
+import com.mozhimen.emulatork.basic.library.db.daos.DataFileDao
+import com.mozhimen.emulatork.basic.library.db.daos.GameDao
+import com.mozhimen.emulatork.basic.library.db.daos.GameSearchDao
+import com.mozhimen.emulatork.basic.library.db.entities.DataFile
+import com.mozhimen.emulatork.basic.library.db.entities.Game
 
 /**
  * @ClassName RetrogradeDatabase

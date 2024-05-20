@@ -35,25 +35,21 @@ android {
 dependencies {
     implementation project(':emulatork_input')
 
-    implementation project(":SwiftKit:basick")
-
-    implementation project(':AAbilityKit_Jetpack:collection')
-    implementation project(':AAbilityKit_Jetpack:documentfile')
-    implementation project(':AAbilityKit_Jetpack:preference')
-
-    implementation project(':ATaskKit:taskk_work')
-
-    implementation project(":APagingKit:pagingk_paging3_basic")
-
-    implementation project(':ANetKit:netk_retrofit2')
-    implementation project(':ANetKit:netk_okio2')
-
-    implementation project(':ACacheKit:cachek_harmony')
-    implementation project(':ACacheKit:cachek_room_paging')
-
-    implementation project(':ALogKit:logk_timber')
-
-    implementation "com.dinuscxj:multitouchgesturedetector:1.0.0"
+    api project(":SwiftKit:basick")
+    api project(':AAbilityKit_Jetpack:collection')
+    api project(':AAbilityKit_Jetpack:documentfile')
+    api project(':AAbilityKit_Jetpack:preference')
+    api project(':ATaskKit:taskk_work')
+    api project(":APagingKit:pagingk_paging3_basic")
+    api project(':ANetKit:netk_retrofit2')
+    api project(':ANetKit:netk_okio2')
+    api project(':ACacheKit:cachek_harmony')
+    api project(':ACacheKit:cachek_room_paging')
+    api project(':ACacheKit:cachek_flow_preferences')
+    api project(':ALogKit:logk_timber')
+    api project(":AEmulatorKit_LibretroDroid:libretrodroid")
+    api "com.dinuscxj:multitouchgesturedetector:1.0.0"
+    api "com.github.Swordfish90:RadialGamePad:2.0.0"
 
     kapt 'androidx.room:room-compiler:2.5.2'
 

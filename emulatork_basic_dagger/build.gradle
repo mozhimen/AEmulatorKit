@@ -31,8 +31,7 @@ android {
 }
 
 dependencies {
-    implementation project(':AInjectKit:injectk_dagger')
-    implementation project(':ATaskKit:taskk_work')
+    api project(':AInjectKit:injectk_dagger')
     implementation project(':emulatork_basic')
 
     testImplementation 'junit:junit:4.13.2'

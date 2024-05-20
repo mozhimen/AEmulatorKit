@@ -1,7 +1,7 @@
 package com.mozhimen.emulatork.basic.saves
 
 import com.mozhimen.basick.utilk.kotlin.UtilKResult
-import com.mozhimen.emulatork.basic.library.db.mos.Game
+import com.mozhimen.emulatork.basic.library.db.entities.Game
 import com.mozhimen.emulatork.basic.storage.DirectoriesManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

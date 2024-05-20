@@ -3,7 +3,7 @@ package com.mozhimen.emulatork.basic.storage
 import android.content.Context
 import android.content.SharedPreferences
 import android.net.Uri
-import com.mozhimen.emulatork.basic.library.db.mos.Game
+import com.mozhimen.emulatork.basic.library.db.entities.Game
 
 /**
  * @ClassName StorageProviderRegistry

@@ -1,6 +1,7 @@
 package com.mozhimen.emulatork.basic.dagger
 
 import androidx.work.ListenableWorker
+import com.mozhimen.emulatork.basic.dagger.interfaces.HasWorkerInjector
 
 /**
  * @ClassName AndroidWorkerInjection

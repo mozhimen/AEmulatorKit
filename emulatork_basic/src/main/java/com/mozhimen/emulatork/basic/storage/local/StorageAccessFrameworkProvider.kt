@@ -8,8 +8,8 @@ import com.mozhimen.abilityk.jetpack.documentfile.utils.isZipped
 import com.mozhimen.basick.utilk.java.io.inputStream2file_use_ofCopyTo
 import com.mozhimen.basick.utilk.java.util.extractEntryToFile_use
 import com.mozhimen.emulatork.basic.R
-import com.mozhimen.emulatork.basic.library.db.mos.DataFile
-import com.mozhimen.emulatork.basic.library.db.mos.Game
+import com.mozhimen.emulatork.basic.library.db.entities.DataFile
+import com.mozhimen.emulatork.basic.library.db.entities.Game
 import com.mozhimen.emulatork.basic.preferences.SharedPreferencesHelper
 import com.mozhimen.emulatork.basic.storage.BaseStorageFile
 import com.mozhimen.emulatork.basic.storage.RomFiles

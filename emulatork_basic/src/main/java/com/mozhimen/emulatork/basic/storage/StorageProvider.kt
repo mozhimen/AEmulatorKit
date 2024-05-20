@@ -1,8 +1,8 @@
 package com.mozhimen.emulatork.basic.storage
 
 import android.net.Uri
-import com.mozhimen.emulatork.basic.library.db.mos.DataFile
-import com.mozhimen.emulatork.basic.library.db.mos.Game
+import com.mozhimen.emulatork.basic.library.db.entities.DataFile
+import com.mozhimen.emulatork.basic.library.db.entities.Game
 import kotlinx.coroutines.flow.Flow
 import java.io.InputStream
 

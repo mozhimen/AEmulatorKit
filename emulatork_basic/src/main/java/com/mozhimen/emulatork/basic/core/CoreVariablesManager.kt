@@ -3,7 +3,6 @@ package com.mozhimen.emulatork.basic.core
 import android.content.SharedPreferences
 import com.mozhimen.emulatork.basic.library.SystemCoreConfig
 import com.mozhimen.emulatork.basic.library.SystemID
-import dagger.Lazy
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.security.InvalidParameterException
@@ -12,10 +11,10 @@ import java.security.InvalidParameterException
  * @ClassName CoreVariablesManager
  * @Description TODO
  * @Author Mozhimen & Kolin Zhao
- * @Date 2024/5/13
+ * @Date 2024/5/20
  * @Version 1.0
  */
-class CoreVariablesManager(private val sharedPreferences: Lazy<SharedPreferences>) {
+open class CoreVariablesManager(private val sharedPreferences: Lazy<SharedPreferences>) {
 
     suspend fun getOptionsForCore(
         systemID: SystemID,
@@ -46,7 +45,7 @@ class CoreVariablesManager(private val sharedPreferences: Lazy<SharedPreferences
         val requestedKeys = (exposedKeys + exposedAdvancedKeys).map { it.key }
             .map { computeSharedPreferenceKey(it, systemID.dbname) }
 
-        sharedPreferences.get().all.filter { it.key in requestedKeys }
+        sharedPreferences.value.all.filter { it.key in requestedKeys }
             .map { (key, value) ->
                 val result = when (value!!) {
                     is Boolean -> if (value as Boolean) "enabled" else "disabled"

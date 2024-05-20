@@ -9,6 +9,7 @@ android {
 
     defaultConfig {
         minSdk 19
+        multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -27,15 +28,16 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    buildFeatures{
+        buildConfig true
+    }
 }
 
 dependencies {
-    api "com.github.Swordfish90:RadialGamePad:2.0.0"
-    implementation project(":ATaskKit:taskk_work")
-    implementation project(':SwiftKit:basick')
-    implementation project(':emulatork_basic')
-    implementation project(':ALogKit:logk_timber')
-    implementation project(':ANetKit:netk_retrofit2')
+    api project(':emulatork_basic')
+    api project(':ANavigateKit:navigatek_navigation')
+    api project(":AImageKit:imagek_coil1")
+    api project(":AXmlKit:drawablek")
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
