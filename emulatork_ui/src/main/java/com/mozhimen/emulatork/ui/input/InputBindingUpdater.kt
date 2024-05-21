@@ -4,8 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.view.InputDevice
 import android.view.KeyEvent
-import com.mozhimen.emulatork.test.R
-import com.mozhimen.emulatork.test.shared.settings.GamePadPreferencesHelper
+import com.mozhimen.emulatork.ui.R
+import com.mozhimen.emulatork.ui.settings.GamePadPreferencesHelper
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async

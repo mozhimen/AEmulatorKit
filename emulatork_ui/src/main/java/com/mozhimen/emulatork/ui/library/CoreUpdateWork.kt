@@ -3,23 +3,16 @@ package com.mozhimen.emulatork.ui.library
 import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
-import androidx.work.ListenableWorker
 import androidx.work.WorkerParameters
 import com.mozhimen.emulatork.basic.core.CoreUpdater
 import com.mozhimen.emulatork.basic.core.CoresSelection
-import com.mozhimen.emulatork.basic.dagger.AndroidWorkerInjection
-import com.mozhimen.emulatork.basic.dagger.interfaces.WorkerKey
 import com.mozhimen.emulatork.basic.library.GameSystem
 import com.mozhimen.emulatork.basic.library.db.RetrogradeDatabase
 import com.mozhimen.emulatork.ui.main.NotificationsManager
-import dagger.Binds
-import dagger.android.AndroidInjector
-import dagger.multibindings.IntoMap
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
 import timber.log.Timber
-import javax.inject.Inject
 
 /**
  * @ClassName CoreUpdateWork
@@ -28,18 +21,20 @@ import javax.inject.Inject
  * @Date 2024/5/11
  * @Version 1.0
  */
-class CoreUpdateWork(context: Context, workerParams: WorkerParameters) :
+abstract class CoreUpdateWork(context: Context, workerParams: WorkerParameters) :
     CoroutineWorker(context, workerParams) {
 
-    @Inject
-    lateinit var retrogradeDatabase: RetrogradeDatabase
-    @Inject
-    lateinit var coreUpdater: CoreUpdater
-    @Inject
-    lateinit var coresSelection: CoresSelection
+//    @Inject
+//    lateinit var retrogradeDatabase: RetrogradeDatabase
+     abstract   fun getRetrogradeDatabase():RetrogradeDatabase
+//    @Inject
+//    lateinit var coreUpdater: CoreUpdater
+     abstract fun getCoreUpdater():CoreUpdater
+//    @Inject
+//    lateinit var coresSelection: CoresSelection
+     abstract fun getCoresSelection():CoresSelection
 
     override suspend fun doWork(): Result {
-        AndroidWorkerInjection.inject(this)
 
         Timber.i("Starting core update/install work")
 
@@ -53,14 +48,14 @@ class CoreUpdateWork(context: Context, workerParams: WorkerParameters) :
         setForegroundAsync(foregroundInfo)
 
         try {
-            val cores = retrogradeDatabase.gameDao().selectSystems()
+            val cores = getRetrogradeDatabase().gameDao().selectSystems()
                 .asFlow()
                 .map { GameSystem.findById(it) }
-                .map { coresSelection.getCoreConfigForSystem(it) }
+                .map { getCoresSelection().getCoreConfigForSystem(it) }
                 .map { it.coreID }
                 .toList()
 
-            coreUpdater.downloadCores(applicationContext, cores)
+            getCoreUpdater().downloadCores(applicationContext, cores)
         } catch (e: Throwable) {
             Timber.e(e, "Core update work failed with exception: ${e.message}")
         }
@@ -68,18 +63,6 @@ class CoreUpdateWork(context: Context, workerParams: WorkerParameters) :
         return Result.success()
     }
 
-    @dagger.Module(subcomponents = [Subcomponent::class])
-    abstract class Module {
-        @Binds
-        @IntoMap
-        @WorkerKey(CoreUpdateWork::class)
-        abstract fun bindMyWorkerFactory(builder: Subcomponent.Builder): AndroidInjector.Factory<out ListenableWorker>
-    }
 
-    @dagger.Subcomponent
-    interface Subcomponent : AndroidInjector<CoreUpdateWork> {
-        @dagger.Subcomponent.Builder
-        abstract class Builder : AndroidInjector.Builder<CoreUpdateWork>()
-    }
 }
 

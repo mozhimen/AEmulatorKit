@@ -11,7 +11,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.mozhimen.emulatork.basic.library.db.entities.Game
 import com.mozhimen.emulatork.ui.R
-import com.mozhimen.emulatork.ui.dagger.feature.game.GameActivity
+import com.mozhimen.emulatork.ui.game.GameActivity
 import com.mozhimen.emulatork.ui.library.LibraryIndexBroadcastReceiver
 import com.mozhimen.emulatork.ui.library.CoreUpdateBroadcastReceiver
 

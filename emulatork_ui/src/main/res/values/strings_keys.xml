@@ -21,4 +21,7 @@
         <item>crt</item>
         <item>lcd</item>
     </string-array>
+    <string name="pref_key_reset_gamepad_bindings" translatable="false">reset_gamepad_bindings</string>
+    <string name="pref_key_save_sync_force_refresh" translatable="false">save_sync_force_refresh</string>
+
 </resources>

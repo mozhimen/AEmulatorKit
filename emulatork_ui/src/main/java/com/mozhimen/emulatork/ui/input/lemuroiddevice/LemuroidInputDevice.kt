@@ -4,7 +4,7 @@ import android.content.Context
 import android.view.InputDevice
 import com.mozhimen.emulatork.ui.input.InputKey
 import com.mozhimen.emulatork.ui.input.RetroKey
-import com.mozhimen.emulatork.ui.dagger.shared.settings.GameMenuShortcut
+import com.mozhimen.emulatork.ui.settings.GameMenuShortcut
 
 /**
  * @ClassName LemuroidInputDevice

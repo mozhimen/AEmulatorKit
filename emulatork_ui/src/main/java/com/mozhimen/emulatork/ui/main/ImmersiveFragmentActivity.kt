@@ -1,7 +1,7 @@
 package com.mozhimen.emulatork.ui.main
 
 import android.view.View
-import com.mozhimen.emulatork.basic.dagger.android.RetrogradeFragmentActivity
+import androidx.fragment.app.FragmentActivity
 
 /**
  * @ClassName ImmersiveActivity
@@ -10,7 +10,7 @@ import com.mozhimen.emulatork.basic.dagger.android.RetrogradeFragmentActivity
  * @Date 2024/5/13
  * @Version 1.0
  */
-abstract class ImmersiveActivity : RetrogradeFragmentActivity() {
+abstract class ImmersiveFragmentActivity : FragmentActivity() {
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         if (hasFocus) hideSystemUI()

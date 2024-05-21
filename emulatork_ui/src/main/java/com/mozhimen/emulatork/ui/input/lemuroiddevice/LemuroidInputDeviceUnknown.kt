@@ -3,8 +3,7 @@ package com.mozhimen.emulatork.ui.input.lemuroiddevice
 import android.content.Context
 import com.mozhimen.emulatork.ui.input.InputKey
 import com.mozhimen.emulatork.ui.input.RetroKey
-import com.mozhimen.emulatork.ui.input.lemuroiddevice.LemuroidInputDevice
-import com.mozhimen.emulatork.ui.dagger.shared.settings.GameMenuShortcut
+import com.mozhimen.emulatork.ui.settings.GameMenuShortcut
 
 /**
  * @ClassName LemuroidInputDeviceUnknown

@@ -3,7 +3,7 @@ package com.mozhimen.emulatork.ui.game
 import android.view.ContextMenu
 import android.view.View
 import com.mozhimen.emulatork.basic.library.db.entities.Game
-import com.mozhimen.emulatork.test.R
+import com.mozhimen.emulatork.ui.R
 
 /**
  * @ClassName GameContextMenuListener

@@ -5,7 +5,6 @@ import android.text.format.Formatter
 import androidx.preference.ListPreference
 import androidx.preference.PreferenceScreen
 import com.mozhimen.emulatork.basic.storage.cache.CacheCleaner
-import com.mozhimen.emulatork.test.R
 
 /**
  * @ClassName AdvancedSettingsPreferences

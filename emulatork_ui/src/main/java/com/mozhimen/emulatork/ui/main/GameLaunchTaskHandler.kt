@@ -6,10 +6,10 @@ import android.content.Intent
 import com.mozhimen.emulatork.basic.library.db.RetrogradeDatabase
 import com.mozhimen.emulatork.basic.library.db.entities.Game
 import com.mozhimen.emulatork.ext.review.ReviewManager
-import com.mozhimen.emulatork.test.R
+import com.mozhimen.emulatork.ui.R
 import com.mozhimen.emulatork.ui.game.BaseGameActivity
-import com.mozhimen.emulatork.test.shared.savesync.SaveSyncWork
-import com.mozhimen.emulatork.test.shared.storage.cache.CacheCleanerWork
+import com.mozhimen.emulatork.ui.savesync.SaveSyncWork
+import com.mozhimen.emulatork.ui.storage.cache.CacheCleanerWork
 import kotlinx.coroutines.delay
 
 /**

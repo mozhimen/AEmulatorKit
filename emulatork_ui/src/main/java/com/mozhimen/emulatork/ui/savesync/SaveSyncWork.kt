@@ -14,20 +14,14 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import com.mozhimen.emulatork.basic.dagger.AndroidWorkerInjection
-import com.mozhimen.emulatork.basic.dagger.interfaces.WorkerKey
 import com.mozhimen.emulatork.basic.library.findByName
 import com.mozhimen.emulatork.basic.savesync.SaveSyncManager
-import com.mozhimen.emulatork.ui.dagger.feature.settings.SettingsManager
 import com.mozhimen.emulatork.ui.main.NotificationsManager
-import dagger.Binds
-import dagger.android.AndroidInjector
-import dagger.multibindings.IntoMap
+import com.mozhimen.emulatork.ui.settings.SettingsManager
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 
 /**
  * @ClassName SaveSyncWork
@@ -36,17 +30,18 @@ import javax.inject.Inject
  * @Date 2024/5/11
  * @Version 1.0
  */
-class SaveSyncWork(context: Context, workerParams: WorkerParameters) :
+abstract class SaveSyncWork(context: Context, workerParams: WorkerParameters) :
     CoroutineWorker(context, workerParams) {
 
-    @Inject
-    lateinit var saveSyncManager: SaveSyncManager
+//    @Inject
+//    lateinit var saveSyncManager: SaveSyncManager
+      abstract  fun getSaveSyncManager():SaveSyncManager
 
-    @Inject
-    lateinit var settingsManager: SettingsManager
+//    @Inject
+//    lateinit var settingsManager: SettingsManager
+      abstract fun getSettingsManager(): SettingsManager
 
     override suspend fun doWork(): Result {
-        AndroidWorkerInjection.inject(this)
 
         if (!shouldPerformSaveSync()) {
             return Result.success()
@@ -54,12 +49,12 @@ class SaveSyncWork(context: Context, workerParams: WorkerParameters) :
 
         displayNotification()
 
-        val coresToSync = settingsManager.syncStatesCores()
+        val coresToSync = getSettingsManager().syncStatesCores()
             .mapNotNull { findByName(it) }
             .toSet()
 
         try {
-            saveSyncManager.sync(coresToSync)
+            getSaveSyncManager().sync(coresToSync)
         } catch (e: Throwable) {
             Timber.e(e, "Error in saves sync")
         }
@@ -69,9 +64,9 @@ class SaveSyncWork(context: Context, workerParams: WorkerParameters) :
 
     private suspend fun shouldPerformSaveSync(): Boolean {
         val conditionsToRunThisWork = flow {
-            emit(saveSyncManager.isSupported())
-            emit(saveSyncManager.isConfigured())
-            emit(settingsManager.syncSaves())
+            emit(getSaveSyncManager().isSupported())
+            emit(getSaveSyncManager().isConfigured())
+            emit(getSettingsManager().syncSaves())
             emit(shouldScheduleThisSync())
         }
 
@@ -81,7 +76,7 @@ class SaveSyncWork(context: Context, workerParams: WorkerParameters) :
     private suspend fun shouldScheduleThisSync(): Boolean {
         val isAutoSync = inputData.getBoolean(IS_AUTO, false)
         val isManualSync = !isAutoSync
-        return settingsManager.autoSaveSync() && isAutoSync || isManualSync
+        return getSettingsManager().autoSaveSync() && isAutoSync || isManualSync
     }
 
     private fun displayNotification() {
@@ -139,17 +134,5 @@ class SaveSyncWork(context: Context, workerParams: WorkerParameters) :
         }
     }
 
-    @dagger.Module(subcomponents = [Subcomponent::class])
-    abstract class Module {
-        @Binds
-        @IntoMap
-        @WorkerKey(SaveSyncWork::class)
-        abstract fun bindMyWorkerFactory(builder: Subcomponent.Builder): AndroidInjector.Factory<out ListenableWorker>
-    }
 
-    @dagger.Subcomponent
-    interface Subcomponent : AndroidInjector<SaveSyncWork> {
-        @dagger.Subcomponent.Builder
-        abstract class Builder : AndroidInjector.Builder<SaveSyncWork>()
-    }
 }

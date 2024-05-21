@@ -1,8 +1,8 @@
-package com.mozhimen.emulatork.basic.dagger.android
+package com.mozhimen.emulatork.ui.dagger.android
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
+import com.mozhimen.emulatork.ui.main.ImmersiveFragmentActivity
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -11,14 +11,13 @@ import dagger.android.support.HasSupportFragmentInjector
 import javax.inject.Inject
 
 /**
- * @ClassName RetrogradeActivity
+ * @ClassName ImmersiveActivity
  * @Description TODO
  * @Author Mozhimen & Kolin Zhao
- * @Date 2024/5/9
+ * @Date 2024/5/13
  * @Version 1.0
  */
-abstract class RetrogradeFragmentActivity : FragmentActivity(), HasFragmentInjector, HasSupportFragmentInjector {
-
+abstract class ImmersiveRetrogradeFragmentActivity : ImmersiveFragmentActivity(), HasFragmentInjector, HasSupportFragmentInjector {
     @Inject
     lateinit var supportFragmentInjector: DispatchingAndroidInjector<Fragment>
     @Inject

@@ -3,10 +3,7 @@ package com.mozhimen.emulatork.ui.game
 import com.mozhimen.basick.utilk.android.widget.showToast
 import com.mozhimen.emulatork.basic.library.db.RetrogradeDatabase
 import com.mozhimen.emulatork.basic.library.db.entities.Game
-import com.mozhimen.emulatork.test.R
-import com.mozhimen.emulatork.ui.shortcuts.ShortcutsGenerator
-import com.mozhimen.emulatork.ui.game.GameLauncher
-import com.mozhimen.emulatork.ui.main.BusyActivity
+import com.mozhimen.emulatork.ui.R
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 

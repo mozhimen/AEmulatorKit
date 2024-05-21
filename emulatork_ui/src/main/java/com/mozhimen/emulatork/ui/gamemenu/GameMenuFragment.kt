@@ -1,16 +1,13 @@
 package com.mozhimen.emulatork.ui.gamemenu
 
-import android.content.Context
 import android.os.Bundle
 import androidx.navigation.fragment.findNavController
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.mozhimen.emulatork.basic.library.SystemCoreConfig
-import com.mozhimen.emulatork.ui.dagger.R
+import com.mozhimen.emulatork.ui.R
 import com.mozhimen.emulatork.ui.game.GameMenuContract
-import com.mozhimen.emulatork.ui.gamemenu.GameMenuHelper
 import com.mozhimen.abilityk.jetpack.preference.SafePreferenceDataStore
-import dagger.android.support.AndroidSupportInjection
 
 /**
  * @ClassName GameMenuFragment
@@ -19,12 +16,12 @@ import dagger.android.support.AndroidSupportInjection
  * @Date 2024/5/13
  * @Version 1.0
  */
-class GameMenuFragment : PreferenceFragmentCompat() {
+abstract class GameMenuFragment : PreferenceFragmentCompat() {
 
-    override fun onAttach(context: Context) {
-        AndroidSupportInjection.inject(this)
-        super.onAttach(context)
-    }
+//    override fun onAttach(context: Context) {
+//        AndroidSupportInjection.inject(this)
+//        super.onAttach(context)
+//    }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         preferenceManager.preferenceDataStore = SafePreferenceDataStore
@@ -86,6 +83,5 @@ class GameMenuFragment : PreferenceFragmentCompat() {
         return super.onPreferenceTreeClick(preference)
     }
 
-    @dagger.Module
-    class Module
+
 }

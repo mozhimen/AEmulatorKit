@@ -1,8 +1,8 @@
-package com.mozhimen.emulatork.basic.dagger.android
+package com.mozhimen.emulatork.ui.dagger.android
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -11,13 +11,13 @@ import dagger.android.support.HasSupportFragmentInjector
 import javax.inject.Inject
 
 /**
- * @ClassName RetrogradeAppCompatActivity
+ * @ClassName RetrogradeActivity
  * @Description TODO
  * @Author Mozhimen & Kolin Zhao
- * @Date 2024/5/10
+ * @Date 2024/5/9
  * @Version 1.0
  */
-abstract class RetrogradeAppCompatActivity : AppCompatActivity(), HasFragmentInjector, HasSupportFragmentInjector {
+abstract class RetrogradeFragmentActivity : FragmentActivity(), HasFragmentInjector, HasSupportFragmentInjector {
 
     @Inject
     lateinit var supportFragmentInjector: DispatchingAndroidInjector<Fragment>

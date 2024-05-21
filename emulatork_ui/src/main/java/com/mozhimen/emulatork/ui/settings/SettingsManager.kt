@@ -18,9 +18,9 @@ import kotlin.math.roundToInt
  * @Date 2024/5/11
  * @Version 1.0
  */
-class SettingsManager(private val context: Context, sharedPreferences: Lazy<SharedPreferences>) {
+open class SettingsManager(private val context: Context, sharedPreferences: Lazy<SharedPreferences>) {
 
-    private val sharedPreferences by lazy { FlowSharedPreferences(sharedPreferences.get()) }
+    private val sharedPreferences by lazy { FlowSharedPreferences(sharedPreferences.value) }
 
     private fun getString(resId: Int) = context.getString(resId)
 

@@ -6,8 +6,6 @@ import android.hardware.input.InputManager
 import android.view.InputDevice
 import android.view.KeyEvent
 import com.fredporciuncula.flow.preferences.FlowSharedPreferences
-import com.mozhimen.emulatork.ui.dagger.shared.settings.GameMenuShortcut
-import dagger.Lazy
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -22,6 +20,7 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.builtins.MapSerializer
 import kotlinx.serialization.json.Json
 import com.mozhimen.emulatork.ui.input.lemuroiddevice.getLemuroidInputDevice
+import com.mozhimen.emulatork.ui.settings.GameMenuShortcut
 
 /**
  * @ClassName InputDeviceManager
@@ -31,14 +30,14 @@ import com.mozhimen.emulatork.ui.input.lemuroiddevice.getLemuroidInputDevice
  * @Version 1.0
  */
 @OptIn(ExperimentalCoroutinesApi::class)
-class InputDeviceManager(
+open class InputDeviceManager(
     private val context: Context,
     sharedPreferencesFactory: Lazy<SharedPreferences>
 ) {
 
     private val inputManager = context.getSystemService(Context.INPUT_SERVICE) as InputManager
 
-    private val sharedPreferences by lazy { sharedPreferencesFactory.get() }
+    private val sharedPreferences by lazy { sharedPreferencesFactory.value }
 
     private val flowSharedPreferences by lazy { FlowSharedPreferences(sharedPreferences) }
 

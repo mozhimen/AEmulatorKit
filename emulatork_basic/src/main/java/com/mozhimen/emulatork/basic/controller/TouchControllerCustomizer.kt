@@ -1,5 +1,6 @@
 package com.mozhimen.emulatork.basic.controller
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.pm.ActivityInfo
 import android.graphics.Rect
@@ -46,6 +47,7 @@ class TouchControllerCustomizer {
         val margin: Float
     )
 
+    @SuppressLint("ClickableViewAccessibility", "InflateParams")
     private fun getEvents(
         activity: Activity,
         layoutInflater: LayoutInflater,

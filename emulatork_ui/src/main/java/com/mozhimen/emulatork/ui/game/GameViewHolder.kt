@@ -6,8 +6,7 @@ import android.widget.TextView
 import android.widget.ToggleButton
 import androidx.recyclerview.widget.RecyclerView
 import com.mozhimen.emulatork.basic.library.db.entities.Game
-import com.mozhimen.emulatork.test.R
-import com.mozhimen.emulatork.test.utils.GameUtils
+import com.mozhimen.emulatork.ui.R
 
 /**
  * @ClassName GameViewHolder

@@ -19,7 +19,7 @@ import com.google.android.material.elevation.SurfaceColors
 import com.mozhimen.basick.utilk.kotlinx.coroutines.launchSafe
 import com.mozhimen.emulatork.basic.dagger.interfaces.PerActivity
 import com.mozhimen.emulatork.basic.dagger.interfaces.PerFragment
-import com.mozhimen.emulatork.basic.dagger.android.RetrogradeAppCompatActivity
+import com.mozhimen.emulatork.ui.dagger.android.RetrogradeAppCompatActivity
 import com.mozhimen.emulatork.basic.library.SystemID
 import com.mozhimen.emulatork.basic.library.db.RetrogradeDatabase
 import com.mozhimen.emulatork.basic.savesync.SaveSyncManager

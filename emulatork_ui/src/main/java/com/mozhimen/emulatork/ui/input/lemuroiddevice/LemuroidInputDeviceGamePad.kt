@@ -6,12 +6,12 @@ import android.view.KeyEvent
 import com.mozhimen.emulatork.ui.input.InputDeviceManager
 import com.mozhimen.emulatork.ui.input.InputKey
 import com.mozhimen.emulatork.ui.input.RetroKey
-import com.mozhimen.emulatork.test.shared.input.bindingsOf
-import com.mozhimen.emulatork.test.shared.input.inputKeysOf
-import com.mozhimen.emulatork.test.shared.input.inputclass.getInputClass
-import com.mozhimen.emulatork.test.shared.input.retroKeysOf
-import com.mozhimen.emulatork.test.shared.input.supportsAllKeys
-import com.mozhimen.emulatork.ui.dagger.shared.settings.GameMenuShortcut
+import com.mozhimen.emulatork.ui.input.bindingsOf
+import com.mozhimen.emulatork.ui.input.inputKeysOf
+import com.mozhimen.emulatork.ui.input.inputclass.getInputClass
+import com.mozhimen.emulatork.ui.input.retroKeysOf
+import com.mozhimen.emulatork.ui.input.supportsAllKeys
+import com.mozhimen.emulatork.ui.settings.GameMenuShortcut
 
 /**
  * @ClassName LemuroidInputDeviceGamePad

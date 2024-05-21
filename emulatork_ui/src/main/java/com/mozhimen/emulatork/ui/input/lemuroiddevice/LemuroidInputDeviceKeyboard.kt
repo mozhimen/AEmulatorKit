@@ -5,10 +5,10 @@ import android.view.InputDevice
 import android.view.KeyEvent
 import com.mozhimen.emulatork.ui.input.InputDeviceManager
 import com.mozhimen.emulatork.ui.input.RetroKey
-import com.mozhimen.emulatork.test.shared.input.bindingsOf
-import com.mozhimen.emulatork.test.shared.input.inputKeysOf
-import com.mozhimen.emulatork.test.shared.input.supportsAllKeys
-import com.mozhimen.emulatork.ui.dagger.shared.settings.GameMenuShortcut
+import com.mozhimen.emulatork.ui.input.bindingsOf
+import com.mozhimen.emulatork.ui.input.inputKeysOf
+import com.mozhimen.emulatork.ui.input.supportsAllKeys
+import com.mozhimen.emulatork.ui.settings.GameMenuShortcut
 
 /**
  * @ClassName LemuroidInputDeviceKeyboard

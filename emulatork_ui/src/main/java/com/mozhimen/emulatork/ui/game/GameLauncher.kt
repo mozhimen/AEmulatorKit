@@ -4,7 +4,7 @@ import android.app.Activity
 import com.mozhimen.emulatork.basic.core.CoresSelection
 import com.mozhimen.emulatork.basic.library.GameSystem
 import com.mozhimen.emulatork.basic.library.db.entities.Game
-import com.mozhimen.emulatork.test.shared.main.GameLaunchTaskHandler
+import com.mozhimen.emulatork.ui.main.GameLaunchTaskHandler
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

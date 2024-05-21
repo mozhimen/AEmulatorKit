@@ -1,6 +1,5 @@
 package com.mozhimen.emulatork.ui.gamemenu
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Lifecycle
@@ -10,10 +9,9 @@ import com.mozhimen.emulatork.basic.preferences.SharedPreferencesHelper
 import com.mozhimen.emulatork.ui.input.InputDeviceManager
 import com.mozhimen.emulatork.ui.game.GameMenuContract
 import com.mozhimen.emulatork.ui.coreoptions.LemuroidCoreOption
-import dagger.android.support.AndroidSupportInjection
+import com.mozhimen.emulatork.ui.R
 import java.security.InvalidParameterException
 import com.mozhimen.emulatork.basic.library.db.entities.Game
-import javax.inject.Inject
 import com.mozhimen.emulatork.basic.library.SystemCoreConfig
 import com.mozhimen.emulatork.ui.coreoptions.CoreOptionsPreferenceHelper
 
@@ -24,27 +22,28 @@ import com.mozhimen.emulatork.ui.coreoptions.CoreOptionsPreferenceHelper
  * @Date 2024/5/13
  * @Version 1.0
  */
-class GameMenuCoreOptionsFragment : PreferenceFragmentCompat() {
+abstract class GameMenuCoreOptionsFragment : PreferenceFragmentCompat() {
 
-    @Inject
-    lateinit var inputDeviceManager: InputDeviceManager
+//    @Inject
+//    lateinit var inputDeviceManager: InputDeviceManager
+    abstract fun getInputDeviceManager():InputDeviceManager
 
-    override fun onAttach(context: Context) {
-        AndroidSupportInjection.inject(this)
-        super.onAttach(context)
-    }
+//    override fun onAttach(context: Context) {
+//        AndroidSupportInjection.inject(this)
+//        super.onAttach(context)
+//    }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         preferenceManager.preferenceDataStore =
             SharedPreferencesHelper.getSharedPreferencesDataStore(requireContext())
-        addPreferencesFromResource(com.mozhimen.emulatork.ui.dagger.R.xml.empty_preference_screen)
+        addPreferencesFromResource(R.xml.empty_preference_screen)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         runOnViewLifecycleState(Lifecycle.State.CREATED) {
-            inputDeviceManager
+            getInputDeviceManager()
                 .getGamePadsObservable()
                 .collect { updateScreen(it.size) }
         }
@@ -84,7 +83,4 @@ class GameMenuCoreOptionsFragment : PreferenceFragmentCompat() {
             coreConfig.controllerConfigs
         )
     }
-
-    @dagger.Module
-    class Module
 }

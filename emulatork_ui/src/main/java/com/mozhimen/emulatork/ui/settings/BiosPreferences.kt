@@ -6,7 +6,7 @@ import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceScreen
 import com.mozhimen.emulatork.basic.bios.Bios
 import com.mozhimen.emulatork.basic.bios.BiosManager
-import com.mozhimen.emulatork.test.R
+import com.mozhimen.emulatork.ui.R
 
 /**
  * @ClassName BiosPreferences

@@ -10,8 +10,7 @@ import androidx.preference.SwitchPreference
 import com.mozhimen.emulatork.basic.library.CoreID
 import com.mozhimen.emulatork.basic.library.GameSystem
 import com.mozhimen.emulatork.basic.savesync.SaveSyncManager
-import com.mozhimen.emulatork.test.R
-import com.mozhimen.emulatork.ui.savesync.SaveSyncWork
+import com.mozhimen.emulatork.ui.R
 
 /**
  * @ClassName SaveSyncPreferences

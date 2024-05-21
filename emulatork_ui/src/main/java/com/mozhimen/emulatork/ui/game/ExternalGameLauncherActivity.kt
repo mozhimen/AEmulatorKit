@@ -15,10 +15,9 @@ import com.mozhimen.basick.utilk.androidx.lifecycle.runOnLifecycleState
 import com.mozhimen.basick.utilk.kotlinx.coroutines.launchSafe
 import com.mozhimen.emulatork.basic.core.CoresSelection
 import com.mozhimen.emulatork.basic.library.db.RetrogradeDatabase
-import com.mozhimen.emulatork.test.R
-import com.mozhimen.emulatork.ui.dagger.ImmersiveActivity
-import com.mozhimen.emulatork.test.shared.library.PendingOperationsMonitor
-import com.mozhimen.emulatork.test.shared.main.GameLaunchTaskHandler
+import com.mozhimen.emulatork.ui.R
+import com.mozhimen.emulatork.ui.main.GameLaunchTaskHandler
+import com.mozhimen.emulatork.ui.main.ImmersiveFragmentActivity
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -27,7 +26,7 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import com.mozhimen.emulatork.ui.library.PendingOperationsMonitor
 
 /**
  * @ClassName ExternalGameLauncherActivity
@@ -42,19 +41,23 @@ import javax.inject.Inject
  * complete.
  */
 @OptIn(FlowPreview::class)
-class ExternalGameLauncherActivity : ImmersiveActivity() {
+abstract class ExternalGameLauncherActivity : ImmersiveFragmentActivity() {
 
-    @Inject
-    lateinit var retrogradeDatabase: RetrogradeDatabase
+//    @Inject
+//    lateinit var retrogradeDatabase: RetrogradeDatabase
+    abstract fun getRetrogradeDatabase():RetrogradeDatabase
 
-    @Inject
-    lateinit var gameLaunchTaskHandler: GameLaunchTaskHandler
+//    @Inject
+//    lateinit var gameLaunchTaskHandler: GameLaunchTaskHandler
+    abstract fun getGameLaunchTaskHandler():GameLaunchTaskHandler
 
-    @Inject
-    lateinit var coresSelection: CoresSelection
+//    @Inject
+//    lateinit var coresSelection: CoresSelection
+    abstract fun getCoresSelection():CoresSelection
 
-    @Inject
-    lateinit var gameLauncher: GameLauncher
+//    @Inject
+//    lateinit var gameLauncher: GameLauncher
+    abstract fun getGameLauncher():GameLauncher
 
     private val loadingState = MutableStateFlow(true)
 
@@ -93,12 +96,12 @@ class ExternalGameLauncherActivity : ImmersiveActivity() {
     private suspend fun loadGame(gameId: Int) {
         waitPendingOperations()
 
-        val game = retrogradeDatabase.gameDao().selectById(gameId)
+        val game = getRetrogradeDatabase().gameDao().selectById(gameId)
             ?: throw IllegalArgumentException("Game not found: $gameId")
 
         delay(get_of_config_mediumAnimTime().toLong())
 
-        gameLauncher.launchGameAsync(
+        getGameLauncher().launchGameAsync(
             this,
             game,
             true,
@@ -114,7 +117,7 @@ false//            TVHelper.isTV(applicationContext)
     }
 
     private fun displayErrorMessage() {
-        showAlertDialog(com.mozhimen.emulatork.ui.R.string.game_loader_error_load_game, R.string.ok) { finish() }
+        showAlertDialog(R.string.game_loader_error_load_game, R.string.ok) { finish() }
     }
 
     private fun getLoadingLiveData(): LiveData<Boolean> {
@@ -132,7 +135,7 @@ false//            TVHelper.isTV(applicationContext)
                     if (isLeanback) {
 //                        ChannelUpdateWork.enqueue(applicationContext)
                     }
-                    gameLaunchTaskHandler.handleGameFinish(false, this@ExternalGameLauncherActivity, resultCode, data)
+                    getGameLaunchTaskHandler().handleGameFinish(false, this@ExternalGameLauncherActivity, resultCode, data)
                     finish()
                 }
             }

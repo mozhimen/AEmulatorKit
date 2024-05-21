@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.TextView
 import androidx.core.view.isVisible
-import com.mozhimen.emulatork.test.R
+import com.mozhimen.emulatork.ui.R
 
 /**
  * @ClassName GameCrashActivity

@@ -9,14 +9,9 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceScreen
 import androidx.preference.SwitchPreference
-import com.mozhimen.emulatork.test.R
-import com.mozhimen.emulatork.test.feature.input.GamePadBindingActivity
-import com.mozhimen.emulatork.ui.input.InputDeviceManager
-import com.mozhimen.emulatork.ui.input.InputKey
-import com.mozhimen.emulatork.ui.input.RetroKey
+import com.mozhimen.emulatork.ui.R
+import com.mozhimen.emulatork.ui.input.GamePadBindingActivity
 import com.mozhimen.emulatork.ui.input.lemuroiddevice.getLemuroidInputDevice
-import com.mozhimen.emulatork.ui.input.InputBindingUpdater
-import com.mozhimen.emulatork.ui.settings.GameMenuShortcut
 import java.util.Locale
 
 /**
@@ -26,7 +21,7 @@ import java.util.Locale
  * @Date 2024/5/13
  * @Version 1.0
  */
-class GamePadPreferencesHelper(
+open class GamePadPreferencesHelper(
     private val inputDeviceManager: com.mozhimen.emulatork.ui.input.InputDeviceManager,
     private val isLeanback: Boolean
 ) {
@@ -227,6 +222,5 @@ class GamePadPreferencesHelper(
         }
     }
 
-    @dagger.Module
-    class Module
+
 }

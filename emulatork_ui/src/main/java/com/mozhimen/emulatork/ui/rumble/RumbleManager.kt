@@ -8,7 +8,7 @@ import android.view.InputDevice
 import com.mozhimen.basick.utilk.kotlinx.coroutines.collectSafe
 import com.mozhimen.emulatork.basic.library.SystemCoreConfig
 import com.mozhimen.emulatork.ui.input.InputDeviceManager
-import com.mozhimen.emulatork.ui.dagger.feature.settings.SettingsManager
+import com.mozhimen.emulatork.ui.settings.SettingsManager
 import com.swordfish.libretrodroid.RumbleEvent
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.ExperimentalCoroutinesApi

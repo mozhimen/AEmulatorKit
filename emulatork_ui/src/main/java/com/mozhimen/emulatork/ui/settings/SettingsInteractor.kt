@@ -3,8 +3,7 @@ package com.mozhimen.emulatork.ui.settings
 import android.content.Context
 import com.mozhimen.emulatork.basic.preferences.SharedPreferencesHelper
 import com.mozhimen.emulatork.basic.storage.DirectoriesManager
-import com.mozhimen.emulatork.ui.library.LibraryIndexScheduler
-import com.mozhimen.emulatork.test.shared.storage.cache.CacheCleanerWork
+import com.mozhimen.emulatork.ui.storage.cache.CacheCleanerWork
 
 /**
  * @ClassName SettingsInteractor

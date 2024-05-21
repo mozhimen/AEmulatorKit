@@ -1,13 +1,8 @@
-package com.mozhimen.emulatork.test.input
+package com.mozhimen.emulatork.ui.input
 
 import android.os.Bundle
 import android.view.KeyEvent
 import androidx.appcompat.app.AlertDialog
-import com.mozhimen.emulatork.basic.dagger.android.RetrogradeFragmentActivity
-import com.mozhimen.emulatork.ui.input.InputBindingUpdater
-import com.mozhimen.emulatork.ui.input.InputDeviceManager
-import javax.inject.Inject
-
 /**
  * @ClassName GamePadBindingActivity
  * @Description TODO

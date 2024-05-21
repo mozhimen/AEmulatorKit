@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.RecyclerView
-import com.mozhimen.emulatork.test.R
+import com.mozhimen.emulatork.ui.R
 import com.mozhimen.basick.utilk.kotlin.sequences.UtilKSequence
 import dagger.android.support.AndroidSupportInjection
 

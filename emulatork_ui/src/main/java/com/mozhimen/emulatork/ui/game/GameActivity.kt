@@ -24,8 +24,6 @@ import com.mozhimen.basick.utilk.kotlinx.coroutines.batch_ofTime
 import com.mozhimen.emulatork.basic.controller.ControllerConfig
 import com.mozhimen.emulatork.basic.controller.TouchControllerCustomizer
 import com.mozhimen.emulatork.basic.controller.TouchControllerSettingsManager
-import com.mozhimen.emulatork.input.LemuroidTouchConfigs
-import com.mozhimen.emulatork.input.LemuroidTouchOverlayThemes
 import com.mozhimen.emulatork.input.sensors.TiltSensor
 import com.mozhimen.emulatork.ui.R
 import com.mozhimen.emulatork.ui.gamemenu.GameMenuActivity
@@ -33,6 +31,8 @@ import com.mozhimen.emulatork.ui.tilt.TiltTracker
 import com.mozhimen.emulatork.ui.tilt.StickTiltTracker
 import com.mozhimen.emulatork.ui.tilt.CrossTiltTracker
 import com.mozhimen.emulatork.ui.tilt.TwoButtonsTiltTracker
+import com.mozhimen.emulatork.input.LemuroidTouchOverlayThemes
+import com.mozhimen.emulatork.input.LemuroidTouchConfigs
 import com.swordfish.libretrodroid.GLRetroView
 import com.swordfish.radialgamepad.library.RadialGamePad
 import com.swordfish.radialgamepad.library.config.RadialGamePadTheme
@@ -59,7 +59,6 @@ import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
 import kotlin.math.roundToInt
 
 /**
@@ -69,9 +68,10 @@ import kotlin.math.roundToInt
  * @Date 2024/5/9
  * @Version 1.0
  */
-class GameActivity : BaseGameActivity() {
-    @Inject
-    lateinit var sharedPreferences: Lazy<SharedPreferences>
+abstract class GameActivity : BaseGameActivity() {
+    //    @Inject
+//    lateinit var sharedPreferences: Lazy<SharedPreferences>
+    abstract fun getLazySharedPreferences(): Lazy<SharedPreferences>
 
     private lateinit var horizontalDivider: View
     private lateinit var leftVerticalDivider: View
@@ -142,7 +142,7 @@ class GameActivity : BaseGameActivity() {
     }
 
     private suspend fun initializeTiltSensitivityFlow() {
-        val sensitivity = settingsManager.tiltSensitivity()
+        val sensitivity = getSettingsManager().tiltSensitivity()
         tiltSensor.setSensitivity(sensitivity)
     }
 
@@ -184,7 +184,7 @@ class GameActivity : BaseGameActivity() {
         .distinctUntilChanged()
 
     private suspend fun setupController(controllerConfig: ControllerConfig, orientation: Int) {
-        val hapticFeedbackMode = settingsManager.hapticFeedbackMode()
+        val hapticFeedbackMode = getSettingsManager().hapticFeedbackMode()
         withContext(Dispatchers.Main) {
             setupTouchViews(controllerConfig, hapticFeedbackMode, orientation)
         }
@@ -192,7 +192,7 @@ class GameActivity : BaseGameActivity() {
     }
 
     private fun isTouchControllerVisible(): Flow<Boolean> {
-        return inputDeviceManager
+        return getInputDeviceManager()
             .getEnabledInputsObservable()
             .map { it.isEmpty() }
     }
@@ -524,7 +524,7 @@ class GameActivity : BaseGameActivity() {
         return TouchControllerSettingsManager(
             applicationContext,
             controllerConfig.touchControllerID,
-            sharedPreferences,
+            getLazySharedPreferences(),
             settingsOrientation
         )
     }

@@ -9,14 +9,12 @@ import androidx.preference.PreferenceFragmentCompat
 import com.mozhimen.basick.utilk.androidx.fragment.runOnViewLifecycleState
 import com.mozhimen.emulatork.basic.library.SystemCoreConfig
 import com.mozhimen.emulatork.basic.library.db.entities.Game
-import com.mozhimen.emulatork.basic.saves.StatesManager
-import com.mozhimen.emulatork.basic.saves.StatesPreviewManager
-import com.mozhimen.emulatork.ui.dagger.R
+import com.mozhimen.emulatork.ui.R
 import com.mozhimen.emulatork.ui.game.GameMenuContract
 import com.mozhimen.abilityk.jetpack.preference.SafePreferenceDataStore
-import dagger.android.support.AndroidSupportInjection
+import com.mozhimen.emulatork.basic.saves.StatesManager
+import com.mozhimen.emulatork.basic.saves.StatesPreviewManager
 import java.security.InvalidParameterException
-import javax.inject.Inject
 
 /**
  * @ClassName GameMenuSaveFragment
@@ -25,17 +23,19 @@ import javax.inject.Inject
  * @Date 2024/5/13
  * @Version 1.0
  */
-class GameMenuSaveFragment : PreferenceFragmentCompat() {
+abstract class GameMenuSaveFragment : PreferenceFragmentCompat() {
 
-    @Inject
-    lateinit var statesManager: StatesManager
-    @Inject
-    lateinit var statesPreviewManager: StatesPreviewManager
+//    @Inject
+//    lateinit var statesManager: StatesManager
+    abstract fun getStatesManager(): StatesManager
+//    @Inject
+//    lateinit var statesPreviewManager: StatesPreviewManager
+    abstract fun getStatesPreviewManager(): StatesPreviewManager
 
-    override fun onAttach(context: Context) {
-        AndroidSupportInjection.inject(this)
-        super.onAttach(context)
-    }
+//    override fun onAttach(context: Context) {
+//        AndroidSupportInjection.inject(this)
+//        super.onAttach(context)
+//    }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         preferenceManager.preferenceDataStore = SafePreferenceDataStore
@@ -59,12 +59,12 @@ class GameMenuSaveFragment : PreferenceFragmentCompat() {
     }
 
     private suspend fun setupSavePreference(game: Game, systemCoreConfig: SystemCoreConfig) {
-        val slotsInfo = statesManager.getSavedSlotsInfo(game, systemCoreConfig.coreID)
+        val slotsInfo = getStatesManager().getSavedSlotsInfo(game, systemCoreConfig.coreID)
 
         slotsInfo.forEachIndexed { index, saveInfo ->
             val bitmap = GameMenuHelper.getSaveStateBitmap(
                 requireContext(),
-                statesPreviewManager,
+                getStatesPreviewManager(),
                 saveInfo,
                 game,
                 systemCoreConfig.coreID,
@@ -84,6 +84,5 @@ class GameMenuSaveFragment : PreferenceFragmentCompat() {
         return GameMenuHelper.onPreferenceTreeClicked(activity, preference)
     }
 
-    @dagger.Module
-    class Module
+
 }
