@@ -3,11 +3,7 @@ package com.mozhimen.emulatork.ui.dagger.gamemenu
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.mozhimen.emulatork.basic.dagger.interfaces.PerFragment
-import com.mozhimen.emulatork.ui.gamemenu.GameMenuActivity
-import com.mozhimen.emulatork.ui.gamemenu.GameMenuCoreOptionsFragment
-import com.mozhimen.emulatork.ui.gamemenu.GameMenuFragment
-import com.mozhimen.emulatork.ui.gamemenu.GameMenuLoadFragment
-import com.mozhimen.emulatork.ui.gamemenu.GameMenuSaveFragment
+import com.mozhimen.emulatork.ui.gamemenu.AbsGameMenuActivity
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.ContributesAndroidInjector
@@ -15,6 +11,7 @@ import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasFragmentInjector
 import dagger.android.support.HasSupportFragmentInjector
 import javax.inject.Inject
+import com.mozhimen.emulatork.ui.dagger.R
 
 /**
  * @ClassName GameMenuActivity
@@ -23,20 +20,27 @@ import javax.inject.Inject
  * @Date 2024/5/20 21:50
  * @Version 1.0
  */
-class GameMenuActivity:GameMenuActivity() , HasFragmentInjector, HasSupportFragmentInjector {
+class GameMenuActivity : AbsGameMenuActivity(), HasFragmentInjector, HasSupportFragmentInjector {
     @Inject
     lateinit var supportFragmentInjector: DispatchingAndroidInjector<Fragment>
+
     @Inject
     lateinit var frameworkFragmentInjector: DispatchingAndroidInjector<android.app.Fragment>
+
+    override fun getGraphId(): Int {
+        return R.navigation.mobile_game_menu
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
     }
 
-    override fun supportFragmentInjector(): AndroidInjector<Fragment>? = supportFragmentInjector
+    override fun supportFragmentInjector(): AndroidInjector<Fragment> =
+        supportFragmentInjector
 
-    override fun fragmentInjector(): AndroidInjector<android.app.Fragment>? = frameworkFragmentInjector
+    override fun fragmentInjector(): AndroidInjector<android.app.Fragment> =
+        frameworkFragmentInjector
 
     @dagger.Module
     abstract class Module {

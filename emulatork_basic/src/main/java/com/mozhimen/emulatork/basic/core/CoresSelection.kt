@@ -14,7 +14,7 @@ import kotlinx.coroutines.withContext
  * @Date 2024/5/11
  * @Version 1.0
  */
-class CoresSelection(private val sharedPreferences: Lazy<SharedPreferences>) {
+open class CoresSelection(private val sharedPreferences: Lazy<SharedPreferences>) {
 
     suspend fun getCoreConfigForSystem(system: GameSystem) = withContext(Dispatchers.IO) {
         fetchSystemCoreConfig(system)

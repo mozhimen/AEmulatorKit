@@ -3,6 +3,8 @@ package com.mozhimen.emulatork.ui.input
 import android.os.Bundle
 import android.view.KeyEvent
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.FragmentActivity
+
 /**
  * @ClassName GamePadBindingActivity
  * @Description TODO
@@ -10,17 +12,18 @@ import androidx.appcompat.app.AlertDialog
  * @Date 2024/5/13
  * @Version 1.0
  */
-class GamePadBindingActivity : RetrogradeFragmentActivity() {
+abstract class GamePadBindingActivity : FragmentActivity() {
 
-    @Inject
-    lateinit var inputDeviceManager: com.mozhimen.emulatork.ui.input.InputDeviceManager
+//    @Inject
+//    lateinit var inputDeviceManager: InputDeviceManager
+    abstract fun inputDeviceManager():InputDeviceManager
 
-    private lateinit var inputBindingUpdater: com.mozhimen.emulatork.ui.input.InputBindingUpdater
+    private lateinit var inputBindingUpdater: InputBindingUpdater
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        inputBindingUpdater = com.mozhimen.emulatork.ui.input.InputBindingUpdater(inputDeviceManager, intent)
+        inputBindingUpdater = InputBindingUpdater(inputDeviceManager(), intent)
 
         if (savedInstanceState == null) {
             AlertDialog.Builder(this)
@@ -42,6 +45,5 @@ class GamePadBindingActivity : RetrogradeFragmentActivity() {
         return result
     }
 
-    @dagger.Module
-    abstract class Module
+
 }

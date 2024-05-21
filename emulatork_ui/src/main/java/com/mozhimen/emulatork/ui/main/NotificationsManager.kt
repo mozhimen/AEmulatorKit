@@ -11,7 +11,6 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.mozhimen.emulatork.basic.library.db.entities.Game
 import com.mozhimen.emulatork.ui.R
-import com.mozhimen.emulatork.ui.game.GameActivity
 import com.mozhimen.emulatork.ui.library.LibraryIndexBroadcastReceiver
 import com.mozhimen.emulatork.ui.library.CoreUpdateBroadcastReceiver
 
@@ -22,12 +21,12 @@ import com.mozhimen.emulatork.ui.library.CoreUpdateBroadcastReceiver
  * @Date 2024/5/9
  * @Version 1.0
  */
-class NotificationsManager(private val applicationContext: Context) {
+class NotificationsManager constructor(private val applicationContext: Context,private val gameActivityClazz: Class<*>) {
 
     fun gameRunningNotification(game: Game?): Notification {
         createDefaultNotificationChannel()
 
-        val intent = Intent(applicationContext, GameActivity::class.java)
+        val intent = Intent(applicationContext, gameActivityClazz)
         val contentIntent = PendingIntent.getActivity(
             applicationContext,
             0,

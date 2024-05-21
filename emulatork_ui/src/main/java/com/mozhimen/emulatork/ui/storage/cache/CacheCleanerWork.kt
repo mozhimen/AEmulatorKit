@@ -4,20 +4,13 @@ import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
-import androidx.work.ListenableWorker
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import com.mozhimen.emulatork.basic.dagger.AndroidWorkerInjection
-import com.mozhimen.emulatork.basic.dagger.interfaces.WorkerKey
 import com.mozhimen.emulatork.basic.storage.cache.CacheCleaner
-import com.mozhimen.emulatork.ui.dagger.feature.settings.SettingsManager
-import dagger.Binds
-import dagger.android.AndroidInjector
-import dagger.multibindings.IntoMap
+import com.mozhimen.emulatork.ui.settings.SettingsManager
 import timber.log.Timber
-import javax.inject.Inject
 
 /**
  * @ClassName CacheCleanerWork
@@ -26,16 +19,17 @@ import javax.inject.Inject
  * @Date 2024/5/13
  * @Version 1.0
  */
-class CacheCleanerWork(
+abstract class CacheCleanerWork(
     context: Context,
     workerParams: WorkerParameters
 ) : CoroutineWorker(context, workerParams) {
 
-    @Inject
-    lateinit var settingsManager: SettingsManager
+    //    @Inject
+//    lateinit var settingsManager: SettingsManager
+    abstract fun settingsManager(): SettingsManager
 
     override suspend fun doWork(): Result {
-        AndroidWorkerInjection.inject(this)
+
 
         try {
             performCleaning()
@@ -55,7 +49,7 @@ class CacheCleanerWork(
     }
 
     private suspend fun cleanLRU(context: Context) {
-        val size = settingsManager.cacheSizeBytes().toLong()
+        val size = settingsManager().cacheSizeBytes().toLong()
         CacheCleaner.clean(context, size)
     }
 
@@ -91,19 +85,5 @@ class CacheCleanerWork(
                     .build()
             )
         }
-    }
-
-    @dagger.Module(subcomponents = [Subcomponent::class])
-    abstract class Module {
-        @Binds
-        @IntoMap
-        @WorkerKey(CacheCleanerWork::class)
-        abstract fun bindMyWorkerFactory(builder: Subcomponent.Builder): AndroidInjector.Factory<out ListenableWorker>
-    }
-
-    @dagger.Subcomponent
-    interface Subcomponent : AndroidInjector<CacheCleanerWork> {
-        @dagger.Subcomponent.Builder
-        abstract class Builder : AndroidInjector.Builder<CacheCleanerWork>()
     }
 }

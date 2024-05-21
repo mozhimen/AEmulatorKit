@@ -32,7 +32,7 @@ android {
 dependencies {
     implementation project(':SwiftKit:basick')
     implementation project(':ALogKit:logk_timber')
-    implementation "com.github.Swordfish90:RadialGamePad:2.0.0"
+    api "com.github.Swordfish90:RadialGamePad:2.0.0"
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

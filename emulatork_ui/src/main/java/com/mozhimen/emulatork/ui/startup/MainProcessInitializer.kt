@@ -3,8 +3,6 @@ package com.mozhimen.emulatork.ui.startup
 import android.content.Context
 import androidx.startup.Initializer
 import androidx.work.WorkManagerInitializer
-import com.mozhimen.emulatork.ui.library.LibraryIndexScheduler
-import com.mozhimen.emulatork.ui.savesync.SaveSyncWork
 import timber.log.Timber
 
 /**
@@ -17,7 +15,7 @@ import timber.log.Timber
 class MainProcessInitializer : Initializer<Unit> {
     override fun create(context: Context) {
         Timber.i("Requested initialization of main process tasks")
-        com.mozhimen.emulatork.ui.savesync.SaveSyncWork.enqueueAutoWork(context, 0)
+        com.mozhimen.emulatork.ui.savesync.AbsSaveSyncWork.enqueueAutoWork(context, 0)
         com.mozhimen.emulatork.ui.library.LibraryIndexScheduler.scheduleCoreUpdate(context)
     }
 

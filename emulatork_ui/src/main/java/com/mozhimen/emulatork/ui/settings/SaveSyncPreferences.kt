@@ -159,6 +159,6 @@ class SaveSyncPreferences(private val saveSyncManager: SaveSyncManager) {
     }
 
     private fun handleSaveSyncRefresh(context: Context) {
-        com.mozhimen.emulatork.ui.savesync.SaveSyncWork.enqueueManualWork(context.applicationContext)
+        com.mozhimen.emulatork.ui.savesync.AbsSaveSyncWork.enqueueManualWork(context.applicationContext)
     }
 }

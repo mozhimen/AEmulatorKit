@@ -32,7 +32,7 @@ import timber.log.Timber
  * @Date 2024/5/11
  * @Version 1.0
  */
-class LemuroidLibrary(
+open class LemuroidLibrary(
     private val retrogradedb: RetrogradeDatabase,
     private val storageProviderRegistry: Lazy<StorageProviderRegistry>,
     private val gameMetadataProvider: Lazy<GameMetadataProvider>,
@@ -56,8 +56,8 @@ class LemuroidLibrary(
 
     @OptIn(FlowPreview::class)
     private suspend fun indexProviders(startedAtMs: Long) {
-        val gameMetadata = gameMetadataProvider.get()
-        val enabledProviders = storageProviderRegistry.get().enabledProviders
+        val gameMetadata = gameMetadataProvider.value
+        val enabledProviders = storageProviderRegistry.value.enabledProviders
         enabledProviders.asFlow()
             .flatMapConcat {
                 indexSingleProvider(it, startedAtMs, gameMetadata)
@@ -300,7 +300,7 @@ class LemuroidLibrary(
         dataFiles: List<DataFile>,
         allowVirtualFiles: Boolean
     ): RomFiles {
-        val provider = storageProviderRegistry.get()
+        val provider = storageProviderRegistry.value
         return provider.getProvider(game).getGameRomFiles(game, dataFiles, allowVirtualFiles)
     }
 

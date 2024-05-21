@@ -1,6 +1,5 @@
 package com.mozhimen.emulatork.ui.game
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +11,6 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.RecyclerView
 import com.mozhimen.emulatork.ui.R
 import com.mozhimen.basick.utilk.kotlin.sequences.UtilKSequence
-import dagger.android.support.AndroidSupportInjection
 
 /**
  * @ClassName RecyclerViewFragment
@@ -36,11 +34,6 @@ open class RecyclerViewFragment : Fragment() {
         recyclerView = root.findViewById(R.id.recycler_view)
         emptyView = root.findViewById(R.id.empty_view)
         return root
-    }
-
-    override fun onAttach(context: Context) {
-        AndroidSupportInjection.inject(this)
-        super.onAttach(context)
     }
 
     fun updateEmptyViewVisibility(loadState: CombinedLoadStates, itemCount: Int) {

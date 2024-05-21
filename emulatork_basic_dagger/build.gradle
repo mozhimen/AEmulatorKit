@@ -32,7 +32,7 @@ android {
 
 dependencies {
     api project(':AInjectKit:injectk_dagger')
-    implementation project(':emulatork_basic')
+    api project(':emulatork_basic')
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

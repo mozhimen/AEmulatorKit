@@ -3,7 +3,7 @@ package com.mozhimen.emulatork.ui.startup
 import android.content.Context
 import android.os.StrictMode
 import androidx.startup.Initializer
-import com.mozhimen.emulatork.test.BuildConfig
+import com.mozhimen.emulatork.ui.BuildConfig
 import timber.log.Timber
 
 /**

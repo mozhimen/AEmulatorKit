@@ -35,7 +35,7 @@ object VirtualLongPressHandler {
     private val DISAPPEAR_ANIMATION = (ViewConfiguration.getLongPressTimeout() * 2f).toLong()
     private val LONG_PRESS_TIMEOUT = ViewConfiguration.getLongPressTimeout().toLong()
 
-    fun initializeTheme(gameActivity: GameActivity) {
+    fun initializeTheme(gameActivity: AbsGameActivity) {
         val palette = LemuroidTouchOverlayThemes.getGamePadTheme(longPressView(gameActivity))
         longPressIconView(gameActivity).setColorFilter(palette.textColor)
         longPressProgressBar(gameActivity).setIndicatorColor(palette.textColor)
@@ -67,7 +67,7 @@ object VirtualLongPressHandler {
     }
 
     suspend fun displayLoading(
-        activity: GameActivity,
+        activity: AbsGameActivity,
         iconId: Int,
         cancellation: Flow<Unit>
     ): Boolean {
@@ -97,24 +97,24 @@ object VirtualLongPressHandler {
         return isSuccessful
     }
 
-    private fun longPressIconView(activity: GameActivity) =
+    private fun longPressIconView(activity: AbsGameActivity) =
         activity.findViewById<ImageView>(R.id.settings_loading_icon)
 
-    private fun longPressProgressBar(activity: GameActivity) =
+    private fun longPressProgressBar(activity: AbsGameActivity) =
         activity.findViewById<CircularProgressIndicator>(R.id.settings_loading_progress)
 
-    private fun longPressView(activity: GameActivity) =
+    private fun longPressView(activity: AbsGameActivity) =
         activity.findViewById<View>(R.id.settings_loading)
 
-    private fun longPressForegroundView(activity: GameActivity) =
+    private fun longPressForegroundView(activity: AbsGameActivity) =
         activity.findViewById<View>(R.id.long_press_foreground)
 
-    private fun displayLongPressView(activity: GameActivity) {
+    private fun displayLongPressView(activity: AbsGameActivity) {
         longPressView(activity).applyVisibleIfElseGoneAnimate(true, APPEAR_ANIMATION)
         longPressProgressBar(activity).applyProgressAnimate(100, LONG_PRESS_TIMEOUT)
     }
 
-    private fun hideLongPressView(activity: GameActivity) {
+    private fun hideLongPressView(activity: AbsGameActivity) {
         longPressView(activity).applyVisibleIfElseGoneAnimate(false, DISAPPEAR_ANIMATION)
         longPressProgressBar(activity).applyProgressAnimate(0, LONG_PRESS_TIMEOUT)
     }

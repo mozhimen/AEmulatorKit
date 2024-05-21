@@ -56,7 +56,7 @@ import com.mozhimen.emulatork.ui.coreoptions.CoreOption
 import com.mozhimen.emulatork.ui.coreoptions.LemuroidCoreOption
 import com.mozhimen.emulatork.ui.input.InputDeviceManager
 import com.mozhimen.emulatork.ui.input.InputKey
-import com.mozhimen.emulatork.ui.main.ImmersiveFragmentActivity
+import com.mozhimen.emulatork.basic.android.ImmersiveFragmentActivity
 import com.mozhimen.emulatork.ui.rumble.RumbleManager
 import com.mozhimen.emulatork.ui.settings.ControllerConfigsManager
 import com.mozhimen.emulatork.ui.settings.SettingsManager
@@ -116,39 +116,39 @@ abstract class BaseGameActivity : ImmersiveFragmentActivity(), IUtilK {
 
     //    @Inject
 //    lateinit var settingsManager: SettingsManager
-    abstract fun getSettingsManager(): SettingsManager
+    abstract fun settingsManager(): SettingsManager
 
     //    @Inject
 //    lateinit var statesManager: StatesManager
-    abstract fun getStatesManager(): StatesManager
+    abstract fun statesManager(): StatesManager
 
     //    @Inject
 //    lateinit var statesPreviewManager: StatesPreviewManager
-    abstract fun getStatesPreviewManager(): StatesPreviewManager
+    abstract fun statesPreviewManager(): StatesPreviewManager
 
     //    @Inject
 //    lateinit var legacySavesManager: SavesManager
-    abstract fun getSavesManager(): SavesManager
+    abstract fun legacySavesManager(): SavesManager
 
-//    @Inject
+    //    @Inject
 //    lateinit var coreVariablesManager: CoreVariablesManager
-    abstract fun getCoreVariablesManager():CoreVariablesManager
+    abstract fun coreVariablesManager(): CoreVariablesManager
 
-//    @Inject
+    //    @Inject
 //    lateinit var inputDeviceManager: InputDeviceManager
-    abstract fun getInputDeviceManager():InputDeviceManager
+    abstract fun inputDeviceManager(): InputDeviceManager
 
-//    @Inject
+    //    @Inject
 //    lateinit var gameLoader: GameLoader
-    abstract fun getGameLoader():GameLoader
+    abstract fun gameLoader(): GameLoader
 
-//    @Inject
+    //    @Inject
 //    lateinit var controllerConfigsManager: ControllerConfigsManager
-    abstract fun getControllerConfigsManager():ControllerConfigsManager
+    abstract fun controllerConfigsManager(): ControllerConfigsManager
 
-//    @Inject
+    //    @Inject
 //    lateinit var rumbleManager: RumbleManager
-    abstract fun getRumbleManager():RumbleManager
+    abstract fun rumbleManager(): RumbleManager
 
     private var defaultExceptionHandler: Thread.UncaughtExceptionHandler? = Thread.getDefaultUncaughtExceptionHandler()
 
@@ -241,7 +241,7 @@ abstract class BaseGameActivity : ImmersiveFragmentActivity(), IUtilK {
     private suspend fun initializeControllersConfigFlow() {
         try {
             waitRetroGameViewInitialized()
-            val controllers = getControllerConfigsManager().getControllerConfigs(system.id, systemCoreConfig)
+            val controllers = controllerConfigsManager().getControllerConfigs(system.id, systemCoreConfig)
             controllerConfigsState.value = controllers
         } catch (e: Exception) {
             Timber.e(e)
@@ -257,7 +257,7 @@ abstract class BaseGameActivity : ImmersiveFragmentActivity(), IUtilK {
     private suspend fun initializeCoreVariablesFlow() {
         try {
             waitRetroGameViewInitialized()
-            val options = getCoreVariablesManager().getOptionsForCore(system.id, systemCoreConfig)
+            val options = coreVariablesManager().getOptionsForCore(system.id, systemCoreConfig)
             updateCoreVariables(options)
         } catch (e: Exception) {
             Timber.e(e)
@@ -302,7 +302,7 @@ abstract class BaseGameActivity : ImmersiveFragmentActivity(), IUtilK {
     private suspend fun initializeRumbleFlow() {
         val retroGameView = retroGameViewFlow()
         val rumbleEvents = retroGameView.getRumbleEvents()
-        getRumbleManager().collectAndProcessRumbleEvents(systemCoreConfig, rumbleEvents)
+        rumbleManager().collectAndProcessRumbleEvents(systemCoreConfig, rumbleEvents)
     }
 
     private fun setUpExceptionsHandler() {
@@ -335,7 +335,7 @@ abstract class BaseGameActivity : ImmersiveFragmentActivity(), IUtilK {
         val previewSize = sizeInDp.dp2pxI()
         val preview = retroGameView?.takeScreenshotOnMain(previewSize, 3)
         if (preview != null) {
-            getStatesPreviewManager().setPreviewForSlot(game, preview, systemCoreConfig.coreID, index)
+            statesPreviewManager().setPreviewForSlot(game, preview, systemCoreConfig.coreID, index)
         }
     }
 
@@ -467,7 +467,7 @@ abstract class BaseGameActivity : ImmersiveFragmentActivity(), IUtilK {
         val advancedOptions = systemCoreConfig.exposedAdvancedSettings
             .mapNotNull { transformExposedSetting(it, coreOptions) }
 
-        val intent = Intent(this, getDialogClass()).apply {
+        val intent = Intent(this, gameMenuActivityClazz()).apply {
             this.putExtra(GameMenuContract.EXTRA_CORE_OPTIONS, options.toTypedArray())
             this.putExtra(GameMenuContract.EXTRA_ADVANCED_CORE_OPTIONS, advancedOptions.toTypedArray())
             this.putExtra(GameMenuContract.EXTRA_CURRENT_DISK, retroGameView?.getCurrentDisk() ?: 0)
@@ -482,10 +482,10 @@ abstract class BaseGameActivity : ImmersiveFragmentActivity(), IUtilK {
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
     }
 
-    protected abstract fun getDialogClass(): Class<out Activity>
+    protected abstract fun gameMenuActivityClazz(): Class<out Activity>
 
     private suspend fun isAutoSaveEnabled(): Boolean {
-        return systemCoreConfig.statesSupported && getSettingsManager().autoSave()
+        return systemCoreConfig.statesSupported && settingsManager().autoSave()
     }
 
     private fun getCoreOptions(): List<CoreOption> {
@@ -515,7 +515,7 @@ abstract class BaseGameActivity : ImmersiveFragmentActivity(), IUtilK {
     }
 
     private suspend fun initializeGamePadShortcutsFlow() {
-        getInputDeviceManager().getInputMenuShortCutObservable()
+        inputDeviceManager().getInputMenuShortCutObservable()
             .distinctUntilChanged()
             .collectSafe { shortcut ->
                 shortcut?.let {
@@ -528,7 +528,7 @@ abstract class BaseGameActivity : ImmersiveFragmentActivity(), IUtilK {
 
     private suspend fun initializeVirtualGamePadMotionsFlow() {
         val events = combine(
-            getInputDeviceManager().getGamePadsPortMapperObservable(),
+            inputDeviceManager().getGamePadsPortMapperObservable(),
             motionEventsFlow,
             ::NTuple2
         )
@@ -560,7 +560,7 @@ abstract class BaseGameActivity : ImmersiveFragmentActivity(), IUtilK {
 
     private suspend fun initializeGamePadMotionsFlow() {
         val events = combine(
-            getInputDeviceManager().getGamePadsPortMapperObservable(),
+            inputDeviceManager().getGamePadsPortMapperObservable(),
             motionEventsFlow,
             ::NTuple2
         )
@@ -582,13 +582,13 @@ abstract class BaseGameActivity : ImmersiveFragmentActivity(), IUtilK {
             .map { Triple(it.device, it.action, it.keyCode) }
             .distinctUntilChanged()
 
-        val shortcutKeys = getInputDeviceManager().getInputMenuShortCutObservable()
+        val shortcutKeys = inputDeviceManager().getInputMenuShortCutObservable()
             .map { it?.keys ?: setOf() }
 
         val combinedObservable = combine(
             shortcutKeys,
-            getInputDeviceManager().getGamePadsPortMapperObservable(),
-            getInputDeviceManager().getInputBindingsObservable(),
+            inputDeviceManager().getGamePadsPortMapperObservable(),
+            inputDeviceManager().getInputBindingsObservable(),
             filteredKeyEvents,
             ::NTuple4
         )
@@ -821,7 +821,7 @@ abstract class BaseGameActivity : ImmersiveFragmentActivity(), IUtilK {
         val state = getCurrentSaveState()
 
         if (state != null) {
-            getStatesManager().setAutoSave(game, systemCoreConfig.coreID, state)
+            statesManager().setAutoSave(game, systemCoreConfig.coreID, state)
             Timber.i("Stored autosave file with size: ${state?.state?.size}")
         }
     }
@@ -829,7 +829,7 @@ abstract class BaseGameActivity : ImmersiveFragmentActivity(), IUtilK {
     private suspend fun saveSRAM(game: Game) {
         val retroGameView = retroGameView ?: return
         val sramState = retroGameView.serializeSRAM()
-        getSavesManager().setSaveRAM(game, sramState)
+        legacySavesManager().setSaveRAM(game, sramState)
         Timber.i("Stored sram file with size: ${sramState.size}")
     }
 
@@ -837,7 +837,7 @@ abstract class BaseGameActivity : ImmersiveFragmentActivity(), IUtilK {
         if (loadingState.value) return
         withLoading {
             getCurrentSaveState()?.let {
-                getStatesManager().setSlotSave(game, it, systemCoreConfig.coreID, index)
+                statesManager().setSlotSave(game, it, systemCoreConfig.coreID, index)
                 runCatching {
                     takeScreenshotPreview(index)
                 }
@@ -849,7 +849,7 @@ abstract class BaseGameActivity : ImmersiveFragmentActivity(), IUtilK {
         if (loadingState.value) return
         withLoading {
             try {
-                getStatesManager().getSlotSave(game, systemCoreConfig.coreID, index)?.let {
+                statesManager().getSlotSave(game, systemCoreConfig.coreID, index)?.let {
                     val loaded = withContext(Dispatchers.IO) {
                         loadSaveState(it)
                     }
@@ -963,15 +963,15 @@ abstract class BaseGameActivity : ImmersiveFragmentActivity(), IUtilK {
     private suspend fun loadGame() {
         val requestLoadSave = intent.getBooleanExtra(EXTRA_LOAD_SAVE, false)
 
-        val autoSaveEnabled = getSettingsManager().autoSave()
-        val filter = getSettingsManager().screenFilter()
-        val hdMode = getSettingsManager().hdMode()
-        val forceLegacyHdMode = getSettingsManager().forceLegacyHdMode()
-        val lowLatencyAudio = getSettingsManager().lowLatencyAudio()
-        val enableRumble = getSettingsManager().enableRumble()
-        val directLoad = getSettingsManager().allowDirectGameLoad()
+        val autoSaveEnabled = settingsManager().autoSave()
+        val filter = settingsManager().screenFilter()
+        val hdMode = settingsManager().hdMode()
+        val forceLegacyHdMode = settingsManager().forceLegacyHdMode()
+        val lowLatencyAudio = settingsManager().lowLatencyAudio()
+        val enableRumble = settingsManager().enableRumble()
+        val directLoad = settingsManager().allowDirectGameLoad()
 
-        val loadingStatesFlow = getGameLoader().load(
+        val loadingStatesFlow = gameLoader().load(
             applicationContext,
             game,
             requestLoadSave && autoSaveEnabled,
@@ -1036,10 +1036,10 @@ abstract class BaseGameActivity : ImmersiveFragmentActivity(), IUtilK {
     companion object {
         const val DIALOG_REQUEST = 100
 
-        private const val EXTRA_GAME = "GAME"
-        private const val EXTRA_LOAD_SAVE = "LOAD_SAVE"
-        private const val EXTRA_LEANBACK = "LEANBACK"
-        private const val EXTRA_SYSTEM_CORE_CONFIG = "EXTRA_SYSTEM_CORE_CONFIG"
+        const val EXTRA_GAME = "GAME"
+        const val EXTRA_LOAD_SAVE = "LOAD_SAVE"
+        const val EXTRA_LEANBACK = "LEANBACK"
+        const val EXTRA_SYSTEM_CORE_CONFIG = "EXTRA_SYSTEM_CORE_CONFIG"
 
         const val REQUEST_PLAY_GAME = 1001
         const val PLAY_GAME_RESULT_SESSION_DURATION = "PLAY_GAME_RESULT_SESSION_DURATION"
@@ -1049,29 +1049,5 @@ abstract class BaseGameActivity : ImmersiveFragmentActivity(), IUtilK {
 
         const val RESULT_ERROR = Activity.RESULT_FIRST_USER + 2
         const val RESULT_UNEXPECTED_ERROR = Activity.RESULT_FIRST_USER + 3
-
-        fun launchGame(
-            activity: Activity,
-            systemCoreConfig: SystemCoreConfig,
-            game: Game,
-            loadSave: Boolean,
-            useLeanback: Boolean
-        ) {
-            val gameActivity = /*if (useLeanback) {
-                TVGameActivity::class.java
-            } else {*/
-                GameActivity::class.java
-//            }
-            activity.startActivityForResult(
-                Intent(activity, gameActivity).apply {
-                    putExtra(EXTRA_GAME, game)
-                    putExtra(EXTRA_LOAD_SAVE, loadSave)
-                    putExtra(EXTRA_LEANBACK, useLeanback)
-                    putExtra(EXTRA_SYSTEM_CORE_CONFIG, systemCoreConfig)
-                },
-                REQUEST_PLAY_GAME
-            )
-            activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-        }
     }
 }

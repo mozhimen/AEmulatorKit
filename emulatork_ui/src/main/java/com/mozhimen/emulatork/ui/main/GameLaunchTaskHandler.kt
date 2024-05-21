@@ -8,7 +8,7 @@ import com.mozhimen.emulatork.basic.library.db.entities.Game
 import com.mozhimen.emulatork.ext.review.ReviewManager
 import com.mozhimen.emulatork.ui.R
 import com.mozhimen.emulatork.ui.game.BaseGameActivity
-import com.mozhimen.emulatork.ui.savesync.SaveSyncWork
+import com.mozhimen.emulatork.ui.savesync.AbsSaveSyncWork
 import com.mozhimen.emulatork.ui.storage.cache.CacheCleanerWork
 import kotlinx.coroutines.delay
 
@@ -51,14 +51,14 @@ class GameLaunchTaskHandler(
     }
 
     private fun cancelBackgroundWork(context: Context) {
-        SaveSyncWork.cancelAutoWork(context)
-        SaveSyncWork.cancelManualWork(context)
+        AbsSaveSyncWork.cancelAutoWork(context)
+        AbsSaveSyncWork.cancelManualWork(context)
         CacheCleanerWork.cancelCleanCacheLRU(context)
     }
 
     private fun rescheduleBackgroundWork(context: Context) {
         // Let's slightly delay the sync. Maybe the user wants to play another game.
-        SaveSyncWork.enqueueAutoWork(context, 5)
+        AbsSaveSyncWork.enqueueAutoWork(context, 5)
         CacheCleanerWork.enqueueCleanCacheLRU(context)
     }
 

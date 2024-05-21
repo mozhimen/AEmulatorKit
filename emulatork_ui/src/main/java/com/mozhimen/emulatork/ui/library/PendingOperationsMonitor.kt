@@ -7,7 +7,7 @@ import androidx.work.WorkManager
 import com.mozhimen.basick.utilk.androidx.lifecycle.liveData2combinedLiveData
 import com.mozhimen.basick.utilk.androidx.lifecycle.liveData2throttledLiveData
 import com.mozhimen.basick.utilk.androidx.lifecycle.map
-import com.mozhimen.emulatork.ui.savesync.SaveSyncWork
+import com.mozhimen.emulatork.ui.savesync.AbsSaveSyncWork
 
 /**
  * @ClassName PendingOperationsMonitor
@@ -21,8 +21,8 @@ class PendingOperationsMonitor(private val appContext: Context) {
     enum class Operation(val uniqueId: String, val isPeriodic: Boolean) {
         LIBRARY_INDEX(LibraryIndexScheduler.LIBRARY_INDEX_WORK_ID, false),
         CORE_UPDATE(LibraryIndexScheduler.CORE_UPDATE_WORK_ID, false),
-        SAVES_SYNC_PERIODIC(SaveSyncWork.UNIQUE_PERIODIC_WORK_ID, true),
-        SAVES_SYNC_ONE_SHOT(SaveSyncWork.UNIQUE_WORK_ID, false)
+        SAVES_SYNC_PERIODIC(AbsSaveSyncWork.UNIQUE_PERIODIC_WORK_ID, true),
+        SAVES_SYNC_ONE_SHOT(AbsSaveSyncWork.UNIQUE_WORK_ID, false)
     }
 
     fun anyOperationInProgress(): LiveData<Boolean> {

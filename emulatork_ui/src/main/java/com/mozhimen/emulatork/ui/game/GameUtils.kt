@@ -18,9 +18,7 @@ class GameUtils {
             val systemName = getSystemNameForGame(context, game)
             val developerName = if (game.developer?.isNotBlank() == true) {
                 "- ${game.developer}"
-            } else {
-                ""
-            }
+            } else ""
             return "$systemName $developerName"
         }
 

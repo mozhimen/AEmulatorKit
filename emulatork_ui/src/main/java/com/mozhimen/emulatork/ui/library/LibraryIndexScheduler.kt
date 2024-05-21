@@ -13,15 +13,15 @@ import androidx.work.WorkManager
  * @Version 1.0
  */
 object LibraryIndexScheduler {
-    val CORE_UPDATE_WORK_ID: String = CoreUpdateWork::class.java.simpleName
-    val LIBRARY_INDEX_WORK_ID: String = LibraryIndexWork::class.java.simpleName
+    val CORE_UPDATE_WORK_ID: String = AbsCoreUpdateWork::class.java.simpleName
+    val LIBRARY_INDEX_WORK_ID: String = AbsLibraryIndexWork::class.java.simpleName
 
     fun scheduleLibrarySync(applicationContext: Context) {
         WorkManager.getInstance(applicationContext)
             .beginUniqueWork(
                 LIBRARY_INDEX_WORK_ID,
                 ExistingWorkPolicy.APPEND_OR_REPLACE,
-                OneTimeWorkRequestBuilder<LibraryIndexWork>().build()
+                OneTimeWorkRequestBuilder<AbsLibraryIndexWork>().build()
             )
             .enqueue()
     }
@@ -31,7 +31,7 @@ object LibraryIndexScheduler {
             .beginUniqueWork(
                 CORE_UPDATE_WORK_ID,
                 ExistingWorkPolicy.APPEND_OR_REPLACE,
-                OneTimeWorkRequestBuilder<CoreUpdateWork>().build()
+                OneTimeWorkRequestBuilder<AbsCoreUpdateWork>().build()
             )
             .enqueue()
     }

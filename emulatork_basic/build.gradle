@@ -2,6 +2,7 @@ plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
+    id "kotlinx-serialization"
 }
 
 android {
@@ -31,23 +32,28 @@ android {
 }
 
 dependencies {
-    implementation project(':emulatork_input')
+    //local lib
+    api project(':emulatork_input')
 
+    //other lib
     api project(":SwiftKit:basick")
+
     api project(':AAbilityKit_Jetpack:collection')
     api project(':AAbilityKit_Jetpack:documentfile')
     api project(':AAbilityKit_Jetpack:preference')
+
     api project(':ATaskKit:taskk_work')
-    api project(":APagingKit:pagingk_paging3_basic")
     api project(':ANetKit:netk_retrofit2')
     api project(':ANetKit:netk_okio2')
+
     api project(':ACacheKit:cachek_harmony')
     api project(':ACacheKit:cachek_room_paging')
     api project(':ACacheKit:cachek_flow_preferences')
+
     api project(':ALogKit:logk_timber')
+
     api project(":AEmulatorKit_LibretroDroid:libretrodroid")
     api "com.dinuscxj:multitouchgesturedetector:1.0.0"
-    api "com.github.Swordfish90:RadialGamePad:2.0.0"
 
     kapt 'androidx.room:room-compiler:2.5.2'
 

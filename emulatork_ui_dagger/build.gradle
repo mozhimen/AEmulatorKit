@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -31,9 +32,11 @@ android {
 }
 
 dependencies {
-    implementation project(':emulatork_ui')
-    implementation project(':emulatork_input')
-    implementation project(':emulatork_basic_dagger')
+    api project(':emulatork_ui')
+    api project(':emulatork_basic_dagger')
+
+    kapt "com.google.dagger:dagger-android-processor:2.19"
+    kapt "com.google.dagger:dagger-compiler:2.19"
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

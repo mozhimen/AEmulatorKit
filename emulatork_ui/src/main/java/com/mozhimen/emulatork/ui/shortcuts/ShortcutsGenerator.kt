@@ -11,8 +11,6 @@ import android.os.Build
 import com.mozhimen.basick.utilk.android.graphics.applyBitmapAnyCropSquare
 import com.mozhimen.basick.utilk.android.graphics.drawable2bitmap
 import com.mozhimen.emulatork.basic.library.db.entities.Game
-import com.mozhimen.emulatork.ui.covers.CoverLoader
-import com.mozhimen.emulatork.ui.deeplink.DeepLink
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.Response

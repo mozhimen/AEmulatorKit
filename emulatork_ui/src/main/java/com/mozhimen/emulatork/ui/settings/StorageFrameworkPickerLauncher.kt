@@ -5,25 +5,25 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import androidx.fragment.app.FragmentActivity
 import com.mozhimen.basick.utilk.android.app.showAlertDialog
-import com.mozhimen.emulatork.basic.dagger.android.RetrogradeFragmentActivity
 import com.mozhimen.emulatork.basic.preferences.SharedPreferencesHelper
 import com.mozhimen.emulatork.basic.storage.DirectoriesManager
-import com.mozhimen.emulatork.test.R
-import com.mozhimen.emulatork.ui.library.LibraryIndexScheduler
-import javax.inject.Inject
+import com.mozhimen.emulatork.ui.R
 
 /**
  * @ClassName StorageFrameworkPickerLauncher
  * @Description TODO
  * @Author Mozhimen & Kolin Zhao
  * @Date 2024/5/13
- * @Version 1.0
+ * @Version 1
  */
-class StorageFrameworkPickerLauncher : RetrogradeFragmentActivity() {
+abstract class StorageFrameworkPickerLauncher : FragmentActivity() {
 
-    @Inject
-    lateinit var directoriesManager: DirectoriesManager
+    //    @Inject
+    //    lateinit var directoriesManager: DirectoriesManager
+
+    abstract fun directoriesManager(): DirectoriesManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +44,7 @@ class StorageFrameworkPickerLauncher : RetrogradeFragmentActivity() {
     }
 
     private fun showStorageAccessFrameworkNotSupportedDialog() {
-        val message = getString(R.string.dialog_saf_not_found, directoriesManager.getInternalRomsDirectory())
+        val message = getString(R.string.dialog_saf_not_found, directoriesManager().getInternalRomsDirectory())
         val actionLabel = getString(R.string.ok)
         showAlertDialog(message, actionLabel) { finish() }
     }
