@@ -4,12 +4,13 @@ import android.content.Context
 import android.os.Bundle
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import com.mozhimen.emulatork.basic.preferences.SharedPreferencesHelper
-import com.mozhimen.emulatork.basic.savesync.SaveSyncManager
-import com.mozhimen.emulatork.basic.storage.DirectoriesManager
-import com.mozhimen.emulatork.ui.library.PendingOperationsMonitor
+import com.mozhimen.emulatork.basic.preferences.SharedPreferencesMgr
+import com.mozhimen.emulatork.basic.save.sync.SaveSyncManager
+import com.mozhimen.emulatork.basic.storage.StorageDirectoriesManager
+import com.mozhimen.emulatork.ext.works.WorkPendingOperationsMonitor
 import com.mozhimen.emulatork.ui.R
-import com.mozhimen.emulatork.ui.settings.SaveSyncPreferences
+import com.mozhimen.emulatork.ext.preferences.PreferencesSaveSync
+import com.mozhimen.emulatork.ui.dagger.works.WorkSaveSync
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
@@ -24,10 +25,11 @@ import javax.inject.Inject
 class SaveSyncFragment : PreferenceFragmentCompat() {
 
     @Inject
-    lateinit var directoriesManager: DirectoriesManager
+    lateinit var storageDirectoriesManager: StorageDirectoriesManager
+
     @Inject
     lateinit var saveSyncManager: SaveSyncManager
-    private lateinit var saveSyncPreferences: SaveSyncPreferences
+    private lateinit var saveSyncPreferences: PreferencesSaveSync
 
     override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
@@ -36,15 +38,15 @@ class SaveSyncFragment : PreferenceFragmentCompat() {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         preferenceManager.preferenceDataStore =
-            SharedPreferencesHelper.getSharedPreferencesDataStore(requireContext())
+            SharedPreferencesMgr.getSharedPreferencesDataStore(requireContext())
 
-        saveSyncPreferences = SaveSyncPreferences(saveSyncManager)
+        saveSyncPreferences = PreferencesSaveSync(saveSyncManager)
         setPreferencesFromResource(R.xml.empty_preference_screen, rootKey)
         saveSyncPreferences.addSaveSyncPreferences(preferenceScreen)
     }
 
     override fun onPreferenceTreeClick(preference: Preference): Boolean {
-        if (saveSyncPreferences.onPreferenceTreeClick(activity, preference))
+        if (saveSyncPreferences.onPreferenceTreeClick(activity, preference, WorkSaveSync::class.java))
             return true
 
         return super.onPreferenceTreeClick(preference)
@@ -53,7 +55,7 @@ class SaveSyncFragment : PreferenceFragmentCompat() {
     override fun onResume() {
         super.onResume()
         saveSyncPreferences.updatePreferences(preferenceScreen, false)
-        PendingOperationsMonitor(requireContext()).anySaveOperationInProgress().observe(this) {
+        WorkPendingOperationsMonitor(requireContext()).anySaveOperationInProgress().observe(this) {
             saveSyncPreferences.updatePreferences(preferenceScreen, it)
         }
     }

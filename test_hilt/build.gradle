@@ -51,7 +51,7 @@ android {
 dependencies {
     implementation project(':emulatork_basic_hilt')
     implementation project(':emulatork_ui_hilt')
-    implementation project(':emulatork_libretro')
+    implementation project(':emulatork_libretro_db')
     implementation project(':emulatork_cores')
 
     implementation project(':ARxKit:rxk_epoxy4')

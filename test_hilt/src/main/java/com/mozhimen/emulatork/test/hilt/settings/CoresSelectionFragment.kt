@@ -3,8 +3,10 @@ package com.mozhimen.emulatork.test.hilt.settings
 import android.content.Context
 import android.os.Bundle
 import androidx.preference.PreferenceFragmentCompat
-import com.mozhimen.emulatork.basic.preferences.SharedPreferencesHelper
+import com.mozhimen.emulatork.basic.preferences.SharedPreferencesMgr
+import com.mozhimen.emulatork.ext.preferences.PreferencesCoreSelection
 import dagger.android.support.AndroidSupportInjection
+import com.mozhimen.emulatork.ui.dagger.works.WorkCoreUpdate
 import javax.inject.Inject
 
 /**
@@ -17,7 +19,7 @@ import javax.inject.Inject
 class CoresSelectionFragment : PreferenceFragmentCompat() {
 
     @Inject
-    lateinit var coresSelectionPreferences: com.mozhimen.emulatork.ui.settings.CoresSelectionPreferences
+    lateinit var coresSelectionPreferences: PreferencesCoreSelection
 
     override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
@@ -26,9 +28,9 @@ class CoresSelectionFragment : PreferenceFragmentCompat() {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         preferenceManager.preferenceDataStore =
-            SharedPreferencesHelper.getSharedPreferencesDataStore(requireContext())
+            SharedPreferencesMgr.getSharedPreferencesDataStore(requireContext())
         setPreferencesFromResource(com.mozhimen.emulatork.ui.R.xml.empty_preference_screen, rootKey)
-        coresSelectionPreferences.addCoresSelectionPreferences(preferenceScreen)
+        coresSelectionPreferences.addCoresSelectionPreferences(preferenceScreen, WorkCoreUpdate::class.java)
     }
 
     @dagger.Module

@@ -7,18 +7,18 @@ import com.mozhimen.basick.utilk.commons.IUtilK
 import com.mozhimen.emulatork.basic.bios.BiosManager
 import com.mozhimen.emulatork.basic.core.CoreVariable
 import com.mozhimen.emulatork.basic.core.CoreVariablesManager
-import com.mozhimen.emulatork.basic.library.CoreID
-import com.mozhimen.emulatork.basic.library.GameSystem
-import com.mozhimen.emulatork.basic.library.LemuroidLibrary
-import com.mozhimen.emulatork.basic.library.SystemCoreConfig
-import com.mozhimen.emulatork.basic.library.db.RetrogradeDatabase
-import com.mozhimen.emulatork.basic.library.db.entities.Game
-import com.mozhimen.emulatork.basic.saves.SaveState
-import com.mozhimen.emulatork.basic.saves.SavesCoherencyEngine
-import com.mozhimen.emulatork.basic.saves.SavesManager
-import com.mozhimen.emulatork.basic.saves.StatesManager
-import com.mozhimen.emulatork.basic.storage.DirectoriesManager
-import com.mozhimen.emulatork.basic.storage.RomFiles
+import com.mozhimen.emulatork.basic.core.CoreID
+import com.mozhimen.emulatork.basic.EmulatorKBasic
+import com.mozhimen.emulatork.basic.game.system.GameSystemCoreConfig
+import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
+import com.mozhimen.emulatork.basic.game.db.entities.Game
+import com.mozhimen.emulatork.basic.save.SaveState
+import com.mozhimen.emulatork.basic.save.SaveCoherencyEngine
+import com.mozhimen.emulatork.basic.save.SaveManager
+import com.mozhimen.emulatork.basic.save.SaveStateManager
+import com.mozhimen.emulatork.basic.storage.StorageDirectoriesManager
+import com.mozhimen.emulatork.basic.storage.StorageRomFile
+import com.mozhimen.emulatork.basic.game.system.GameSystems
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import timber.log.Timber
@@ -32,32 +32,47 @@ import java.io.File
  * @Version 1.0
  */
 class GameLoader(
-    private val lemuroidLibrary: LemuroidLibrary,
-    private val legacyStatesManager: StatesManager,
-    private val legacySavesManager: SavesManager,
+    private val lemuroidLibrary: EmulatorKBasic,
+    private val legacySaveStateManager: SaveStateManager,
+    private val legacySaveManager: SaveManager,
     private val legacyCoreVariablesManager: CoreVariablesManager,
     private val retrogradeDatabase: RetrogradeDatabase,
-    private val savesCoherencyEngine: SavesCoherencyEngine,
-    private val directoriesManager: DirectoriesManager,
+    private val saveCoherencyEngine: SaveCoherencyEngine,
+    private val storageDirectoriesManager: StorageDirectoriesManager,
     private val biosManager: BiosManager
 ) : IUtilK {
+
     sealed class LoadingState {
         object LoadingCore : LoadingState()
         object LoadingGame : LoadingState()
         class Ready(val gameData: GameData) : LoadingState()
     }
 
+    @Suppress("ArrayInDataClass")
+    data class GameData constructor(
+        val game: Game,
+        val coreLibrary: String,
+        val gameFiles: StorageRomFile,
+        val quickSaveData: SaveState?,
+        val saveRAMData: ByteArray?,
+        val coreVariables: Array<CoreVariable>,
+        val systemDirectory: File,
+        val savesDirectory: File
+    )
+
+    ///////////////////////////////////////////////////////////////////////////////
+
     fun load(
         appContext: Context,
         game: Game,
         loadSave: Boolean,
-        systemCoreConfig: SystemCoreConfig,
+        systemCoreConfig: GameSystemCoreConfig,
         directLoad: Boolean
     ): Flow<LoadingState> = flow {
         try {
             emit(LoadingState.LoadingCore)
 
-            val system = GameSystem.findById(game.systemId)
+            val system = GameSystems.findById(game.systemId)
 
             if (!isArchitectureSupported(systemCoreConfig)) {
                 throw GameLoaderException(GameLoaderError.UnsupportedArchitecture)
@@ -83,15 +98,15 @@ class GameLoader(
             }.getOrElse { throw it }
 
             val saveRAMData = runCatching {
-                legacySavesManager.getSaveRAM(game)
+                legacySaveManager.getSaveRAM(game)
             }.getOrElse { throw GameLoaderException(GameLoaderError.Saves) }
 
             val quickSaveData = runCatching {
                 val shouldDiscardSave =
-                    !savesCoherencyEngine.shouldDiscardAutoSaveState(game, systemCoreConfig.coreID)
+                    !saveCoherencyEngine.shouldDiscardAutoSaveState(game, systemCoreConfig.coreID)
 
                 if (systemCoreConfig.statesSupported && loadSave && shouldDiscardSave) {
-                    legacyStatesManager.getAutoSave(game, systemCoreConfig.coreID)
+                    legacySaveStateManager.getAutoSave(game, systemCoreConfig.coreID)
                 } else {
                     null
                 }
@@ -100,8 +115,8 @@ class GameLoader(
             val coreVariables = legacyCoreVariablesManager.getOptionsForCore(system.id, systemCoreConfig)
                 .toTypedArray()
 
-            val systemDirectory = directoriesManager.getSystemDirectory()
-            val savesDirectory = directoriesManager.getSavesDirectory()
+            val systemDirectory = storageDirectoriesManager.getSystemDirectory()
+            val savesDirectory = storageDirectoriesManager.getSavesDirectory()
 
             emit(
                 LoadingState.Ready(
@@ -126,7 +141,9 @@ class GameLoader(
         }
     }
 
-    private fun isArchitectureSupported(systemCoreConfig: SystemCoreConfig): Boolean {
+    ///////////////////////////////////////////////////////////////////////////////
+
+    private fun isArchitectureSupported(systemCoreConfig: GameSystemCoreConfig): Boolean {
         val supportedOnlyArchitectures = systemCoreConfig.supportedOnlyArchitectures ?: return true
         return Build.SUPPORTED_ABIS.toSet().intersect(supportedOnlyArchitectures).isNotEmpty()
     }
@@ -144,16 +161,4 @@ class GameLoader(
             .flatMap { it.walkBottomUp() }
             .firstOrNull { it.name == coreID.libretroFileName }
     }
-
-    @Suppress("ArrayInDataClass")
-    data class GameData constructor(
-        val game: Game,
-        val coreLibrary: String,
-        val gameFiles: RomFiles,
-        val quickSaveData: SaveState?,
-        val saveRAMData: ByteArray?,
-        val coreVariables: Array<CoreVariable>,
-        val systemDirectory: File,
-        val savesDirectory: File
-    )
 }

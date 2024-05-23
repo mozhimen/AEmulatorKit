@@ -7,12 +7,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mozhimen.basick.utilk.androidx.fragment.runOnViewLifecycleState
-import com.mozhimen.emulatork.basic.library.db.RetrogradeDatabase
-import com.mozhimen.emulatork.ui.game.GameInteractor
-import com.mozhimen.emulatork.ui.game.GamesAdapter
+import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
+import com.mozhimen.emulatork.ext.game.GameInteractor
 import com.mozhimen.emulatork.ui.R
-import com.mozhimen.emulatork.ui.covers.CoverLoader
-import com.mozhimen.emulatork.ui.dagger.game.RecyclerViewFragment
+import com.mozhimen.emulatork.ext.covers.CoverLoader
+import com.mozhimen.emulatork.basic.dagger.android.DaggerRecyclerViewFragment
 import javax.inject.Inject
 
 /**
@@ -22,7 +21,7 @@ import javax.inject.Inject
  * @Date 2024/5/10
  * @Version 1.0
  */
-class GamesFragment : RecyclerViewFragment() {
+class GamesFragment : DaggerRecyclerViewFragment() {
 
     @Inject
     lateinit var retrogradeDb: RetrogradeDatabase

@@ -2,7 +2,7 @@ package com.mozhimen.emulatork.basic.storage
 
 import android.net.Uri
 import com.mozhimen.basick.utilk.kotlin.UtilKStrFile
-import com.mozhimen.emulatork.basic.library.SystemID
+import com.mozhimen.emulatork.basic.game.system.GameSystemID
 
 /**
  * @ClassName StorageFile
@@ -25,7 +25,7 @@ data class StorageFile(
 
     val path: String? = null,
 
-    val systemID: SystemID? = null
+    val systemID: GameSystemID? = null
 ) {
 
     val extension: String

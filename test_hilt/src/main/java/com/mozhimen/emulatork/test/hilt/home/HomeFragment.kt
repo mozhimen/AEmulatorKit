@@ -18,11 +18,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.epoxy.Carousel
 import com.mozhimen.basick.utilk.android.app.UtilKActivityStart
 import com.mozhimen.basick.utilk.androidx.fragment.runOnViewLifecycleState
-import com.mozhimen.emulatork.basic.library.db.RetrogradeDatabase
-import com.mozhimen.emulatork.test.R
-import com.mozhimen.emulatork.ui.settings.SettingsInteractor
-import com.mozhimen.emulatork.ui.game.GameInteractor
-import com.mozhimen.emulatork.ui.covers.CoverLoader
+import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
+import com.mozhimen.emulatork.test.dagger.R
+import com.mozhimen.emulatork.ext.library.SettingsInteractor
+import com.mozhimen.emulatork.ext.game.GameInteractor
+import com.mozhimen.emulatork.ext.covers.CoverLoader
+import com.mozhimen.emulatork.ui.dagger.settings.StorageFrameworkPickerActivity
 import dagger.android.support.AndroidSupportInjection
 import timber.log.Timber
 import javax.inject.Inject
@@ -108,7 +109,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun handleChangeStorageFolder() {
-        settingsInteractor.changeLocalStorageFolder()
+        settingsInteractor.changeLocalStorageFolder(StorageFrameworkPickerActivity::class.java)
     }
 
     private fun handleNotificationPermissionRequest() {

@@ -9,10 +9,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.mozhimen.basick.utilk.androidx.fragment.runOnViewLifecycleState
-import com.mozhimen.emulatork.basic.preferences.SharedPreferencesHelper
+import com.mozhimen.emulatork.basic.preferences.SharedPreferencesMgr
 import com.mozhimen.emulatork.ui.R
-import com.mozhimen.emulatork.ui.input.InputDeviceManager
-import com.mozhimen.emulatork.ui.settings.GamePadPreferencesHelper
+import com.mozhimen.emulatork.input.device.InputDeviceManager
+import com.mozhimen.emulatork.ext.game.pad.GamePadPreferencesManager
 import com.mozhimen.basick.elemk.mos.NTuple2
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.coroutines.flow.combine
@@ -31,7 +31,7 @@ import javax.inject.Inject
 class GamepadSettingsFragment : PreferenceFragmentCompat() {
 
     @Inject
-    lateinit var gamePadPreferencesHelper: GamePadPreferencesHelper
+    lateinit var gamePadPreferencesManager: GamePadPreferencesManager
 
     @Inject
     lateinit var inputDeviceManager: InputDeviceManager
@@ -43,7 +43,7 @@ class GamepadSettingsFragment : PreferenceFragmentCompat() {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         preferenceManager.preferenceDataStore =
-            SharedPreferencesHelper.getSharedPreferencesDataStore(requireContext())
+            SharedPreferencesMgr.getSharedPreferencesDataStore(requireContext())
         setPreferencesFromResource(R.xml.empty_preference_screen, rootKey)
     }
 
@@ -71,7 +71,7 @@ class GamepadSettingsFragment : PreferenceFragmentCompat() {
     private fun addGamePads(pads: List<InputDevice>, enabledPads: List<InputDevice>) {
         lifecycleScope.launch {
             preferenceScreen.removeAll()
-            gamePadPreferencesHelper.addGamePadsPreferencesToScreen(
+            gamePadPreferencesManager.addGamePadsPreferencesToScreen(
                 requireActivity(),
                 preferenceScreen,
                 pads,
@@ -82,7 +82,7 @@ class GamepadSettingsFragment : PreferenceFragmentCompat() {
 
     private fun refreshGamePads(enabledGamePads: List<InputDevice>) {
         lifecycleScope.launch {
-            gamePadPreferencesHelper.refreshGamePadsPreferencesToScreen(preferenceScreen, enabledGamePads)
+            gamePadPreferencesManager.refreshGamePadsPreferencesToScreen(preferenceScreen, enabledGamePads)
         }
     }
 

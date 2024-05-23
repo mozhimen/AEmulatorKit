@@ -22,19 +22,22 @@ import com.mozhimen.basick.elemk.mos.NTuple2
 import com.mozhimen.basick.elemk.mos.NTuple3
 import com.mozhimen.basick.utilk.kotlin.math.UtilKMathInterpolation
 import com.mozhimen.basick.utilk.kotlinx.coroutines.batch_ofTime
-import com.mozhimen.emulatork.basic.controller.ControllerConfig
-import com.mozhimen.emulatork.basic.controller.TouchControllerCustomizer
-import com.mozhimen.emulatork.basic.controller.TouchControllerSettingsManager
-import com.mozhimen.emulatork.basic.library.SystemCoreConfig
-import com.mozhimen.emulatork.basic.library.db.entities.Game
-import com.mozhimen.emulatork.input.sensors.TiltSensor
+import com.mozhimen.emulatork.basic.controller.touch.ControllerTouchConfig
+import com.mozhimen.emulatork.basic.controller.touch.ControllerTouchCustomizer
+import com.mozhimen.emulatork.basic.controller.touch.ControllerTouchSettingsManager
+import com.mozhimen.emulatork.basic.game.system.GameSystemCoreConfig
+import com.mozhimen.emulatork.basic.game.db.entities.Game
+import com.mozhimen.emulatork.ext.game.BaseGameActivity
+import com.mozhimen.emulatork.ext.input.InputVirtualLongPressHandler
+import com.mozhimen.emulatork.input.sensors.InputSensorTilt
 import com.mozhimen.emulatork.ui.R
-import com.mozhimen.emulatork.ui.tilt.TiltTracker
-import com.mozhimen.emulatork.ui.tilt.StickTiltTracker
-import com.mozhimen.emulatork.ui.tilt.CrossTiltTracker
-import com.mozhimen.emulatork.ui.tilt.TwoButtonsTiltTracker
-import com.mozhimen.emulatork.input.LemuroidTouchOverlayThemes
-import com.mozhimen.emulatork.input.LemuroidTouchConfigs
+import com.mozhimen.emulatork.input.tilt.TiltTracker
+import com.mozhimen.emulatork.input.tilt.TiltTrackerStick
+import com.mozhimen.emulatork.input.tilt.TiltTrackerCross
+import com.mozhimen.emulatork.input.tilt.TiltTrackerTwoButtons
+import com.mozhimen.emulatork.input.InputOverlayThemes
+import com.mozhimen.emulatork.input.InputConfigs
+import com.mozhimen.emulatork.basic.game.menu.GameMenuContract
 import com.swordfish.libretrodroid.GLRetroView
 import com.swordfish.radialgamepad.library.RadialGamePad
 import com.swordfish.radialgamepad.library.config.RadialGamePadTheme
@@ -83,7 +86,7 @@ abstract class AbsGameActivity : BaseGameActivity() {
 
     private var serviceController: AbsGameService.GameServiceController? = null
 
-    private lateinit var tiltSensor: TiltSensor
+    private lateinit var inputSensorTilt: InputSensorTilt
     private var currentTiltTracker: TiltTracker? = null
 
     private var leftPad: RadialGamePad? = null
@@ -91,7 +94,7 @@ abstract class AbsGameActivity : BaseGameActivity() {
 
     private val touchControllerJobs = mutableSetOf<Job>()
 
-    private val touchControllerSettingsState = MutableStateFlow<TouchControllerSettingsManager.Settings?>(null)
+    private val touchControllerSettingsState = MutableStateFlow<ControllerTouchSettingsManager.Settings?>(null)
     private val insetsState = MutableStateFlow<Rect?>(null)
     private val orientationState = MutableStateFlow(Configuration.ORIENTATION_PORTRAIT)
 
@@ -100,7 +103,7 @@ abstract class AbsGameActivity : BaseGameActivity() {
 
         orientationState.value = getCurrentOrientation()
 
-        tiltSensor = TiltSensor(applicationContext)
+        inputSensorTilt = InputSensorTilt(applicationContext)
 
         horizontalDivider = findViewById(R.id.horizontaldividier)
         leftVerticalDivider = findViewById(R.id.leftverticaldivider)
@@ -140,14 +143,14 @@ abstract class AbsGameActivity : BaseGameActivity() {
     }
 
     private suspend fun initializeTiltEventsFlow() {
-        tiltSensor
+        inputSensorTilt
             .getTiltEvents()
             .collectSafe { sendTiltEvent(it) }
     }
 
     private suspend fun initializeTiltSensitivityFlow() {
         val sensitivity = settingsManager().tiltSensitivity()
-        tiltSensor.setSensitivity(sensitivity)
+        inputSensorTilt.setSensitivity(sensitivity)
     }
 
     private fun initializeInsetsState() {
@@ -187,7 +190,7 @@ abstract class AbsGameActivity : BaseGameActivity() {
         .filterNotNull()
         .distinctUntilChanged()
 
-    private suspend fun setupController(controllerConfig: ControllerConfig, orientation: Int) {
+    private suspend fun setupController(controllerConfig: ControllerTouchConfig, orientation: Int) {
         val hapticFeedbackMode = settingsManager().hapticFeedbackMode()
         withContext(Dispatchers.Main) {
             setupTouchViews(controllerConfig, hapticFeedbackMode, orientation)
@@ -209,7 +212,7 @@ abstract class AbsGameActivity : BaseGameActivity() {
     }
 
     private fun setupTouchViews(
-        controllerConfig: ControllerConfig,
+        controllerConfig: ControllerTouchConfig,
         hapticFeedbackType: String,
         orientation: Int
     ) {
@@ -230,9 +233,9 @@ abstract class AbsGameActivity : BaseGameActivity() {
             else -> HapticConfig.OFF
         }
 
-        val theme = LemuroidTouchOverlayThemes.getGamePadTheme(leftGamePadContainer)
+        val theme = InputOverlayThemes.getGamePadTheme(leftGamePadContainer)
 
-        val leftConfig = LemuroidTouchConfigs.getRadialGamePadConfig(
+        val leftConfig = InputConfigs.getRadialGamePadConfig(
             touchControllerConfig.leftConfig,
             hapticConfig,
             theme
@@ -240,7 +243,7 @@ abstract class AbsGameActivity : BaseGameActivity() {
         val leftPad = RadialGamePad(leftConfig, DEFAULT_MARGINS_DP, this)
         leftGamePadContainer.addView(leftPad)
 
-        val rightConfig = LemuroidTouchConfigs.getRadialGamePadConfig(
+        val rightConfig = InputConfigs.getRadialGamePadConfig(
             touchControllerConfig.rightConfig,
             hapticConfig,
             theme
@@ -307,7 +310,7 @@ abstract class AbsGameActivity : BaseGameActivity() {
     }
 
     private fun setupTouchMenuActions(touchControllerEvents: Flow<Event>) {
-        VirtualLongPressHandler.initializeTheme(this)
+        InputVirtualLongPressHandler.initializeTheme(this)
 
         val allMenuButtonEvents = touchControllerEvents
             .filterIsInstance<Event.Button>()
@@ -322,7 +325,7 @@ abstract class AbsGameActivity : BaseGameActivity() {
             allMenuButtonEvents
                 .filter { it.action == KeyEvent.ACTION_DOWN }
                 .map {
-                    VirtualLongPressHandler.displayLoading(
+                    InputVirtualLongPressHandler.displayLoading(
                         this@AbsGameActivity,
                         R.drawable.ic_menu,
                         cancelMenuButtonEvents
@@ -340,30 +343,30 @@ abstract class AbsGameActivity : BaseGameActivity() {
 
     private fun handleTripleTaps(events: List<Event.Gesture>) {
         val eventsTracker = when (events.map { it.id }.toSet()) {
-            setOf(LemuroidTouchConfigs.MOTION_SOURCE_LEFT_STICK) -> StickTiltTracker(
-                LemuroidTouchConfigs.MOTION_SOURCE_LEFT_STICK
+            setOf(InputConfigs.MOTION_SOURCE_LEFT_STICK) -> TiltTrackerStick(
+                InputConfigs.MOTION_SOURCE_LEFT_STICK
             )
 
-            setOf(LemuroidTouchConfigs.MOTION_SOURCE_RIGHT_STICK) -> StickTiltTracker(
-                LemuroidTouchConfigs.MOTION_SOURCE_RIGHT_STICK
+            setOf(InputConfigs.MOTION_SOURCE_RIGHT_STICK) -> TiltTrackerStick(
+                InputConfigs.MOTION_SOURCE_RIGHT_STICK
             )
 
-            setOf(LemuroidTouchConfigs.MOTION_SOURCE_DPAD) -> CrossTiltTracker(
-                LemuroidTouchConfigs.MOTION_SOURCE_DPAD
+            setOf(InputConfigs.MOTION_SOURCE_DPAD) -> TiltTrackerCross(
+                InputConfigs.MOTION_SOURCE_DPAD
             )
 
-            setOf(LemuroidTouchConfigs.MOTION_SOURCE_DPAD_AND_LEFT_STICK) -> CrossTiltTracker(
-                LemuroidTouchConfigs.MOTION_SOURCE_DPAD_AND_LEFT_STICK
+            setOf(InputConfigs.MOTION_SOURCE_DPAD_AND_LEFT_STICK) -> TiltTrackerCross(
+                InputConfigs.MOTION_SOURCE_DPAD_AND_LEFT_STICK
             )
 
-            setOf(LemuroidTouchConfigs.MOTION_SOURCE_RIGHT_DPAD) -> CrossTiltTracker(
-                LemuroidTouchConfigs.MOTION_SOURCE_RIGHT_DPAD
+            setOf(InputConfigs.MOTION_SOURCE_RIGHT_DPAD) -> TiltTrackerCross(
+                InputConfigs.MOTION_SOURCE_RIGHT_DPAD
             )
 
             setOf(
                 KeyEvent.KEYCODE_BUTTON_L1,
                 KeyEvent.KEYCODE_BUTTON_R1
-            ) -> TwoButtonsTiltTracker(
+            ) -> TiltTrackerTwoButtons(
                 KeyEvent.KEYCODE_BUTTON_L1,
                 KeyEvent.KEYCODE_BUTTON_R1
             )
@@ -371,7 +374,7 @@ abstract class AbsGameActivity : BaseGameActivity() {
             setOf(
                 KeyEvent.KEYCODE_BUTTON_L2,
                 KeyEvent.KEYCODE_BUTTON_R2
-            ) -> TwoButtonsTiltTracker(
+            ) -> TiltTrackerTwoButtons(
                 KeyEvent.KEYCODE_BUTTON_L2,
                 KeyEvent.KEYCODE_BUTTON_R2
             )
@@ -407,11 +410,11 @@ abstract class AbsGameActivity : BaseGameActivity() {
 
     private fun handleGamePadDirection(it: Event.Direction) {
         when (it.id) {
-            LemuroidTouchConfigs.MOTION_SOURCE_DPAD -> {
+            InputConfigs.MOTION_SOURCE_DPAD -> {
                 retroGameView?.sendMotionEvent(GLRetroView.MOTION_SOURCE_DPAD, it.xAxis, it.yAxis)
             }
 
-            LemuroidTouchConfigs.MOTION_SOURCE_LEFT_STICK -> {
+            InputConfigs.MOTION_SOURCE_LEFT_STICK -> {
                 retroGameView?.sendMotionEvent(
                     GLRetroView.MOTION_SOURCE_ANALOG_LEFT,
                     it.xAxis,
@@ -419,7 +422,7 @@ abstract class AbsGameActivity : BaseGameActivity() {
                 )
             }
 
-            LemuroidTouchConfigs.MOTION_SOURCE_RIGHT_STICK -> {
+            InputConfigs.MOTION_SOURCE_RIGHT_STICK -> {
                 retroGameView?.sendMotionEvent(
                     GLRetroView.MOTION_SOURCE_ANALOG_RIGHT,
                     it.xAxis,
@@ -427,7 +430,7 @@ abstract class AbsGameActivity : BaseGameActivity() {
                 )
             }
 
-            LemuroidTouchConfigs.MOTION_SOURCE_DPAD_AND_LEFT_STICK -> {
+            InputConfigs.MOTION_SOURCE_DPAD_AND_LEFT_STICK -> {
                 retroGameView?.sendMotionEvent(
                     GLRetroView.MOTION_SOURCE_ANALOG_LEFT,
                     it.xAxis,
@@ -436,7 +439,7 @@ abstract class AbsGameActivity : BaseGameActivity() {
                 retroGameView?.sendMotionEvent(GLRetroView.MOTION_SOURCE_DPAD, it.xAxis, it.yAxis)
             }
 
-            LemuroidTouchConfigs.MOTION_SOURCE_RIGHT_DPAD -> {
+            InputConfigs.MOTION_SOURCE_RIGHT_DPAD -> {
                 retroGameView?.sendMotionEvent(
                     GLRetroView.MOTION_SOURCE_ANALOG_RIGHT,
                     it.xAxis,
@@ -460,12 +463,12 @@ abstract class AbsGameActivity : BaseGameActivity() {
 
     override fun onPause() {
         super.onPause()
-        tiltSensor.isAllowedToRun = false
+        inputSensorTilt.isAllowedToRun = false
     }
 
     override fun onResume() {
         super.onResume()
-        tiltSensor.isAllowedToRun = true
+        inputSensorTilt.isAllowedToRun = true
     }
 
     private fun sendTiltEvent(sensorValues: FloatArray) {
@@ -478,7 +481,7 @@ abstract class AbsGameActivity : BaseGameActivity() {
 
     private fun stopTrackingId(trackedEvent: TiltTracker) {
         currentTiltTracker = null
-        tiltSensor.shouldRun = false
+        inputSensorTilt.shouldRun = false
         trackedEvent.stopTracking(sequenceOf(leftPad, rightPad).filterNotNull())
     }
 
@@ -486,7 +489,7 @@ abstract class AbsGameActivity : BaseGameActivity() {
         if (currentTiltTracker != trackedEvent) {
             currentTiltTracker?.let { stopTrackingId(it) }
             currentTiltTracker = trackedEvent
-            tiltSensor.shouldRun = true
+            inputSensorTilt.shouldRun = true
             simulateTouchControllerHaptic()
         }
     }
@@ -496,16 +499,16 @@ abstract class AbsGameActivity : BaseGameActivity() {
     }
 
     private suspend fun storeTouchControllerSettings(
-        controllerConfig: ControllerConfig,
+        controllerConfig: ControllerTouchConfig,
         orientation: Int,
-        settings: TouchControllerSettingsManager.Settings
+        settings: ControllerTouchSettingsManager.Settings
     ) {
         val settingsManager = getTouchControllerSettingsManager(controllerConfig, orientation)
         return settingsManager.storeSettings(settings)
     }
 
     private suspend fun loadTouchControllerSettings(
-        controllerConfig: ControllerConfig,
+        controllerConfig: ControllerTouchConfig,
         orientation: Int
     ) {
         val settingsManager = getTouchControllerSettingsManager(controllerConfig, orientation)
@@ -513,16 +516,16 @@ abstract class AbsGameActivity : BaseGameActivity() {
     }
 
     private fun getTouchControllerSettingsManager(
-        controllerConfig: ControllerConfig,
+        controllerConfig: ControllerTouchConfig,
         orientation: Int
-    ): TouchControllerSettingsManager {
+    ): ControllerTouchSettingsManager {
         val settingsOrientation = if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-            TouchControllerSettingsManager.Orientation.PORTRAIT
+            ControllerTouchSettingsManager.Orientation.PORTRAIT
         } else {
-            TouchControllerSettingsManager.Orientation.LANDSCAPE
+            ControllerTouchSettingsManager.Orientation.LANDSCAPE
         }
 
-        return TouchControllerSettingsManager(
+        return ControllerTouchSettingsManager(
             applicationContext,
             controllerConfig.touchControllerID,
             sharedPreferences(),
@@ -533,7 +536,7 @@ abstract class AbsGameActivity : BaseGameActivity() {
     private suspend fun displayCustomizationOptions() {
         findViewById<View>(R.id.editcontrolsdarkening).isVisible = true
 
-        val customizer = TouchControllerCustomizer()
+        val customizer = ControllerTouchCustomizer()
 
         val insets = insetsState
             .filterNotNull()
@@ -545,7 +548,7 @@ abstract class AbsGameActivity : BaseGameActivity() {
         val padSettings = touchControllerSettingsState.filterNotNull()
             .first()
 
-        val initialSettings = TouchControllerCustomizer.Settings(
+        val initialSettings = ControllerTouchCustomizer.Settings(
             padSettings.scale,
             padSettings.rotation,
             padSettings.marginX,
@@ -559,18 +562,18 @@ abstract class AbsGameActivity : BaseGameActivity() {
             insets,
             initialSettings
         )
-            .takeWhile { it !is TouchControllerCustomizer.Event.Close }
+            .takeWhile { it !is ControllerTouchCustomizer.Event.Close }
             .scan(padSettings) { current, it ->
                 when (it) {
-                    is TouchControllerCustomizer.Event.Scale -> {
+                    is ControllerTouchCustomizer.Event.Scale -> {
                         current.copy(scale = it.value)
                     }
 
-                    is TouchControllerCustomizer.Event.Rotation -> {
+                    is ControllerTouchCustomizer.Event.Rotation -> {
                         current.copy(rotation = it.value)
                     }
 
-                    is TouchControllerCustomizer.Event.Margins -> {
+                    is ControllerTouchCustomizer.Event.Margins -> {
                         current.copy(marginX = it.x, marginY = it.y)
                     }
 
@@ -588,7 +591,7 @@ abstract class AbsGameActivity : BaseGameActivity() {
 
         private fun handleRetroViewLayout(
             constraintSet: ConstraintSet,
-            controllerConfig: ControllerConfig,
+            controllerConfig: ControllerTouchConfig,
             orientation: Int,
             touchControllerVisible: Boolean,
             insets: Rect
@@ -703,8 +706,8 @@ abstract class AbsGameActivity : BaseGameActivity() {
 
         private fun handleTouchControllerLayout(
             constraintSet: ConstraintSet,
-            padSettings: TouchControllerSettingsManager.Settings,
-            controllerConfig: ControllerConfig,
+            padSettings: ControllerTouchSettingsManager.Settings,
+            controllerConfig: ControllerTouchConfig,
             orientation: Int,
             insets: Rect
         ) {
@@ -731,8 +734,8 @@ abstract class AbsGameActivity : BaseGameActivity() {
                 )
             }
 
-            val minScale = TouchControllerSettingsManager.MIN_SCALE
-            val maxScale = TouchControllerSettingsManager.MAX_SCALE
+            val minScale = ControllerTouchSettingsManager.MIN_SCALE
+            val maxScale = ControllerTouchSettingsManager.MAX_SCALE
 
             val leftScale = UtilKMathInterpolation.get_ofLinear(
                 padSettings.scale,
@@ -746,7 +749,7 @@ abstract class AbsGameActivity : BaseGameActivity() {
                 maxScale
             ) * touchControllerConfig.rightScale
 
-            val maxMargins = TouchControllerSettingsManager.MAX_MARGINS.dp2px()
+            val maxMargins = ControllerTouchSettingsManager.MAX_MARGINS.dp2px()
 
             constraintSet.setHorizontalWeight(R.id.leftgamepad, touchControllerConfig.leftScale)
             constraintSet.setHorizontalWeight(R.id.rightgamepad, touchControllerConfig.rightScale)
@@ -802,7 +805,7 @@ abstract class AbsGameActivity : BaseGameActivity() {
             constraintSet.constrainWidth(R.id.rightgamepad, constrainWidth)
 
             if (controllerConfig.allowTouchRotation) {
-                val maxRotation = TouchControllerSettingsManager.MAX_ROTATION
+                val maxRotation = ControllerTouchSettingsManager.MAX_ROTATION
                 leftPad.secondaryDialRotation = UtilKMathInterpolation.get_ofLinear(padSettings.rotation, 0f, maxRotation)
                 rightPad.secondaryDialRotation = -UtilKMathInterpolation.get_ofLinear(padSettings.rotation, 0f, maxRotation)
             }
@@ -812,7 +815,7 @@ abstract class AbsGameActivity : BaseGameActivity() {
             leftPad: RadialGamePad,
             rightPad: RadialGamePad,
             maxMargins: Float,
-            padSettings: TouchControllerSettingsManager.Settings,
+            padSettings: ControllerTouchSettingsManager.Settings,
             verticalSpacing: Int,
             horizontalSpacing: Int
         ) {
@@ -841,7 +844,7 @@ abstract class AbsGameActivity : BaseGameActivity() {
             leftPad: RadialGamePad,
             rightPad: RadialGamePad,
             maxMargins: Float,
-            padSettings: TouchControllerSettingsManager.Settings,
+            padSettings: ControllerTouchSettingsManager.Settings,
             verticalSpacing: Int
         ) {
             leftPad.spacingBottom = UtilKMathInterpolation.get_ofLinear(
@@ -866,10 +869,10 @@ abstract class AbsGameActivity : BaseGameActivity() {
 
         private fun updateDividers(
             orientation: Int,
-            controllerConfig: ControllerConfig,
+            controllerConfig: ControllerTouchConfig,
             touchControllerVisible: Boolean
         ) {
-            val theme = LemuroidTouchOverlayThemes.getGamePadTheme(leftGamePadContainer)
+            val theme = InputOverlayThemes.getGamePadTheme(leftGamePadContainer)
 
             val displayHorizontalDivider = UtilKBoolean.allTrue(
                 orientation == Configuration.ORIENTATION_PORTRAIT,
@@ -893,8 +896,8 @@ abstract class AbsGameActivity : BaseGameActivity() {
         }
 
         fun updateLayout(
-            config: ControllerConfig,
-            padSettings: TouchControllerSettingsManager.Settings,
+            config: ControllerTouchConfig,
+            padSettings: ControllerTouchSettingsManager.Settings,
             orientation: Int,
             touchControllerVisible: Boolean,
             insets: Rect
@@ -921,7 +924,7 @@ abstract class AbsGameActivity : BaseGameActivity() {
         fun launchGame(
             activity: Activity,
             gameActivityClazz: Class<*>,
-            systemCoreConfig: SystemCoreConfig,
+            systemCoreConfig: GameSystemCoreConfig,
             game: Game,
             loadSave: Boolean,
             useLeanback: Boolean

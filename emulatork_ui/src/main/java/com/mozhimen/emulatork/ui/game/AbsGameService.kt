@@ -8,8 +8,8 @@ import android.content.ServiceConnection
 import android.os.Binder
 import android.os.IBinder
 import androidx.core.app.NotificationManagerCompat
-import com.mozhimen.emulatork.basic.library.db.entities.Game
-import com.mozhimen.emulatork.ui.main.NotificationsManager
+import com.mozhimen.emulatork.basic.game.db.entities.Game
+import com.mozhimen.emulatork.ext.library.NotificationsManager
 
 /**
  * @ClassName GameService

@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
-import com.mozhimen.emulatork.basic.library.db.RetrogradeDatabase
-import com.mozhimen.emulatork.basic.library.db.entities.Game
+import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
+import com.mozhimen.emulatork.basic.game.db.entities.Game
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
-
+import com.mozhimen.emulatork.ext.works.WorkPendingOperationsMonitor
 /**
  * @ClassName HomeViewModel
  * @Description TODO
@@ -96,7 +96,7 @@ class HomeViewModel(appContext: Context, retrogradeDb: RetrogradeDatabase) : Vie
     }
 
     private fun indexingInProgress(appContext: Context) =
-        com.mozhimen.emulatork.ui.library.PendingOperationsMonitor(appContext).anyLibraryOperationInProgress().asFlow()
+        WorkPendingOperationsMonitor(appContext).anyLibraryOperationInProgress().asFlow()
 
     private fun discoveryGames(retrogradeDb: RetrogradeDatabase) =
         retrogradeDb.gameDao().selectFirstNotPlayed(CAROUSEL_MAX_ITEMS)

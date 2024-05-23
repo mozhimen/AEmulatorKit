@@ -12,12 +12,15 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.fredporciuncula.flow.preferences.FlowSharedPreferences
 import com.mozhimen.basick.utilk.androidx.fragment.runOnViewLifecycleState
-import com.mozhimen.emulatork.basic.preferences.SharedPreferencesHelper
-import com.mozhimen.emulatork.basic.savesync.SaveSyncManager
-import com.mozhimen.emulatork.basic.storage.DirectoriesManager
+import com.mozhimen.emulatork.basic.preferences.SharedPreferencesMgr
+import com.mozhimen.emulatork.basic.save.sync.SaveSyncManager
+import com.mozhimen.emulatork.basic.storage.StorageDirectoriesManager
 import com.mozhimen.emulatork.ui.R
-import com.mozhimen.emulatork.ui.library.LibraryIndexScheduler
-import com.mozhimen.emulatork.ui.settings.SettingsInteractor
+import com.mozhimen.emulatork.ext.works.WorkScheduler
+import com.mozhimen.emulatork.ext.library.SettingsInteractor
+import com.mozhimen.emulatork.ui.dagger.settings.StorageFrameworkPickerActivity
+import com.mozhimen.emulatork.ui.dagger.works.WorkLibraryIndex
+import com.mozhimen.emulatork.ui.dagger.works.WorkStorageCacheCleaner
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
@@ -32,10 +35,14 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     @Inject
     lateinit var settingsInteractor: SettingsInteractor
+
     @Inject
-    lateinit var directoriesManager: DirectoriesManager
+    lateinit var storageDirectoriesManager: StorageDirectoriesManager
+
     @Inject
     lateinit var saveSyncManager: SaveSyncManager
+
+    ///////////////////////////////////////////////////////////////////////
 
     override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
@@ -49,7 +56,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         preferenceManager.preferenceDataStore =
-            SharedPreferencesHelper.getSharedPreferencesDataStore(requireContext())
+            SharedPreferencesMgr.getSharedPreferencesDataStore(requireContext())
         setPreferencesFromResource(R.xml.mobile_settings, rootKey)
 
         findPreference<Preference>(getString(R.string.pref_key_open_save_sync_settings))?.apply {
@@ -63,7 +70,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val factory = SettingsViewModel.Factory(
             requireContext(),
             FlowSharedPreferences(
-                SharedPreferencesHelper.getLegacySharedPreferences(requireContext())
+                SharedPreferencesMgr.getLegacySharedPreferences(requireContext())
             )
         )
         val settingsViewModel = ViewModelProvider(this, factory)[SettingsViewModel::class.java]
@@ -95,12 +102,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
     }
 
-    private fun getDisplayNameForFolderUri(uri: Uri): String? {
-        return runCatching {
-            DocumentFile.fromTreeUri(requireContext(), uri)?.name
-        }.getOrNull()
-    }
-
     override fun onPreferenceTreeClick(preference: Preference?): Boolean {
         when (preference?.key) {
             getString(R.string.pref_key_rescan) -> rescanLibrary()
@@ -116,28 +117,36 @@ class SettingsFragment : PreferenceFragmentCompat() {
         return super.onPreferenceTreeClick(preference)
     }
 
+    ///////////////////////////////////////////////////////////////////////
+
+    private fun getDisplayNameForFolderUri(uri: Uri): String? {
+        return runCatching {
+            DocumentFile.fromTreeUri(requireContext(), uri)?.name
+        }.getOrNull()
+    }
+
     private fun handleAdvancedSettings() {
-        findNavController().navigate(com.mozhimen.emulatork.test.R.id.navigation_settings_advanced)
+        findNavController().navigate(com.mozhimen.emulatork.test.dagger.R.id.navigation_settings_advanced)
     }
 
     private fun handleDisplayBiosInfo() {
-        findNavController().navigate(com.mozhimen.emulatork.test.R.id.navigation_settings_bios_info)
+        findNavController().navigate(com.mozhimen.emulatork.test.dagger.R.id.navigation_settings_bios_info)
     }
 
     private fun handleDisplayCorePage() {
-        findNavController().navigate(com.mozhimen.emulatork.test.R.id.navigation_settings_cores_selection)
+        findNavController().navigate(com.mozhimen.emulatork.test.dagger.R.id.navigation_settings_cores_selection)
     }
 
     private fun handleDisplaySaveSync() {
-        findNavController().navigate(com.mozhimen.emulatork.test.R.id.navigation_settings_save_sync)
+        findNavController().navigate(com.mozhimen.emulatork.test.dagger.R.id.navigation_settings_save_sync)
     }
 
     private fun handleOpenGamePadSettings() {
-        findNavController().navigate(com.mozhimen.emulatork.test.R.id.navigation_settings_gamepad)
+        findNavController().navigate(com.mozhimen.emulatork.test.dagger.R.id.navigation_settings_gamepad)
     }
 
     private fun handleChangeExternalFolder() {
-        settingsInteractor.changeLocalStorageFolder()
+        settingsInteractor.changeLocalStorageFolder(StorageFrameworkPickerActivity::class.java)
     }
 
     private fun handleResetSettings() {
@@ -145,7 +154,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             .setTitle(R.string.reset_settings_warning_message_title)
             .setMessage(R.string.reset_settings_warning_message_description)
             .setPositiveButton(R.string.ok) { _, _ ->
-                settingsInteractor.resetAllSettings()
+                settingsInteractor.resetAllSettings(WorkLibraryIndex::class.java,WorkStorageCacheCleaner::class.java)
                 reloadPreferences()
             }
             .setNegativeButton(com.mozhimen.emulatork.ui.R.string.cancel) { _, _ -> }
@@ -158,12 +167,14 @@ class SettingsFragment : PreferenceFragmentCompat() {
     }
 
     private fun rescanLibrary() {
-        context?.let { com.mozhimen.emulatork.ui.library.LibraryIndexScheduler.scheduleLibrarySync(it) }
+        context?.let { WorkScheduler.scheduleLibrarySync(WorkLibraryIndex::class.java, it) }
     }
 
     private fun stopRescanLibrary() {
-        context?.let { com.mozhimen.emulatork.ui.library.LibraryIndexScheduler.cancelLibrarySync(it) }
+        context?.let { WorkScheduler.cancelLibrarySync(it) }
     }
+
+    ///////////////////////////////////////////////////////////////////////
 
     @dagger.Module
     class Module

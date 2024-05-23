@@ -3,8 +3,8 @@ package com.mozhimen.emulatork.test.hilt.favorites
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.paging.PagingData
-import com.mozhimen.emulatork.basic.library.db.RetrogradeDatabase
-import com.mozhimen.emulatork.basic.library.db.entities.Game
+import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
+import com.mozhimen.emulatork.basic.game.db.entities.Game
 import com.mozhimen.pagingk.paging3.basic.utils.Paging3Util
 import kotlinx.coroutines.flow.Flow
 

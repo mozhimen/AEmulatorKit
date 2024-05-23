@@ -29,7 +29,7 @@ include ':emulatork_basic_dagger'
 include ':emulatork_ui_dagger'
 include ':emulatork_ui'
 include ':emulatork_input'
-include ':emulatork_libretro'
+include ':emulatork_libretro_db'
 include ':emulatork_cores'
 //SwiftKit
 include ':SwiftKit'

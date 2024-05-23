@@ -5,10 +5,12 @@ import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import com.mozhimen.emulatork.basic.preferences.SharedPreferencesHelper
+import com.mozhimen.emulatork.basic.preferences.SharedPreferencesMgr
 import com.mozhimen.emulatork.ui.R
-import com.mozhimen.emulatork.ui.settings.AdvancedSettingsPreferences
-import com.mozhimen.emulatork.ui.settings.SettingsInteractor
+import com.mozhimen.emulatork.ext.preferences.PreferencesAdvancedSettings
+import com.mozhimen.emulatork.ext.library.SettingsInteractor
+import com.mozhimen.emulatork.ui.dagger.works.WorkLibraryIndex
+import com.mozhimen.emulatork.ui.dagger.works.WorkStorageCacheCleaner
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
@@ -36,9 +38,9 @@ class AdvancedSettingsFragment : PreferenceFragmentCompat() {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         preferenceManager.preferenceDataStore =
-            SharedPreferencesHelper.getSharedPreferencesDataStore(requireContext())
+            SharedPreferencesMgr.getSharedPreferencesDataStore(requireContext())
         setPreferencesFromResource(R.xml.mobile_settings_advanced, rootKey)
-        AdvancedSettingsPreferences.updateCachePreferences(preferenceScreen)
+        PreferencesAdvancedSettings.updateCachePreferences(preferenceScreen)
     }
 
     override fun onPreferenceTreeClick(preference: Preference?): Boolean {
@@ -53,7 +55,7 @@ class AdvancedSettingsFragment : PreferenceFragmentCompat() {
             .setTitle(R.string.reset_settings_warning_message_title)
             .setMessage(R.string.reset_settings_warning_message_description)
             .setPositiveButton(R.string.ok) { _, _ ->
-                settingsInteractor.resetAllSettings()
+                settingsInteractor.resetAllSettings(WorkLibraryIndex::class.java, WorkStorageCacheCleaner::class.java)
                 reloadPreferences()
             }
             .setNegativeButton(com.mozhimen.emulatork.ui.R.string.cancel) { _, _ -> }

@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.fredporciuncula.flow.preferences.FlowSharedPreferences
-import com.mozhimen.emulatork.ui.library.PendingOperationsMonitor
+import com.mozhimen.emulatork.ext.works.WorkPendingOperationsMonitor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOn
@@ -37,9 +37,9 @@ class SettingsViewModel(
 
     val currentFolder = MutableStateFlow("")
 
-    val indexingInProgress = com.mozhimen.emulatork.ui.library.PendingOperationsMonitor(context).anyLibraryOperationInProgress()
+    val indexingInProgress = WorkPendingOperationsMonitor(context).anyLibraryOperationInProgress()
 
-    val directoryScanInProgress = com.mozhimen.emulatork.ui.library.PendingOperationsMonitor(context).isDirectoryScanInProgress()
+    val directoryScanInProgress = WorkPendingOperationsMonitor(context).isDirectoryScanInProgress()
 
     init {
         viewModelScope.launch {

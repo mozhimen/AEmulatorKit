@@ -1,8 +1,8 @@
 package com.mozhimen.emulatork.basic.storage
 
 import android.net.Uri
-import com.mozhimen.emulatork.basic.library.db.entities.DataFile
-import com.mozhimen.emulatork.basic.library.db.entities.Game
+import com.mozhimen.emulatork.basic.game.db.entities.DataFile
+import com.mozhimen.emulatork.basic.game.db.entities.Game
 import kotlinx.coroutines.flow.Flow
 import java.io.InputStream
 
@@ -25,15 +25,15 @@ interface StorageProvider {
 
     val enabledByDefault: Boolean
 
-    fun listBaseStorageFiles(): Flow<List<BaseStorageFile>>
+    fun listBaseStorageFiles(): Flow<List<StorageBaseFile>>
 
     fun getInputStream(uri: Uri): InputStream?
 
-    fun getStorageFile(baseStorageFile: BaseStorageFile): StorageFile?
+    fun getStorageFile(storageBaseFile: StorageBaseFile): StorageFile?
 
     fun getGameRomFiles(
         game: Game,
         dataFiles: List<DataFile>,
         allowVirtualFiles: Boolean
-    ): RomFiles
+    ): StorageRomFile
 }

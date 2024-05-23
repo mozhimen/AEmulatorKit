@@ -2,21 +2,22 @@ package com.mozhimen.emulatork.ui.hilt.game
 
 import android.app.Activity
 import android.content.SharedPreferences
+import android.os.Bundle
+import androidx.fragment.app.Fragment
 import com.mozhimen.emulatork.basic.core.CoreVariablesManager
 import com.mozhimen.emulatork.basic.game.GameLoader
-import com.mozhimen.emulatork.basic.saves.SavesManager
-import com.mozhimen.emulatork.basic.saves.StatesManager
-import com.mozhimen.emulatork.basic.saves.StatesPreviewManager
-import com.mozhimen.emulatork.ui.hilt.gamemenu.GameMenuActivity
+import com.mozhimen.emulatork.basic.save.SaveManager
+import com.mozhimen.emulatork.basic.save.SaveStateManager
+import com.mozhimen.emulatork.basic.save.SaveStatePreviewManager
+import com.mozhimen.emulatork.ui.hilt.game.menu.GameMenuActivity
 import com.mozhimen.emulatork.ui.game.AbsGameActivity
 import com.mozhimen.emulatork.ui.game.AbsGameService
-import com.mozhimen.emulatork.ui.input.InputDeviceManager
-import com.mozhimen.emulatork.ui.rumble.RumbleManager
-import com.mozhimen.emulatork.ui.settings.ControllerConfigsManager
-import com.mozhimen.emulatork.ui.settings.SettingsManager
+import com.mozhimen.emulatork.input.device.InputDeviceManager
+import com.mozhimen.emulatork.basic.game.rumble.GameRumbleManager
+import com.mozhimen.emulatork.basic.controller.ControllerConfigsManager
+import com.mozhimen.emulatork.basic.game.setting.GameSettingsManager
 import javax.inject.Inject
 import dagger.Lazy
-import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * @ClassName GameActivity
@@ -25,19 +26,18 @@ import dagger.hilt.android.AndroidEntryPoint
  * @Date 2024/5/21
  * @Version 1.0
  */
-@AndroidEntryPoint
 class GameActivity : AbsGameActivity() {
     @Inject
-    lateinit var settingsManager: SettingsManager
+    lateinit var gameSettingsManager: GameSettingsManager
 
     @Inject
-    lateinit var statesManager: StatesManager
+    lateinit var saveStateManager: SaveStateManager
 
     @Inject
-    lateinit var statesPreviewManager: StatesPreviewManager
+    lateinit var saveStatePreviewManager: SaveStatePreviewManager
 
     @Inject
-    lateinit var legacySavesManager: SavesManager
+    lateinit var legacySaveManager: SaveManager
 
     @Inject
     lateinit var coreVariablesManager: CoreVariablesManager
@@ -52,7 +52,7 @@ class GameActivity : AbsGameActivity() {
     lateinit var controllerConfigsManager: ControllerConfigsManager
 
     @Inject
-    lateinit var rumbleManager: RumbleManager
+    lateinit var gameRumbleManager: GameRumbleManager
 
     @Inject
     lateinit var sharedPreferences: Lazy<SharedPreferences>
@@ -69,20 +69,20 @@ class GameActivity : AbsGameActivity() {
         return GameService::class.java
     }
 
-    override fun settingsManager(): SettingsManager {
-        return settingsManager
+    override fun settingsManager(): GameSettingsManager {
+        return gameSettingsManager
     }
 
-    override fun statesManager(): StatesManager {
-        return statesManager
+    override fun statesManager(): SaveStateManager {
+        return saveStateManager
     }
 
-    override fun statesPreviewManager(): StatesPreviewManager {
-        return statesPreviewManager
+    override fun statesPreviewManager(): SaveStatePreviewManager {
+        return saveStatePreviewManager
     }
 
-    override fun legacySavesManager(): SavesManager {
-        return legacySavesManager
+    override fun legacySavesManager(): SaveManager {
+        return legacySaveManager
     }
 
     override fun coreVariablesManager(): CoreVariablesManager {
@@ -101,7 +101,7 @@ class GameActivity : AbsGameActivity() {
         return controllerConfigsManager
     }
 
-    override fun rumbleManager(): RumbleManager {
-        return rumbleManager
+    override fun rumbleManager(): GameRumbleManager {
+        return gameRumbleManager
     }
 }

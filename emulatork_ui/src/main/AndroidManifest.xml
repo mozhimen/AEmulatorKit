@@ -7,12 +7,12 @@
     <application>
 
         <activity
-            android:name="com.mozhimen.emulatork.ui.gamecrash.GameCrashActivity"
+            android:name="com.mozhimen.emulatork.ext.game.crash.GameCrashActivity"
             android:theme="@style/Theme.AGameKit_Emulator.Game" />
 
-        <receiver android:name="com.mozhimen.emulatork.ui.library.LibraryIndexBroadcastReceiver" />
+        <receiver android:name="com.mozhimen.emulatork.ext.library.LibraryIndexBroadcastReceiver" />
 
-        <receiver android:name="com.mozhimen.emulatork.ui.library.CoreUpdateBroadcastReceiver" />
+        <receiver android:name="com.mozhimen.emulatork.ext.library.CoreUpdateBroadcastReceiver" />
 
     </application>
 </manifest>

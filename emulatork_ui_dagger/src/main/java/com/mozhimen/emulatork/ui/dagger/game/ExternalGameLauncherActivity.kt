@@ -2,11 +2,15 @@ package com.mozhimen.emulatork.ui.dagger.game
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import com.mozhimen.emulatork.basic.core.CoresSelection
-import com.mozhimen.emulatork.basic.library.db.RetrogradeDatabase
-import com.mozhimen.emulatork.ui.game.AbstractExternalGameLauncherActivity
-import com.mozhimen.emulatork.ui.game.GameLauncher
-import com.mozhimen.emulatork.ui.main.GameLaunchTaskHandler
+import com.mozhimen.emulatork.basic.core.CoreSelection
+import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
+import com.mozhimen.emulatork.ui.game.AbsExternalGameLauncherActivity
+import com.mozhimen.emulatork.ext.game.GameLauncher
+import com.mozhimen.emulatork.ext.game.GameLaunchTaskHandler
+import com.mozhimen.emulatork.ui.dagger.works.WorkSaveSync
+import com.mozhimen.emulatork.ui.dagger.works.WorkStorageCacheCleaner
+import com.mozhimen.emulatork.ui.works.AbsWorkSaveSync
+import com.mozhimen.emulatork.ui.works.AbsWorkStorageCacheCleaner
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -21,7 +25,7 @@ import javax.inject.Inject
  * @Date 2024/5/21
  * @Version 1.0
  */
-class ExternalGameLauncherActivity :AbstractExternalGameLauncherActivity(), HasFragmentInjector, HasSupportFragmentInjector {
+class ExternalGameLauncherActivity :AbsExternalGameLauncherActivity(), HasFragmentInjector, HasSupportFragmentInjector {
     @Inject
     lateinit var supportFragmentInjector: DispatchingAndroidInjector<Fragment>
 
@@ -35,7 +39,7 @@ class ExternalGameLauncherActivity :AbstractExternalGameLauncherActivity(), HasF
     lateinit var gameLaunchTaskHandler: GameLaunchTaskHandler
 
     @Inject
-    lateinit var coresSelection: CoresSelection
+    lateinit var coresSelection: CoreSelection
 
     @Inject
     lateinit var gameLauncher: GameLauncher
@@ -59,7 +63,7 @@ class ExternalGameLauncherActivity :AbstractExternalGameLauncherActivity(), HasF
         return gameLaunchTaskHandler
     }
 
-    override fun coresSelection(): CoresSelection {
+    override fun coresSelection(): CoreSelection {
         return coresSelection
     }
 
@@ -69,5 +73,13 @@ class ExternalGameLauncherActivity :AbstractExternalGameLauncherActivity(), HasF
 
     override fun gameActivityClazz(): Class<*> {
         return GameActivity::class.java
+    }
+
+    override fun workSaveSyncClazz(): Class<out AbsWorkSaveSync> {
+        return WorkSaveSync::class.java
+    }
+
+    override fun workStorageCacheCleanerClazz(): Class<out AbsWorkStorageCacheCleaner> {
+        return WorkStorageCacheCleaner::class.java
     }
 }

@@ -11,11 +11,6 @@
     <string name="empty_view_default">No Items</string>
     <string name="settings_bios_category_detected">Detected</string>
     <string name="settings_bios_category_not_detected">Supported</string>
-    <string name="settings_gamepad_category_enabled">Enabled devices</string>
-    <string name="settings_gamepad_category_general">General</string>
-    <string name="settings_gamepad_title_reset_bindings">Reset bindings</string>
-    <string name="settings_gamepad_title_game_menu">Menu</string>
-    <string name="settings_retropad_button_name">RetroPad %1$s</string>
     <string name="settings_save_sync_configure">Configure %1$s</string>
     <string name="settings_save_sync_include_saves">Sync in-game saves</string>
     <string name="settings_save_sync_include_saves_description">%1$s on device</string>
@@ -72,8 +67,6 @@
     <string name="game_menu_settings">Settings</string>
 
     <string name="error_message_incompatible_state">This save state is not compatible with the current core version. Please load the latest in-game save or use a previous Lemuroid version.</string>
-    <string name="gamepad_binding_update_title">Associate \"RetroPad %1$s\"</string>
-    <string name="gamepad_binding_update_description">Press a button on your \"%1$s\"</string>
 
     <string name="library_index_notification_title">ROMs scanning in progress</string>
     <string name="library_index_notification_message">This can take up to a few minutes</string>
@@ -83,9 +76,6 @@
 
     <string name="notification_channel_name">All notifications</string>
 
-    <string name="core_settings_category_controllers">Controllers</string>
-    <string name="core_settings_controller">Controller %1$s</string>
-    <string name="core_settings_category_preferences">Preferences</string>
     <string name="core_settings_title">Core Settings</string>
 
     <string name="dialog_saf_not_found">This device does not support the StorageAccessFramework file picker. Please manually copy uncompressed ROM files into %1$s and hit Rescan.</string>
@@ -206,4 +196,21 @@
     <string name="haptic_feedback_mode_names_none">None</string>
     <string name="haptic_feedback_mode_names_press">Press</string>
     <string name="haptic_feedback_mode_names_press_release">Press &amp; release</string>
+
+    <!--////////////////////////////////////////////////////////////////////////////////////////-->
+
+    <string name="gamepad_binding_update_title">Associate \"RetroPad %1$s\"</string>
+    <string name="gamepad_binding_update_description">Press a button on your \"%1$s\"</string>
+
+    <string name="settings_gamepad_category_enabled">Enabled devices</string>
+    <string name="settings_gamepad_category_general">General</string>
+    <string name="settings_gamepad_title_reset_bindings">Reset bindings</string>
+    <string name="settings_gamepad_title_game_menu">Menu</string>
+
+    <string name="settings_retropad_button_name">RetroPad %1$s</string>
+
+    <string name="core_settings_controller">Controller %1$s</string>
+    <string name="core_settings_category_preferences">Preferences</string>
+    <string name="core_settings_category_controllers">Controllers</string>
+
 </resources>

@@ -3,7 +3,7 @@ package com.mozhimen.emulatork.test.hilt.main
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.mozhimen.emulatork.ui.library.PendingOperationsMonitor
+import com.mozhimen.emulatork.ext.works.WorkPendingOperationsMonitor
 
 /**
  * @ClassName MainViewModel
@@ -20,5 +20,5 @@ class MainViewModel(appContext: Context) : ViewModel() {
         }
     }
 
-    val displayProgress = com.mozhimen.emulatork.ui.library.PendingOperationsMonitor(appContext).anyOperationInProgress()
+    val displayProgress = WorkPendingOperationsMonitor(appContext).anyOperationInProgress()
 }

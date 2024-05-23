@@ -6,22 +6,22 @@
 
     <fragment
         android:id="@+id/game_menu"
-        android:name="com.mozhimen.emulatork.ui.hilt.gamemenu.GameMenuFragment"
+        android:name="com.mozhimen.emulatork.ui.dagger.game.menu.GameMenuFragment"
         android:label="@string/game_menu_title"/>
 
     <fragment
         android:id="@+id/game_menu_core_options"
-        android:name="com.mozhimen.emulatork.ui.hilt.gamemenu.GameMenuCoreOptionsFragment"
+        android:name="com.mozhimen.emulatork.ui.dagger.game.menu.GameMenuCoreOptionsFragment"
         android:label="@string/core_settings_title"/>
 
     <fragment
         android:id="@+id/game_menu_save"
-        android:name="com.mozhimen.emulatork.ui.hilt.gamemenu.GameMenuSaveFragment"
+        android:name="com.mozhimen.emulatork.ui.dagger.game.menu.GameMenuSaveFragment"
         android:label="@string/game_menu_save"/>
 
     <fragment
         android:id="@+id/game_menu_load"
-        android:name="com.mozhimen.emulatork.ui.hilt.gamemenu.GameMenuLoadFragment"
+        android:name="com.mozhimen.emulatork.ui.dagger.game.menu.GameMenuLoadFragment"
         android:label="@string/game_menu_load"/>
 
 </navigation>

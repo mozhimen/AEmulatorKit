@@ -1,8 +1,8 @@
 package com.mozhimen.emulatork.basic.core
 
 import android.content.SharedPreferences
-import com.mozhimen.emulatork.basic.library.SystemCoreConfig
-import com.mozhimen.emulatork.basic.library.SystemID
+import com.mozhimen.emulatork.basic.game.system.GameSystemCoreConfig
+import com.mozhimen.emulatork.basic.game.system.GameSystemID
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.security.InvalidParameterException
@@ -15,46 +15,6 @@ import java.security.InvalidParameterException
  * @Version 1.0
  */
 open class CoreVariablesManager(private val sharedPreferences: Lazy<SharedPreferences>) {
-
-    suspend fun getOptionsForCore(
-        systemID: SystemID,
-        systemCoreConfig: SystemCoreConfig
-    ): List<CoreVariable> {
-        val defaultMap = convertCoreVariablesToMap(systemCoreConfig.defaultSettings)
-        val coreVariables = retrieveCustomCoreVariables(systemID, systemCoreConfig)
-        val coreVariablesMap = defaultMap + convertCoreVariablesToMap(coreVariables)
-        return convertMapToCoreVariables(coreVariablesMap)
-    }
-
-    private fun convertMapToCoreVariables(variablesMap: Map<String, String>): List<CoreVariable> {
-        return variablesMap.entries.map { CoreVariable(it.key, it.value) }
-    }
-
-    private fun convertCoreVariablesToMap(coreVariables: List<CoreVariable>): Map<String, String> {
-        return coreVariables.associate { it.key to it.value }
-    }
-
-    private suspend fun retrieveCustomCoreVariables(
-        systemID: SystemID,
-        systemCoreConfig: SystemCoreConfig
-    ): List<CoreVariable> = withContext(Dispatchers.IO) {
-
-        val exposedKeys = systemCoreConfig.exposedSettings
-        val exposedAdvancedKeys = systemCoreConfig.exposedAdvancedSettings
-
-        val requestedKeys = (exposedKeys + exposedAdvancedKeys).map { it.key }
-            .map { computeSharedPreferenceKey(it, systemID.dbname) }
-
-        sharedPreferences.value.all.filter { it.key in requestedKeys }
-            .map { (key, value) ->
-                val result = when (value!!) {
-                    is Boolean -> if (value as Boolean) "enabled" else "disabled"
-                    is String -> value as String
-                    else -> throw InvalidParameterException("Invalid setting in SharedPreferences")
-                }
-                CoreVariable(computeOriginalKey(key, systemID.dbname), result)
-            }
-    }
 
     companion object {
         private const val RETRO_OPTION_PREFIX = "cv"
@@ -70,5 +30,47 @@ open class CoreVariablesManager(private val sharedPreferences: Lazy<SharedPrefer
         private fun computeSharedPreferencesPrefix(systemID: String): String {
             return "${RETRO_OPTION_PREFIX}_${systemID}_"
         }
+    }
+
+    suspend fun getOptionsForCore(
+        systemID: GameSystemID,
+        systemCoreConfig: GameSystemCoreConfig
+    ): List<CoreVariable> {
+        val defaultMap = convertCoreVariablesToMap(systemCoreConfig.defaultSettings)
+        val coreVariables = retrieveCustomCoreVariables(systemID, systemCoreConfig)
+        val coreVariablesMap = defaultMap + convertCoreVariablesToMap(coreVariables)
+        return convertMapToCoreVariables(coreVariablesMap)
+    }
+
+    //////////////////////////////////////////////////////////////////////////////
+
+    private fun convertMapToCoreVariables(variablesMap: Map<String, String>): List<CoreVariable> {
+        return variablesMap.entries.map { CoreVariable(it.key, it.value) }
+    }
+
+    private fun convertCoreVariablesToMap(coreVariables: List<CoreVariable>): Map<String, String> {
+        return coreVariables.associate { it.key to it.value }
+    }
+
+    private suspend fun retrieveCustomCoreVariables(
+        systemID: GameSystemID,
+        systemCoreConfig: GameSystemCoreConfig
+    ): List<CoreVariable> = withContext(Dispatchers.IO) {
+
+        val exposedKeys = systemCoreConfig.systemExposedSettings
+        val exposedAdvancedKeys = systemCoreConfig.exposedAdvancedSettings
+
+        val requestedKeys = (exposedKeys + exposedAdvancedKeys).map { it.key }
+            .map { computeSharedPreferenceKey(it, systemID.dbname) }
+
+        sharedPreferences.value.all.filter { it.key in requestedKeys }
+            .map { (key, value) ->
+                val result = when (value!!) {
+                    is Boolean -> if (value as Boolean) "enabled" else "disabled"
+                    is String -> value as String
+                    else -> throw InvalidParameterException("Invalid setting in SharedPreferences")
+                }
+                CoreVariable(computeOriginalKey(key, systemID.dbname), result)
+            }
     }
 }

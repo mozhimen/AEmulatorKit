@@ -4,10 +4,10 @@ import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.epoxy.carousel
 import com.mozhimen.basick.BuildConfig
 import com.mozhimen.basick.utilk.kotlin.sequences.UtilKSequence
-import com.mozhimen.emulatork.basic.library.db.entities.Game
+import com.mozhimen.emulatork.basic.game.db.entities.Game
 import com.mozhimen.emulatork.ui.R
-import com.mozhimen.emulatork.ui.game.GameInteractor
-import com.mozhimen.emulatork.ui.covers.CoverLoader
+import com.mozhimen.emulatork.ext.game.GameInteractor
+import com.mozhimen.emulatork.ext.covers.CoverLoader
 import com.mozhimen.rxk.epoxy4.util.withModelsFrom
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow

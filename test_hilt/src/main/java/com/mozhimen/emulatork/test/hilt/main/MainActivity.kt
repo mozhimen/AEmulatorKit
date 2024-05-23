@@ -17,41 +17,45 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.elevation.SurfaceColors
 import com.mozhimen.basick.utilk.kotlinx.coroutines.launchSafe
-import com.mozhimen.emulatork.basic.dagger.interfaces.PerActivity
-import com.mozhimen.emulatork.basic.dagger.interfaces.PerFragment
-import com.mozhimen.emulatork.basic.dagger.android.RetrogradeAppCompatActivity
-import com.mozhimen.emulatork.basic.library.SystemID
-import com.mozhimen.emulatork.basic.library.db.RetrogradeDatabase
-import com.mozhimen.emulatork.basic.savesync.SaveSyncManager
-import com.mozhimen.emulatork.basic.storage.DirectoriesManager
-import com.mozhimen.emulatork.ext.review.ReviewManager
+import com.mozhimen.emulatork.basic.dagger.annors.PerActivity
+import com.mozhimen.emulatork.basic.dagger.annors.PerFragment
+import com.mozhimen.emulatork.basic.dagger.android.DaggerAppCompatActivity
+import com.mozhimen.emulatork.basic.game.system.GameSystemID
+import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
+import com.mozhimen.emulatork.basic.save.sync.SaveSyncManager
+import com.mozhimen.emulatork.basic.storage.StorageDirectoriesManager
+import com.mozhimen.emulatork.basic.game.review.GameReviewManager
 import com.mozhimen.emulatork.ui.R
-import com.mozhimen.emulatork.test.favorites.FavoritesFragment
-import com.mozhimen.emulatork.test.games.GamesFragment
-import com.mozhimen.emulatork.test.home.HomeFragment
-import com.mozhimen.emulatork.test.search.SearchFragment
-import com.mozhimen.emulatork.test.settings.AdvancedSettingsFragment
-import com.mozhimen.emulatork.test.settings.BiosSettingsFragment
-import com.mozhimen.emulatork.test.settings.CoresSelectionFragment
-import com.mozhimen.emulatork.test.settings.GamepadSettingsFragment
-import com.mozhimen.emulatork.test.settings.SaveSyncFragment
-import com.mozhimen.emulatork.test.settings.SettingsFragment
-import com.mozhimen.emulatork.test.systems.MetaSystemsFragment
+import com.mozhimen.emulatork.test.dagger.favorites.FavoritesFragment
+import com.mozhimen.emulatork.test.dagger.games.GamesFragment
+import com.mozhimen.emulatork.test.dagger.home.HomeFragment
+import com.mozhimen.emulatork.test.dagger.search.SearchFragment
+import com.mozhimen.emulatork.test.dagger.settings.AdvancedSettingsFragment
+import com.mozhimen.emulatork.test.dagger.settings.BiosSettingsFragment
+import com.mozhimen.emulatork.test.dagger.settings.CoresSelectionFragment
+import com.mozhimen.emulatork.test.dagger.settings.GamepadSettingsFragment
+import com.mozhimen.emulatork.test.dagger.settings.SaveSyncFragment
+import com.mozhimen.emulatork.test.dagger.settings.SettingsFragment
+import com.mozhimen.emulatork.test.dagger.systems.MetaSystemsFragment
 import com.mozhimen.emulatork.ui.dagger.game.GameActivity
-import com.mozhimen.emulatork.ui.settings.SettingsInteractor
-import com.mozhimen.emulatork.ui.shortcuts.ShortcutsGenerator
-import com.mozhimen.emulatork.ui.game.GameInteractor
-import com.mozhimen.emulatork.ui.game.GameLauncher
-import com.mozhimen.emulatork.ui.input.InputDeviceManager
-import com.mozhimen.emulatork.ui.main.BusyActivity
-import com.mozhimen.emulatork.ui.main.GameLaunchTaskHandler
-import com.mozhimen.emulatork.ui.settings.GamePadPreferencesHelper
-import com.mozhimen.emulatork.ui.game.BaseGameActivity
+import com.mozhimen.emulatork.ext.library.SettingsInteractor
+import com.mozhimen.emulatork.ext.covers.CoverShortcutGenerator
+import com.mozhimen.emulatork.ext.game.GameInteractor
+import com.mozhimen.emulatork.ext.game.GameLauncher
+import com.mozhimen.emulatork.input.device.InputDeviceManager
+import com.mozhimen.emulatork.basic.game.GameBusyActivity
+import com.mozhimen.emulatork.ext.game.GameLaunchTaskHandler
+import com.mozhimen.emulatork.ext.game.pad.GamePadPreferencesManager
+import com.mozhimen.emulatork.ext.game.BaseGameActivity
+import com.mozhimen.emulatork.ext.works.WorkScheduler
+import com.mozhimen.emulatork.ui.dagger.game.pad.GamePadBindingActivity
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import javax.inject.Inject
+import com.mozhimen.emulatork.ui.dagger.works.WorkSaveSync
+import com.mozhimen.emulatork.ui.dagger.works.WorkStorageCacheCleaner
 
 /**
  * @ClassName MainActivity
@@ -61,7 +65,7 @@ import javax.inject.Inject
  * @Version 1.0
  */
 @OptIn(DelicateCoroutinesApi::class)
-class MainActivity : RetrogradeAppCompatActivity(), BusyActivity {
+class MainActivity : DaggerAppCompatActivity(), GameBusyActivity {
 
     @Inject
     lateinit var gameLaunchTaskHandler: GameLaunchTaskHandler
@@ -69,14 +73,14 @@ class MainActivity : RetrogradeAppCompatActivity(), BusyActivity {
     @Inject
     lateinit var saveSyncManager: SaveSyncManager
 
-    private val reviewManager = ReviewManager()
+    private val gameReviewManager = GameReviewManager()
     private var mainViewModel: MainViewModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.navigationBarColor = SurfaceColors.SURFACE_2.getColor(this)
         window.statusBarColor = SurfaceColors.SURFACE_2.getColor(this)
-        setContentView(com.mozhimen.emulatork.test.R.layout.activity_main)
+        setContentView(com.mozhimen.emulatork.test.dagger.R.layout.activity_main)
         initializeActivity()
     }
 
@@ -87,10 +91,10 @@ class MainActivity : RetrogradeAppCompatActivity(), BusyActivity {
         setSupportActionBar(findViewById(R.id.toolbar))
 
         GlobalScope.launchSafe {
-            reviewManager.initialize(applicationContext)
+            gameReviewManager.initialize(applicationContext)
         }
 
-        val navView: BottomNavigationView = findViewById(com.mozhimen.emulatork.test.R.id.nav_view)
+        val navView: BottomNavigationView = findViewById(com.mozhimen.emulatork.test.dagger.R.id.nav_view)
         val navController = findNavController(R.id.nav_host_fragment)
 
         val topLevelIds = setOf(
@@ -119,7 +123,7 @@ class MainActivity : RetrogradeAppCompatActivity(), BusyActivity {
         when (requestCode) {
             BaseGameActivity.REQUEST_PLAY_GAME -> {
                 GlobalScope.launchSafe {
-                    gameLaunchTaskHandler.handleGameFinish(true, this@MainActivity, resultCode, data)
+                    gameLaunchTaskHandler.handleGameFinish(true, this@MainActivity, resultCode, data, WorkSaveSync::class.java, WorkStorageCacheCleaner::class.java)
                 }
             }
         }
@@ -145,7 +149,7 @@ class MainActivity : RetrogradeAppCompatActivity(), BusyActivity {
             }
 
             R.id.menu_options_sync -> {
-                com.mozhimen.emulatork.ui.savesync.AbsSaveSyncWork.enqueueManualWork(this)
+                WorkScheduler.enqueueManualWork(WorkSaveSync::class.java, this)
                 true
             }
 
@@ -154,7 +158,7 @@ class MainActivity : RetrogradeAppCompatActivity(), BusyActivity {
     }
 
     private fun displayLemuroidHelp() {
-        val systemFolders = SystemID.values()
+        val systemFolders = GameSystemID.values()
             .map { it.dbname }
             .map { "<i>$it</i>" }
             .joinToString(", ")
@@ -220,14 +224,14 @@ class MainActivity : RetrogradeAppCompatActivity(), BusyActivity {
             @Provides
             @PerActivity
             @JvmStatic
-            fun settingsInteractor(activity: MainActivity, directoriesManager: DirectoriesManager) =
-                SettingsInteractor(activity, directoriesManager)
+            fun settingsInteractor(activity: MainActivity, storageDirectoriesManager: StorageDirectoriesManager) =
+                SettingsInteractor(activity, storageDirectoriesManager)
 
             @Provides
             @PerActivity
             @JvmStatic
             fun gamePadPreferencesHelper(inputDeviceManager: InputDeviceManager) =
-                GamePadPreferencesHelper(inputDeviceManager, false)
+                GamePadPreferencesManager(inputDeviceManager, GamePadBindingActivity::class.java, false)
 
             @Provides
             @PerActivity
@@ -235,10 +239,10 @@ class MainActivity : RetrogradeAppCompatActivity(), BusyActivity {
             fun gameInteractor(
                 activity: MainActivity,
                 retrogradeDb: RetrogradeDatabase,
-                shortcutsGenerator: ShortcutsGenerator,
+                coverShortcutGenerator: CoverShortcutGenerator,
                 gameLauncher: GameLauncher
             ) =
-                GameInteractor(activity, GameActivity::class.java, retrogradeDb, false, shortcutsGenerator, gameLauncher)
+                GameInteractor(activity, GameActivity::class.java, retrogradeDb, false, coverShortcutGenerator, gameLauncher)
         }
     }
 }

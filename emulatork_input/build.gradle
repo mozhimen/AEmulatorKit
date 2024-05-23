@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
+    id "kotlinx-serialization"
 }
 
 android {
@@ -32,6 +33,7 @@ android {
 dependencies {
     implementation project(':SwiftKit:basick')
     implementation project(':ALogKit:logk_timber')
+    implementation project(':ACacheKit:cachek_flow_preferences')
     api "com.github.Swordfish90:RadialGamePad:2.0.0"
 
     testImplementation 'junit:junit:4.13.2'

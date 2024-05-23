@@ -12,11 +12,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mozhimen.basick.utilk.androidx.fragment.runOnViewLifecycleState
-import com.mozhimen.emulatork.basic.library.db.RetrogradeDatabase
-import com.mozhimen.emulatork.ui.game.GameInteractor
-import com.mozhimen.emulatork.ui.game.GamesAdapter
-import com.mozhimen.emulatork.ui.game.RecyclerViewFragment
-import com.mozhimen.emulatork.ui.covers.CoverLoader
+import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
+import com.mozhimen.emulatork.ext.game.GameInteractor
+import com.mozhimen.emulatork.test.dagger.games.GamesAdapter
+import com.mozhimen.emulatork.ext.covers.CoverLoader
+import com.mozhimen.emulatork.basic.dagger.android.DaggerRecyclerViewFragment
+import com.mozhimen.emulatork.ui.R
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.debounce
@@ -29,7 +30,7 @@ import javax.inject.Inject
  * @Date 2024/5/10
  * @Version 1.0
  */
-class SearchFragment : RecyclerViewFragment() {
+class SearchFragment : DaggerRecyclerViewFragment() {
 
     @Inject
     lateinit var retrogradeDb: RetrogradeDatabase
@@ -53,7 +54,7 @@ class SearchFragment : RecyclerViewFragment() {
 
         initializeMenuProvider()
 
-        val gamesAdapter = GamesAdapter(com.mozhimen.emulatork.ui.R.layout.layout_game_list, gameInteractor, coverLoader)
+        val gamesAdapter = GamesAdapter(R.layout.layout_game_list, gameInteractor, coverLoader)
 
         runOnViewLifecycleState(Lifecycle.State.RESUMED) {
             searchViewModel.searchResults

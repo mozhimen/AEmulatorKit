@@ -1,6 +1,6 @@
 package com.mozhimen.emulatork.basic.bios
 
-import com.mozhimen.emulatork.basic.library.SystemID
+import com.mozhimen.emulatork.basic.game.system.GameSystemID
 
 /**
  * @ClassName Bios
@@ -13,7 +13,7 @@ data class Bios(
     val libretroFileName: String,
     val md5: String,
     val description: String,
-    val systemID: SystemID,
+    val systemID: GameSystemID,
     val externalCRC32: String? = null,
     val externalName: String? = null,
 ) {

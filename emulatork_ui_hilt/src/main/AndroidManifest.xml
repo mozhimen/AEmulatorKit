@@ -28,16 +28,16 @@
             android:theme="@style/Theme.AGameKit_Emulator.Game" />
 
         <activity
-            android:name="com.mozhimen.emulatork.ui.hilt.gamemenu.GameMenuActivity"
+            android:name="com.mozhimen.emulatork.ui.hilt.game.menu.GameMenuActivity"
             android:process=":game"
             android:theme="@style/Theme.AGameKit_Emulator.Menu" />
 
         <activity
-            android:name="com.mozhimen.emulatork.ui.hilt.settings.StorageFrameworkPickerLauncher"
+            android:name="com.mozhimen.emulatork.ui.hilt.settings.StorageFrameworkPickerActivity"
             android:theme="@style/Theme.AGameKit_Emulator.Invisible" />
 
         <activity
-            android:name="com.mozhimen.emulatork.ui.hilt.input.GamePadBindingActivity"
+            android:name="com.mozhimen.emulatork.ui.hilt.game.pad.GamePadBindingActivity"
             android:theme="@style/Theme.AGameKit_Emulator.Invisible" />
     </application>
 </manifest>
