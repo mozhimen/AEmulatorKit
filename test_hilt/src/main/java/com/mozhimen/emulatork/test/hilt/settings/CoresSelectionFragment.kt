@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.preference.PreferenceFragmentCompat
 import com.mozhimen.emulatork.basic.preferences.SharedPreferencesMgr
 import com.mozhimen.emulatork.ext.preferences.PreferencesCoreSelection
-import com.mozhimen.emulatork.ui.hilt.works.WorkCoreUpdate
+import com.mozhimen.emulatork.test.hilt.works.WorkCoreUpdate
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

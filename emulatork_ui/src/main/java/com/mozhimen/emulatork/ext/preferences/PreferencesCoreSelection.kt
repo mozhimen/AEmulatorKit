@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceScreen
+import com.mozhimen.basick.utilk.commons.IUtilK
 import com.mozhimen.emulatork.basic.core.CoreSelection
 import com.mozhimen.emulatork.basic.game.system.GameSystem
 import com.mozhimen.emulatork.basic.game.system.GameSystems
@@ -17,7 +18,7 @@ import com.mozhimen.emulatork.ui.works.AbsWorkCoreUpdate
  * @Date 2024/5/13
  * @Version 1.0
  */
-class PreferencesCoreSelection {
+class PreferencesCoreSelection : IUtilK {
 
     fun addCoresSelectionPreferences(preferenceScreen: PreferenceScreen, workCoreUpdateClazz: Class<out AbsWorkCoreUpdate>) {
         val context = preferenceScreen.context
@@ -47,7 +48,7 @@ class PreferencesCoreSelection {
             .toTypedArray()
 
         preference.setOnPreferenceChangeListener { _, _ ->
-            WorkScheduler.scheduleCoreUpdate(workCoreUpdateClazz, context.applicationContext)
+            WorkScheduler.scheduleCoreUpdate(TAG,workCoreUpdateClazz, context.applicationContext)
             true
         }
 

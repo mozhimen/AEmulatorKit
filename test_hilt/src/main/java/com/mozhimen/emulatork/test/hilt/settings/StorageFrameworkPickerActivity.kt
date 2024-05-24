@@ -1,7 +1,7 @@
-package com.mozhimen.emulatork.ui.hilt.settings
+package com.mozhimen.emulatork.test.hilt.settings
 
 import com.mozhimen.emulatork.basic.storage.StorageDirectoriesManager
-import com.mozhimen.emulatork.ui.hilt.works.WorkLibraryIndex
+import com.mozhimen.emulatork.test.hilt.works.WorkLibraryIndex
 import com.mozhimen.emulatork.ui.settings.AbsStorageFrameworkPickerActivity
 import com.mozhimen.emulatork.ui.works.AbsWorkLibraryIndex
 import dagger.hilt.android.AndroidEntryPoint

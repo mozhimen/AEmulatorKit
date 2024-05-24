@@ -10,6 +10,8 @@
         android:name="android.hardware.gamepad"
         android:required="false" />
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <application
         android:name=".LemuroidApplication"
         android:allowBackup="true"
@@ -38,5 +40,4 @@
             android:authorities="${applicationId}.androidx-startup"
             tools:node="remove" />
     </application>
-
 </manifest>

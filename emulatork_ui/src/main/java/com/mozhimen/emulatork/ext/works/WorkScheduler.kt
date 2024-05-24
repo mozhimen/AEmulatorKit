@@ -12,10 +12,13 @@ import androidx.work.PeriodicWorkRequest
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
+import com.mozhimen.basick.utilk.android.util.UtilKLogWrapper
+import com.mozhimen.basick.utilk.commons.IUtilK
 import com.mozhimen.emulatork.ui.works.AbsWorkCoreUpdate
 import com.mozhimen.emulatork.ui.works.AbsWorkLibraryIndex
 import com.mozhimen.emulatork.ui.works.AbsWorkSaveSync
 import com.mozhimen.emulatork.ui.works.AbsWorkStorageCacheCleaner
+import com.squareup.moshi.internal.Util
 import java.util.concurrent.TimeUnit
 
 /**
@@ -25,7 +28,7 @@ import java.util.concurrent.TimeUnit
  * @Date 2024/5/11
  * @Version 1.0
  */
-object WorkScheduler {
+object WorkScheduler : IUtilK {
     val WORK_ID_CORE_UPDATE: String = AbsWorkCoreUpdate::class.java.simpleName
     val WORK_ID_LIBRARY_INDEX: String = AbsWorkLibraryIndex::class.java.simpleName
     val WORK_ID_SAVE_SYNC: String = AbsWorkSaveSync::class.java.simpleName
@@ -34,7 +37,11 @@ object WorkScheduler {
     const val SAVE_SYNC_IS_AUTO = "IS_AUTO"
     const val STORAGE_CACHE_CLEANER_CLEAN_EVERYTHING = "CLEAN_EVERYTHING"
 
-    fun scheduleLibrarySync(workLibraryIndexClazz: Class<out AbsWorkLibraryIndex>, applicationContext: Context) {
+    ////////////////////////////////////////////////////////////////////////////////////
+
+    fun scheduleLibrarySync(tag: String, workLibraryIndexClazz: Class<out AbsWorkLibraryIndex>, applicationContext: Context) {
+        UtilKLogWrapper.w(TAG, "scheduleLibrarySync $tag")
+
         WorkManager.getInstance(applicationContext)
             .beginUniqueWork(
                 WORK_ID_LIBRARY_INDEX,
@@ -44,13 +51,9 @@ object WorkScheduler {
             .enqueue()
     }
 
-    fun cancelLibrarySync(applicationContext: Context) {
-        WorkManager.getInstance(applicationContext).cancelUniqueWork(WORK_ID_LIBRARY_INDEX)
-    }
+    fun scheduleCoreUpdate(tag: String, workCoreUpdateClazz: Class<out AbsWorkCoreUpdate>, applicationContext: Context) {
+        UtilKLogWrapper.w(TAG, "scheduleCoreUpdate $tag")
 
-    ////////////////////////////////////////////////////////////////////////////////////
-
-    fun scheduleCoreUpdate(workCoreUpdateClazz: Class<out AbsWorkCoreUpdate>, applicationContext: Context) {
         WorkManager.getInstance(applicationContext)
             .beginUniqueWork(
                 WORK_ID_CORE_UPDATE,
@@ -60,13 +63,9 @@ object WorkScheduler {
             .enqueue()
     }
 
-    fun cancelCoreUpdate(applicationContext: Context) {
-        WorkManager.getInstance(applicationContext).cancelUniqueWork(WORK_ID_CORE_UPDATE)
-    }
+    fun enqueueManualWork(tag: String, workSaveSyncClazz: Class<out AbsWorkSaveSync>, applicationContext: Context) {
+        UtilKLogWrapper.w(TAG, "enqueueManualWork $tag")
 
-    ////////////////////////////////////////////////////////////////////////////////////
-
-    fun enqueueManualWork(workSaveSyncClazz: Class<out AbsWorkSaveSync>, applicationContext: Context) {
         val inputData: Data = workDataOf(SAVE_SYNC_IS_AUTO to false)
 
         WorkManager.getInstance(applicationContext).enqueueUniqueWork(
@@ -78,13 +77,9 @@ object WorkScheduler {
         )
     }
 
-    fun cancelManualWork(applicationContext: Context) {
-        WorkManager.getInstance(applicationContext).cancelUniqueWork(WORK_ID_SAVE_SYNC)
-    }
+    fun enqueueAutoWork(tag: String, workSaveSyncClazz: Class<out AbsWorkSaveSync>, applicationContext: Context, delayMinutes: Long = 0) {
+        UtilKLogWrapper.w(TAG, "enqueueAutoWork $tag")
 
-    ////////////////////////////////////////////////////////////////////////////////////
-
-    fun enqueueAutoWork(workSaveSyncClazz: Class<out AbsWorkSaveSync>, applicationContext: Context, delayMinutes: Long = 0) {
         val inputData: Data = workDataOf(SAVE_SYNC_IS_AUTO to true)
 
         WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork(
@@ -103,13 +98,9 @@ object WorkScheduler {
         )
     }
 
-    fun cancelAutoWork(applicationContext: Context) {
-        WorkManager.getInstance(applicationContext).cancelUniqueWork(WORK_ID_SAVE_SYNC_PERIODIC)
-    }
+    fun enqueueCleanCacheLRU(tag: String, workStorageCacheCleanerClazz: Class<out AbsWorkStorageCacheCleaner>, applicationContext: Context) {
+        UtilKLogWrapper.w(TAG, "enqueueCleanCacheLRU $tag")
 
-    ////////////////////////////////////////////////////////////////////////////////////
-
-    fun enqueueCleanCacheLRU(workStorageCacheCleanerClazz: Class<out AbsWorkStorageCacheCleaner>, applicationContext: Context) {
         WorkManager.getInstance(applicationContext).enqueueUniqueWork(
             WORK_ID_STORAGE_CACHE_CLEANER,
             ExistingWorkPolicy.APPEND,
@@ -117,13 +108,9 @@ object WorkScheduler {
         )
     }
 
-    fun cancelCleanCacheLRU(applicationContext: Context) {
-        WorkManager.getInstance(applicationContext).cancelUniqueWork(WORK_ID_STORAGE_CACHE_CLEANER)
-    }
+    fun enqueueCleanCacheAll(tag: String, workStorageCacheCleanerClazz: Class<out AbsWorkStorageCacheCleaner>, applicationContext: Context) {
+        UtilKLogWrapper.w(TAG, "enqueueCleanCacheAll $tag")
 
-    ////////////////////////////////////////////////////////////////////////////////////
-
-    fun enqueueCleanCacheAll(workStorageCacheCleanerClazz: Class<out AbsWorkStorageCacheCleaner>, applicationContext: Context) {
         val inputData: Data = workDataOf(STORAGE_CACHE_CLEANER_CLEAN_EVERYTHING to true)
 
         WorkManager.getInstance(applicationContext).enqueueUniqueWork(
@@ -133,5 +120,27 @@ object WorkScheduler {
                 .setInputData(inputData)
                 .build()
         )
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////
+
+    fun cancelLibrarySync(applicationContext: Context) {
+        WorkManager.getInstance(applicationContext).cancelUniqueWork(WORK_ID_LIBRARY_INDEX)
+    }
+
+    fun cancelCoreUpdate(applicationContext: Context) {
+        WorkManager.getInstance(applicationContext).cancelUniqueWork(WORK_ID_CORE_UPDATE)
+    }
+
+    fun cancelManualWork(applicationContext: Context) {
+        WorkManager.getInstance(applicationContext).cancelUniqueWork(WORK_ID_SAVE_SYNC)
+    }
+
+    fun cancelAutoWork(applicationContext: Context) {
+        WorkManager.getInstance(applicationContext).cancelUniqueWork(WORK_ID_SAVE_SYNC_PERIODIC)
+    }
+
+    fun cancelCleanCacheLRU(applicationContext: Context) {
+        WorkManager.getInstance(applicationContext).cancelUniqueWork(WORK_ID_STORAGE_CACHE_CLEANER)
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
+import com.mozhimen.basick.utilk.commons.IUtilK
 import com.mozhimen.emulatork.basic.EmulatorKBasic
 import com.mozhimen.emulatork.ext.library.NotificationsManager
 import com.mozhimen.emulatork.ext.works.WorkScheduler
@@ -20,7 +21,7 @@ import timber.log.Timber
  * @Version 1.0
  */
 abstract class AbsWorkLibraryIndex(context: Context, workerParams: WorkerParameters) :
-    CoroutineWorker(context, workerParams) {
+    CoroutineWorker(context, workerParams),IUtilK {
 
     abstract fun lemuroidLibrary(): EmulatorKBasic
 
@@ -48,7 +49,7 @@ abstract class AbsWorkLibraryIndex(context: Context, workerParams: WorkerParamet
             Timber.e("Library indexing work terminated with an exception:", it)
         }
 
-        WorkScheduler.scheduleCoreUpdate(workCoreUpdateClazz(), applicationContext)
+        WorkScheduler.scheduleCoreUpdate(TAG,workCoreUpdateClazz(), applicationContext)
 
         return Result.success()
     }

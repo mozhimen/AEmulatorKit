@@ -1,13 +1,16 @@
-package com.mozhimen.emulatork.ui.hilt.works
+package com.mozhimen.emulatork.test.hilt.works
 
 import android.content.Context
+import androidx.hilt.work.HiltWorker
 import androidx.work.ListenableWorker
 import androidx.work.WorkerParameters
 import com.mozhimen.emulatork.basic.save.sync.SaveSyncManager
 import com.mozhimen.emulatork.ui.works.AbsWorkSaveSync
 import com.mozhimen.emulatork.basic.game.setting.GameSettingsManager
-import com.mozhimen.emulatork.ui.hilt.game.GameActivity
+import com.mozhimen.emulatork.test.hilt.game.GameActivity
 import dagger.Binds
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import dagger.multibindings.IntoMap
 import javax.inject.Inject
 
@@ -19,13 +22,12 @@ import javax.inject.Inject
  * @Version 1.0
  */
 @HiltWorker
-class WorkSaveSync constructor(context: Context, workerParams: WorkerParameters) : AbsWorkSaveSync(context, workerParams) {
-
-    @Inject
-    lateinit var saveSyncManager: SaveSyncManager
-
-    @Inject
-    lateinit var gameSettingsManager: GameSettingsManager
+class WorkSaveSync @AssistedInject constructor(
+    @Assisted context: Context,
+    @Assisted workerParams: WorkerParameters,
+    private val saveSyncManager: SaveSyncManager,
+    private val gameSettingsManager: GameSettingsManager,
+) : AbsWorkSaveSync(context, workerParams) {
 
     override fun saveSyncManager(): SaveSyncManager {
         return saveSyncManager

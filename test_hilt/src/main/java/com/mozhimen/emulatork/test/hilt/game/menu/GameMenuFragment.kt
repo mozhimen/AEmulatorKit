@@ -1,4 +1,4 @@
-package com.mozhimen.emulatork.ui.hilt.game.menu
+package com.mozhimen.emulatork.test.hilt.game.menu
 
 import androidx.navigation.fragment.findNavController
 import androidx.preference.Preference

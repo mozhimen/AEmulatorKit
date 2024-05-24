@@ -1,4 +1,4 @@
-package com.mozhimen.emulatork.ui.hilt.game.pad
+package com.mozhimen.emulatork.test.hilt.game.pad
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.mozhimen.emulatork.ui.game.pad.AbsGamePadBindingActivity

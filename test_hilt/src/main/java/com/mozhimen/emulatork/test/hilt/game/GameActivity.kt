@@ -1,4 +1,4 @@
-package com.mozhimen.emulatork.ui.hilt.game
+package com.mozhimen.emulatork.test.hilt.game
 
 import android.app.Activity
 import android.content.SharedPreferences
@@ -9,7 +9,7 @@ import com.mozhimen.emulatork.basic.game.GameLoader
 import com.mozhimen.emulatork.basic.save.SaveManager
 import com.mozhimen.emulatork.basic.save.SaveStateManager
 import com.mozhimen.emulatork.basic.save.SaveStatePreviewManager
-import com.mozhimen.emulatork.ui.hilt.game.menu.GameMenuActivity
+import com.mozhimen.emulatork.test.hilt.game.menu.GameMenuActivity
 import com.mozhimen.emulatork.ui.game.AbsGameActivity
 import com.mozhimen.emulatork.ui.game.AbsGameService
 import com.mozhimen.emulatork.input.device.InputDeviceManager

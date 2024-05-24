@@ -62,6 +62,7 @@ include ':AInjectKit'
 project(':AInjectKit').projectDir = new File("D:\\WorkSpace\\GitHub\\AInjectKit")
 include ':AInjectKit:injectk_dagger'
 include ':AInjectKit:injectk_hilt'
+include ':AInjectKit:injectk_hilt_work'
 //ANetKit
 include ':ANetKit'
 project(':ANetKit').projectDir = new File("D:\\WorkSpace\\GitHub\\ANetKit")

@@ -6,22 +6,22 @@
 
     <fragment
         android:id="@+id/game_menu"
-        android:name="com.mozhimen.emulatork.ui.hilt.game.menu.GameMenuFragment"
+        android:name="com.mozhimen.emulatork.test.hilt.game.menu.GameMenuFragment"
         android:label="@string/game_menu_title"/>
 
     <fragment
         android:id="@+id/game_menu_core_options"
-        android:name="com.mozhimen.emulatork.ui.hilt.game.menu.GameMenuCoreOptionsFragment"
+        android:name="com.mozhimen.emulatork.test.hilt.game.menu.GameMenuCoreOptionsFragment"
         android:label="@string/core_settings_title"/>
 
     <fragment
         android:id="@+id/game_menu_save"
-        android:name="com.mozhimen.emulatork.ui.hilt.game.menu.GameMenuSaveFragment"
+        android:name="com.mozhimen.emulatork.test.hilt.game.menu.GameMenuSaveFragment"
         android:label="@string/game_menu_save"/>
 
     <fragment
         android:id="@+id/game_menu_load"
-        android:name="com.mozhimen.emulatork.ui.hilt.game.menu.GameMenuLoadFragment"
+        android:name="com.mozhimen.emulatork.test.hilt.game.menu.GameMenuLoadFragment"
         android:label="@string/game_menu_load"/>
 
 </navigation>

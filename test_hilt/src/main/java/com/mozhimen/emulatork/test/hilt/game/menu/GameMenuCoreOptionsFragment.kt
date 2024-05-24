@@ -1,4 +1,4 @@
-package com.mozhimen.emulatork.ui.hilt.game.menu
+package com.mozhimen.emulatork.test.hilt.game.menu
 
 import com.mozhimen.emulatork.ui.game.menu.AbsGameMenuCoreOptionsFragment
 import com.mozhimen.emulatork.input.device.InputDeviceManager

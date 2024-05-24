@@ -12,6 +12,7 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.fredporciuncula.flow.preferences.FlowSharedPreferences
 import com.mozhimen.basick.utilk.androidx.fragment.runOnViewLifecycleState
+import com.mozhimen.basick.utilk.commons.IUtilK
 import com.mozhimen.emulatork.basic.preferences.SharedPreferencesMgr
 import com.mozhimen.emulatork.basic.save.sync.SaveSyncManager
 import com.mozhimen.emulatork.basic.storage.StorageDirectoriesManager
@@ -31,7 +32,7 @@ import javax.inject.Inject
  * @Date 2024/5/10
  * @Version 1.0
  */
-class SettingsFragment : PreferenceFragmentCompat() {
+class SettingsFragment : PreferenceFragmentCompat(), IUtilK {
 
     @Inject
     lateinit var settingsInteractor: SettingsInteractor
@@ -154,7 +155,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             .setTitle(R.string.reset_settings_warning_message_title)
             .setMessage(R.string.reset_settings_warning_message_description)
             .setPositiveButton(R.string.ok) { _, _ ->
-                settingsInteractor.resetAllSettings(WorkLibraryIndex::class.java,WorkStorageCacheCleaner::class.java)
+                settingsInteractor.resetAllSettings(WorkLibraryIndex::class.java, WorkStorageCacheCleaner::class.java)
                 reloadPreferences()
             }
             .setNegativeButton(com.mozhimen.emulatork.ui.R.string.cancel) { _, _ -> }
@@ -167,7 +168,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     }
 
     private fun rescanLibrary() {
-        context?.let { WorkScheduler.scheduleLibrarySync(WorkLibraryIndex::class.java, it) }
+        context?.let { WorkScheduler.scheduleLibrarySync(TAG, WorkLibraryIndex::class.java, it) }
     }
 
     private fun stopRescanLibrary() {

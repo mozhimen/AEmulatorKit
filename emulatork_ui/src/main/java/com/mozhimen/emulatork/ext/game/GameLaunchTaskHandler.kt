@@ -3,6 +3,7 @@ package com.mozhimen.emulatork.ext.game
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import com.mozhimen.basick.utilk.commons.IUtilK
 import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
 import com.mozhimen.emulatork.basic.game.db.entities.Game
 import com.mozhimen.emulatork.basic.game.review.GameReviewManager
@@ -23,7 +24,7 @@ import com.mozhimen.emulatork.ui.works.AbsWorkStorageCacheCleaner
 class GameLaunchTaskHandler(
     private val gameReviewManager: GameReviewManager,
     private val retrogradeDb: RetrogradeDatabase
-) {
+):IUtilK {
 
     fun handleGameStart(context: Context) {
         cancelBackgroundWork(context)
@@ -62,8 +63,8 @@ class GameLaunchTaskHandler(
 
     private fun rescheduleBackgroundWork(context: Context, workSaveSyncClazz: Class<out AbsWorkSaveSync>, workStorageCacheCleanerClazz: Class<out AbsWorkStorageCacheCleaner>) {
         // Let's slightly delay the sync. Maybe the user wants to play another game.
-        WorkScheduler.enqueueAutoWork(workSaveSyncClazz, context, 5)
-        WorkScheduler.enqueueCleanCacheLRU(workStorageCacheCleanerClazz, context)
+        WorkScheduler.enqueueAutoWork(TAG,workSaveSyncClazz, context, 5)
+        WorkScheduler.enqueueCleanCacheLRU(TAG,workStorageCacheCleanerClazz, context)
     }
 
     private fun handleUnsuccessfulGameFinish(

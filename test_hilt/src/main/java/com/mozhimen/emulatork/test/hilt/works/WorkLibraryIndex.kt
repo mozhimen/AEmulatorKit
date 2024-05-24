@@ -1,14 +1,17 @@
-package com.mozhimen.emulatork.ui.hilt.works
+package com.mozhimen.emulatork.test.hilt.works
 
 import android.content.Context
+import androidx.hilt.work.HiltWorker
 import androidx.work.ListenableWorker
 import androidx.work.WorkerParameters
 import com.mozhimen.emulatork.basic.EmulatorKBasic
 import com.mozhimen.emulatork.ui.works.AbsWorkLibraryIndex
-import com.mozhimen.emulatork.ui.hilt.game.GameActivity
+import com.mozhimen.emulatork.test.hilt.game.GameActivity
 import com.mozhimen.emulatork.ui.game.AbsGameActivity
 import com.mozhimen.emulatork.ui.works.AbsWorkCoreUpdate
 import dagger.Binds
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import dagger.multibindings.IntoMap
 import javax.inject.Inject
 
@@ -19,10 +22,12 @@ import javax.inject.Inject
  * @Date 2024/5/20 22:29
  * @Version 1.0
  */
-class WorkLibraryIndex(context: Context, workerParams: WorkerParameters):AbsWorkLibraryIndex(context, workerParams) {
-
-    @Inject
-    lateinit var lemuroidLibrary: EmulatorKBasic
+@HiltWorker
+class WorkLibraryIndex @AssistedInject constructor(
+    @Assisted context: Context,
+    @Assisted workerParams: WorkerParameters,
+    private val lemuroidLibrary: EmulatorKBasic,
+) : AbsWorkLibraryIndex(context, workerParams) {
 
     ///////////////////////////////////////////////////////////////////////////
 

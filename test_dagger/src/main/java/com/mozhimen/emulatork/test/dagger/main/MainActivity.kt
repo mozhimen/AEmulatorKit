@@ -16,6 +16,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.elevation.SurfaceColors
+import com.mozhimen.basick.utilk.commons.IUtilK
 import com.mozhimen.basick.utilk.kotlinx.coroutines.launchSafe
 import com.mozhimen.emulatork.basic.dagger.annors.PerActivity
 import com.mozhimen.emulatork.basic.dagger.annors.PerFragment
@@ -65,7 +66,7 @@ import com.mozhimen.emulatork.ui.dagger.works.WorkStorageCacheCleaner
  * @Version 1.0
  */
 @OptIn(DelicateCoroutinesApi::class)
-class MainActivity : DaggerAppCompatActivity(), GameBusyActivity {
+class MainActivity : DaggerAppCompatActivity(), GameBusyActivity ,IUtilK{
 
     @Inject
     lateinit var gameLaunchTaskHandler: GameLaunchTaskHandler
@@ -149,7 +150,7 @@ class MainActivity : DaggerAppCompatActivity(), GameBusyActivity {
             }
 
             R.id.menu_options_sync -> {
-                WorkScheduler.enqueueManualWork(WorkSaveSync::class.java, this)
+                WorkScheduler.enqueueManualWork(TAG,WorkSaveSync::class.java, this)
                 true
             }
 

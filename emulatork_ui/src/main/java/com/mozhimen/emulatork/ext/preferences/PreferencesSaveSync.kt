@@ -7,6 +7,7 @@ import androidx.preference.MultiSelectListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceScreen
 import androidx.preference.SwitchPreference
+import com.mozhimen.basick.utilk.commons.IUtilK
 import com.mozhimen.emulatork.basic.core.CoreID
 import com.mozhimen.emulatork.basic.save.sync.SaveSyncManager
 import com.mozhimen.emulatork.basic.game.system.GameSystems
@@ -21,7 +22,7 @@ import com.mozhimen.emulatork.ui.works.AbsWorkSaveSync
  * @Date 2024/5/14
  * @Version 1.0
  */
-class PreferencesSaveSync(private val saveSyncManager: SaveSyncManager) {
+class PreferencesSaveSync(private val saveSyncManager: SaveSyncManager):IUtilK {
 
     fun addSaveSyncPreferences(preferenceScreen: PreferenceScreen) {
         val context = preferenceScreen.context
@@ -163,6 +164,6 @@ class PreferencesSaveSync(private val saveSyncManager: SaveSyncManager) {
     }
 
     private fun handleSaveSyncRefresh(workSaveSyncClazz: Class<out AbsWorkSaveSync>, context: Context) {
-        WorkScheduler.enqueueManualWork(workSaveSyncClazz, context.applicationContext)
+        WorkScheduler.enqueueManualWork(TAG,workSaveSyncClazz, context.applicationContext)
     }
 }

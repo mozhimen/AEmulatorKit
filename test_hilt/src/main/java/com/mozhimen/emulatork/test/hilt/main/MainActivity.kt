@@ -17,6 +17,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.elevation.SurfaceColors
+import com.mozhimen.basick.utilk.commons.IUtilK
 import com.mozhimen.basick.utilk.kotlinx.coroutines.launchSafe
 import com.mozhimen.emulatork.basic.game.GameBusyActivity
 import com.mozhimen.emulatork.basic.game.review.GameReviewManager
@@ -26,8 +27,8 @@ import com.mozhimen.emulatork.ext.game.BaseGameActivity
 import com.mozhimen.emulatork.ext.game.GameLaunchTaskHandler
 import com.mozhimen.emulatork.ext.works.WorkScheduler
 import com.mozhimen.emulatork.ui.R
-import com.mozhimen.emulatork.ui.hilt.works.WorkSaveSync
-import com.mozhimen.emulatork.ui.hilt.works.WorkStorageCacheCleaner
+import com.mozhimen.emulatork.test.hilt.works.WorkSaveSync
+import com.mozhimen.emulatork.test.hilt.works.WorkStorageCacheCleaner
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -42,7 +43,7 @@ import javax.inject.Inject
  */
 @AndroidEntryPoint
 @OptIn(DelicateCoroutinesApi::class)
-class MainActivity : AppCompatActivity(), GameBusyActivity {
+class MainActivity : AppCompatActivity(), GameBusyActivity,IUtilK {
 
     @Inject
     lateinit var gameLaunchTaskHandler: GameLaunchTaskHandler
@@ -126,7 +127,7 @@ class MainActivity : AppCompatActivity(), GameBusyActivity {
             }
 
             R.id.menu_options_sync -> {
-                WorkScheduler.enqueueManualWork(WorkSaveSync::class.java, this)
+                WorkScheduler.enqueueManualWork(TAG,WorkSaveSync::class.java, this)
                 true
             }
 

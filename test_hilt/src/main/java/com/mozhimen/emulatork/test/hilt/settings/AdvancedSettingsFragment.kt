@@ -9,8 +9,8 @@ import com.mozhimen.emulatork.basic.preferences.SharedPreferencesMgr
 import com.mozhimen.emulatork.ui.R
 import com.mozhimen.emulatork.ext.preferences.PreferencesAdvancedSettings
 import com.mozhimen.emulatork.ext.library.SettingsInteractor
-import com.mozhimen.emulatork.ui.hilt.works.WorkLibraryIndex
-import com.mozhimen.emulatork.ui.hilt.works.WorkStorageCacheCleaner
+import com.mozhimen.emulatork.test.hilt.works.WorkLibraryIndex
+import com.mozhimen.emulatork.test.hilt.works.WorkStorageCacheCleaner
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

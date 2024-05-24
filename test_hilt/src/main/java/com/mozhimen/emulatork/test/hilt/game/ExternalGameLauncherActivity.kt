@@ -1,12 +1,12 @@
-package com.mozhimen.emulatork.ui.hilt.game
+package com.mozhimen.emulatork.test.hilt.game
 
 import com.mozhimen.emulatork.basic.core.CoreSelection
 import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
 import com.mozhimen.emulatork.ui.game.AbsExternalGameLauncherActivity
 import com.mozhimen.emulatork.ext.game.GameLauncher
 import com.mozhimen.emulatork.ext.game.GameLaunchTaskHandler
-import com.mozhimen.emulatork.ui.hilt.works.WorkSaveSync
-import com.mozhimen.emulatork.ui.hilt.works.WorkStorageCacheCleaner
+import com.mozhimen.emulatork.test.hilt.works.WorkSaveSync
+import com.mozhimen.emulatork.test.hilt.works.WorkStorageCacheCleaner
 import com.mozhimen.emulatork.ui.works.AbsWorkSaveSync
 import com.mozhimen.emulatork.ui.works.AbsWorkStorageCacheCleaner
 import dagger.hilt.android.AndroidEntryPoint

@@ -1,4 +1,4 @@
-package com.mozhimen.emulatork.ui.hilt.game
+package com.mozhimen.emulatork.test.hilt.game
 
 import com.mozhimen.emulatork.ui.game.AbsGameService
 

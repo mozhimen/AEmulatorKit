@@ -1,16 +1,15 @@
-package com.mozhimen.emulatork.ui.hilt.works
+package com.mozhimen.emulatork.test.hilt.works
 
 import android.content.Context
-import androidx.work.ListenableWorker
+import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
 import com.mozhimen.emulatork.basic.core.CoreUpdater
 import com.mozhimen.emulatork.basic.core.CoreSelection
 import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
 import com.mozhimen.emulatork.ui.works.AbsWorkCoreUpdate
-import com.mozhimen.emulatork.ui.hilt.game.GameActivity
-import dagger.Binds
-import dagger.multibindings.IntoMap
-import javax.inject.Inject
+import com.mozhimen.emulatork.test.hilt.game.GameActivity
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 
 /**
  * @ClassName CoreUpdateWork
@@ -19,16 +18,14 @@ import javax.inject.Inject
  * @Date 2024/5/20 22:21
  * @Version 1.0
  */
-class WorkCoreUpdate(context: Context, workerParams: WorkerParameters) : AbsWorkCoreUpdate(context, workerParams) {
-    @Inject
-    lateinit var retrogradeDatabase: RetrogradeDatabase
-
-    @Inject
-    lateinit var coreUpdater: CoreUpdater
-
-    @Inject
-    lateinit var coresSelection: CoreSelection
-
+@HiltWorker
+class WorkCoreUpdate @AssistedInject constructor(
+    @Assisted context: Context,
+    @Assisted workerParams: WorkerParameters,
+    private val retrogradeDatabase: RetrogradeDatabase,
+    private val coreUpdater: CoreUpdater,
+    private val coresSelection: CoreSelection
+) : AbsWorkCoreUpdate(context, workerParams) {
 
     override fun coreUpdater(): CoreUpdater {
         return coreUpdater

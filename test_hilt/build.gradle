@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
+    id 'dagger.hilt.android.plugin'
     id "androidx.navigation.safeargs.kotlin"
 }
 
@@ -50,7 +51,6 @@ android {
 }
 
 dependencies {
-    implementation project(':emulatork_basic_hilt')
     implementation project(':emulatork_ui_hilt')
     implementation project(':emulatork_libretro_db')
     implementation project(':emulatork_cores')
@@ -61,8 +61,13 @@ dependencies {
     implementation project(":AXmlKit:recyclerk")
 
     kapt "com.airbnb.android:epoxy-processor:4.6.3-vinay-compose"
+
     implementation 'com.google.dagger:hilt-android:2.46.1'
     kapt 'com.google.dagger:hilt-compiler:2.46.1'
+
+    implementation 'androidx.work:work-runtime-ktx:2.8.1'
+    
+    kapt 'androidx.hilt:hilt-compiler:1.0.0'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

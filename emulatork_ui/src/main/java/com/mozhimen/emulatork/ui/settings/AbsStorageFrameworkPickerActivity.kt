@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import com.mozhimen.basick.utilk.android.app.showAlertDialog
+import com.mozhimen.basick.utilk.commons.IUtilK
 import com.mozhimen.emulatork.basic.preferences.SharedPreferencesMgr
 import com.mozhimen.emulatork.basic.storage.StorageDirectoriesManager
 import com.mozhimen.emulatork.ui.R
@@ -20,7 +21,7 @@ import com.mozhimen.emulatork.ui.works.AbsWorkLibraryIndex
  * @Date 2024/5/13
  * @Version 1
  */
-abstract class AbsStorageFrameworkPickerActivity : FragmentActivity() {
+abstract class AbsStorageFrameworkPickerActivity : FragmentActivity(), IUtilK {
 
     //    @Inject
     //    lateinit var directoriesManager: DirectoriesManager
@@ -92,7 +93,7 @@ abstract class AbsStorageFrameworkPickerActivity : FragmentActivity() {
     }
 
     private fun startLibraryIndexWork() {
-        WorkScheduler.scheduleLibrarySync(workLibraryIndexClazz(), applicationContext)
+        WorkScheduler.scheduleLibrarySync(TAG, workLibraryIndexClazz(), applicationContext)
     }
 
     companion object {

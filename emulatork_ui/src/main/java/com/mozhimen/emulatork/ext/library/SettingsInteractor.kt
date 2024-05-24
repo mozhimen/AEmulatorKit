@@ -1,6 +1,7 @@
 package com.mozhimen.emulatork.ext.library
 
 import android.content.Context
+import com.mozhimen.basick.utilk.commons.IUtilK
 import com.mozhimen.emulatork.basic.preferences.SharedPreferencesMgr
 import com.mozhimen.emulatork.basic.storage.StorageDirectoriesManager
 import com.mozhimen.emulatork.ext.works.WorkScheduler
@@ -19,7 +20,7 @@ import com.mozhimen.emulatork.ui.works.AbsWorkStorageCacheCleaner
 class SettingsInteractor constructor(
     private val context: Context,
     private val storageDirectoriesManager: StorageDirectoriesManager
-) {
+) : IUtilK {
     fun changeLocalStorageFolder(storageFrameworkPickerActivityClazz: Class<out AbsStorageFrameworkPickerActivity>) {
         AbsStorageFrameworkPickerActivity.pickFolder(context, storageFrameworkPickerActivityClazz)
     }
@@ -27,8 +28,8 @@ class SettingsInteractor constructor(
     fun resetAllSettings(workLibraryIndexClazz: Class<out AbsWorkLibraryIndex>, workStorageCacheCleanerClazz: Class<out AbsWorkStorageCacheCleaner>) {
         SharedPreferencesMgr.getLegacySharedPreferences(context).edit().clear().apply()
         SharedPreferencesMgr.getSharedPreferences(context).edit().clear().apply()
-        WorkScheduler.scheduleLibrarySync(workLibraryIndexClazz, context.applicationContext)
-        WorkScheduler.enqueueCleanCacheAll(workStorageCacheCleanerClazz, context.applicationContext)
+        WorkScheduler.scheduleLibrarySync(TAG,workLibraryIndexClazz, context.applicationContext)
+        WorkScheduler.enqueueCleanCacheAll(TAG,workStorageCacheCleanerClazz, context.applicationContext)
         deleteDownloadedCores()
     }
 

@@ -42,8 +42,8 @@ import com.mozhimen.emulatork.ext.preferences.PreferencesCoreSelection
 import com.mozhimen.emulatork.input.device.InputDeviceManager
 import com.mozhimen.emulatork.libretro.db.LibretroDBManager
 import com.mozhimen.emulatork.libretro.db.LibretroDBMetadataProvider
-import com.mozhimen.emulatork.ui.hilt.game.GameActivity
-import com.mozhimen.emulatork.ui.hilt.game.pad.GamePadBindingActivity
+import com.mozhimen.emulatork.test.hilt.game.GameActivity
+import com.mozhimen.emulatork.test.hilt.game.pad.GamePadBindingActivity
 import dagger.Binds
 import dagger.Lazy
 import dagger.Module

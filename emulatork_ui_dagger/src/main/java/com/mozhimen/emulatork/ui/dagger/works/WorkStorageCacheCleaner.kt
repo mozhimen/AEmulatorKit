@@ -19,7 +19,7 @@ import dagger.multibindings.IntoMap
  * @Date 2024/5/21
  * @Version 1.0
  */
-class WorkStorageCacheCleaner(
+class WorkStorageCacheCleaner constructor(
     context: Context,
     workerParams: WorkerParameters
 ) : AbsWorkStorageCacheCleaner(context, workerParams) {
