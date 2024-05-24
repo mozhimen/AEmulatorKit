@@ -19,12 +19,12 @@ import com.airbnb.epoxy.Carousel
 import com.mozhimen.basick.utilk.android.app.UtilKActivityStart
 import com.mozhimen.basick.utilk.androidx.fragment.runOnViewLifecycleState
 import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
-import com.mozhimen.emulatork.test.dagger.R
+import com.mozhimen.emulatork.test.hilt.R
 import com.mozhimen.emulatork.ext.library.SettingsInteractor
 import com.mozhimen.emulatork.ext.game.GameInteractor
 import com.mozhimen.emulatork.ext.covers.CoverLoader
-import com.mozhimen.emulatork.ui.dagger.settings.StorageFrameworkPickerActivity
-import dagger.android.support.AndroidSupportInjection
+import com.mozhimen.emulatork.ui.hilt.settings.StorageFrameworkPickerActivity
+import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -35,6 +35,7 @@ import javax.inject.Inject
  * @Date 2024/5/7
  * @Version 1.0
  */
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     @Inject
@@ -55,11 +56,6 @@ class HomeFragment : Fragment() {
         ActivityResultContracts.RequestPermission()
     ) {
         handleNotificationPermissionResponse(it)
-    }
-
-    override fun onAttach(context: Context) {
-        AndroidSupportInjection.inject(this)
-        super.onAttach(context)
     }
 
     override fun onCreateView(
@@ -144,6 +140,6 @@ class HomeFragment : Fragment() {
         homeViewModel.updateNotificationPermission(isNotificationsPermissionGranted())
     }
 
-    @dagger.Module
-    class Module
+//    @dagger.Module
+//    class Module
 }

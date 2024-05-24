@@ -4,6 +4,7 @@ import com.mozhimen.emulatork.basic.storage.StorageDirectoriesManager
 import com.mozhimen.emulatork.ui.hilt.works.WorkLibraryIndex
 import com.mozhimen.emulatork.ui.settings.AbsStorageFrameworkPickerActivity
 import com.mozhimen.emulatork.ui.works.AbsWorkLibraryIndex
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 /**
@@ -13,6 +14,7 @@ import javax.inject.Inject
  * @Date 2024/5/21
  * @Version 1.0
  */
+@AndroidEntryPoint
 class StorageFrameworkPickerActivity :AbsStorageFrameworkPickerActivity() {
     @Inject
     lateinit var storageDirectoriesManager: StorageDirectoriesManager

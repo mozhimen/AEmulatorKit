@@ -5,6 +5,8 @@ import androidx.preference.Preference
 import com.mozhimen.emulatork.ui.hilt.R
 import com.mozhimen.emulatork.ui.game.menu.AbsGameMenuFragment
 import com.mozhimen.emulatork.ext.game.menu.GameMenuMgr
+import dagger.hilt.android.AndroidEntryPoint
+
 /**
  * @ClassName GameMenuFragment
  * @Description TODO
@@ -12,6 +14,7 @@ import com.mozhimen.emulatork.ext.game.menu.GameMenuMgr
  * @Date 2024/5/20 22:12
  * @Version 1.0
  */
+@AndroidEntryPoint
  class GameMenuFragment : AbsGameMenuFragment() {
 
     override fun onPreferenceTreeClick(preference: Preference?): Boolean {

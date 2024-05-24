@@ -8,11 +8,12 @@ import com.mozhimen.basick.utilk.androidx.fragment.runOnViewLifecycleState
 import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
 import com.mozhimen.emulatork.ui.R
 import com.mozhimen.emulatork.ext.game.GameInteractor
-import com.mozhimen.emulatork.test.dagger.games.GamesAdapter
+import com.mozhimen.emulatork.test.hilt.games.GamesAdapter
 import com.mozhimen.emulatork.ext.covers.CoverLoader
 import com.mozhimen.xmlk.recyclerk.decoration.RecyclerKDecorationSpaceGrid
 import com.mozhimen.xmlk.recyclerk.manager.RecyclerKDynamicGridLayoutManager
-import com.mozhimen.emulatork.basic.dagger.android.DaggerRecyclerViewFragment
+import com.mozhimen.emulatork.basic.android.RecyclerViewFragment
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 /**
@@ -22,7 +23,8 @@ import javax.inject.Inject
  * @Date 2024/5/10
  * @Version 1.0
  */
-class FavoritesFragment : DaggerRecyclerViewFragment() {
+@AndroidEntryPoint
+class FavoritesFragment : RecyclerViewFragment() {
 
     @Inject
     lateinit var retrogradeDb: RetrogradeDatabase
@@ -41,7 +43,7 @@ class FavoritesFragment : DaggerRecyclerViewFragment() {
         val factory = FavoritesViewModel.Factory(retrogradeDb)
         favoritesViewModel = ViewModelProvider(this, factory)[FavoritesViewModel::class.java]
 
-        val gamesAdapter = GamesAdapter(com.mozhimen.emulatork.test.dagger.R.layout.layout_game_grid, gameInteractor, coverLoader)
+        val gamesAdapter = GamesAdapter(com.mozhimen.emulatork.test.hilt.R.layout.layout_game_grid, gameInteractor, coverLoader)
 
         runOnViewLifecycleState(Lifecycle.State.RESUMED) {
             favoritesViewModel.favorites
@@ -63,6 +65,6 @@ class FavoritesFragment : DaggerRecyclerViewFragment() {
         }
     }
 
-    @dagger.Module
-    class Module
+//    @dagger.Module
+//    class Module
 }

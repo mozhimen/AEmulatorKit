@@ -16,7 +16,7 @@ import com.mozhimen.emulatork.ui.works.AbsWorkStorageCacheCleaner
  * @Version 1.0
  */
 
-class SettingsInteractor(
+class SettingsInteractor constructor(
     private val context: Context,
     private val storageDirectoriesManager: StorageDirectoriesManager
 ) {

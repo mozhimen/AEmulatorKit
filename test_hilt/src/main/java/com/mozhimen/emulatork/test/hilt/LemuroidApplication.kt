@@ -3,21 +3,18 @@ package com.mozhimen.emulatork.test.hilt
 import android.annotation.SuppressLint
 import android.content.Context
 import androidx.startup.AppInitializer
-import androidx.work.ListenableWorker
 import com.google.android.material.color.DynamicColors
+import com.mozhimen.basick.elemk.android.app.bases.BaseApplication
+import com.mozhimen.basick.lintk.optins.OApiMultiDex_InApplication
 import com.mozhimen.basick.utilk.android.content.isMainProcess
-import com.mozhimen.emulatork.basic.dagger.interfaces.HasWorkerInjector
 import com.mozhimen.emulatork.basic.android.ContextHandler
-import com.mozhimen.emulatork.ui.dagger.startup.MainProcessInitializer
+import com.mozhimen.emulatork.ui.hilt.startup.MainProcessInitializer
 import com.mozhimen.emulatork.basic.startup.GameProcessInitializer
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import javax.inject.Inject
+import dagger.hilt.android.HiltAndroidApp
 
-class LemuroidApplication : dagger.android.support.DaggerApplication(), HasWorkerInjector {
-
-    @Inject
-    lateinit var workerInjector: DispatchingAndroidInjector<ListenableWorker>
+@HiltAndroidApp
+@OptIn(OApiMultiDex_InApplication::class)
+class LemuroidApplication : BaseApplication() {
 
     @SuppressLint("CheckResult")
     override fun onCreate() {
@@ -38,10 +35,4 @@ class LemuroidApplication : dagger.android.support.DaggerApplication(), HasWorke
         super.attachBaseContext(base)
         ContextHandler.attachBaseContext(base)
     }
-
-    override fun applicationInjector(): AndroidInjector<out dagger.android.support.DaggerApplication> {
-        return DaggerLemuroidApplicationComponent.builder().create(this)
-    }
-
-    override fun workerInjector(): AndroidInjector<ListenableWorker> = workerInjector
 }

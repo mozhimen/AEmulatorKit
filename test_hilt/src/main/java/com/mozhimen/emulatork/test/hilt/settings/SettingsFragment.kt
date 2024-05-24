@@ -18,10 +18,10 @@ import com.mozhimen.emulatork.basic.storage.StorageDirectoriesManager
 import com.mozhimen.emulatork.ui.R
 import com.mozhimen.emulatork.ext.works.WorkScheduler
 import com.mozhimen.emulatork.ext.library.SettingsInteractor
-import com.mozhimen.emulatork.ui.dagger.settings.StorageFrameworkPickerActivity
-import com.mozhimen.emulatork.ui.dagger.works.WorkLibraryIndex
-import com.mozhimen.emulatork.ui.dagger.works.WorkStorageCacheCleaner
-import dagger.android.support.AndroidSupportInjection
+import com.mozhimen.emulatork.ui.hilt.settings.StorageFrameworkPickerActivity
+import com.mozhimen.emulatork.ui.hilt.works.WorkLibraryIndex
+import com.mozhimen.emulatork.ui.hilt.works.WorkStorageCacheCleaner
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 /**
@@ -31,6 +31,7 @@ import javax.inject.Inject
  * @Date 2024/5/10
  * @Version 1.0
  */
+@AndroidEntryPoint
 class SettingsFragment : PreferenceFragmentCompat() {
 
     @Inject
@@ -43,11 +44,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
     lateinit var saveSyncManager: SaveSyncManager
 
     ///////////////////////////////////////////////////////////////////////
-
-    override fun onAttach(context: Context) {
-        AndroidSupportInjection.inject(this)
-        super.onAttach(context)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -126,23 +122,23 @@ class SettingsFragment : PreferenceFragmentCompat() {
     }
 
     private fun handleAdvancedSettings() {
-        findNavController().navigate(com.mozhimen.emulatork.test.dagger.R.id.navigation_settings_advanced)
+        findNavController().navigate(com.mozhimen.emulatork.test.hilt.R.id.navigation_settings_advanced)
     }
 
     private fun handleDisplayBiosInfo() {
-        findNavController().navigate(com.mozhimen.emulatork.test.dagger.R.id.navigation_settings_bios_info)
+        findNavController().navigate(com.mozhimen.emulatork.test.hilt.R.id.navigation_settings_bios_info)
     }
 
     private fun handleDisplayCorePage() {
-        findNavController().navigate(com.mozhimen.emulatork.test.dagger.R.id.navigation_settings_cores_selection)
+        findNavController().navigate(com.mozhimen.emulatork.test.hilt.R.id.navigation_settings_cores_selection)
     }
 
     private fun handleDisplaySaveSync() {
-        findNavController().navigate(com.mozhimen.emulatork.test.dagger.R.id.navigation_settings_save_sync)
+        findNavController().navigate(com.mozhimen.emulatork.test.hilt.R.id.navigation_settings_save_sync)
     }
 
     private fun handleOpenGamePadSettings() {
-        findNavController().navigate(com.mozhimen.emulatork.test.dagger.R.id.navigation_settings_gamepad)
+        findNavController().navigate(com.mozhimen.emulatork.test.hilt.R.id.navigation_settings_gamepad)
     }
 
     private fun handleChangeExternalFolder() {
@@ -176,6 +172,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     ///////////////////////////////////////////////////////////////////////
 
-    @dagger.Module
-    class Module
+//    @dagger.Module
+//    class Module
 }

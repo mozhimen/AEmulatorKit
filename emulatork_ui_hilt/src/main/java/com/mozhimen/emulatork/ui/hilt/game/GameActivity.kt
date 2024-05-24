@@ -18,6 +18,7 @@ import com.mozhimen.emulatork.basic.controller.ControllerConfigsManager
 import com.mozhimen.emulatork.basic.game.setting.GameSettingsManager
 import javax.inject.Inject
 import dagger.Lazy
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * @ClassName GameActivity
@@ -26,6 +27,7 @@ import dagger.Lazy
  * @Date 2024/5/21
  * @Version 1.0
  */
+@AndroidEntryPoint
 class GameActivity : AbsGameActivity() {
     @Inject
     lateinit var gameSettingsManager: GameSettingsManager

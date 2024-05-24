@@ -10,8 +10,8 @@ import com.mozhimen.emulatork.basic.storage.StorageDirectoriesManager
 import com.mozhimen.emulatork.ext.works.WorkPendingOperationsMonitor
 import com.mozhimen.emulatork.ui.R
 import com.mozhimen.emulatork.ext.preferences.PreferencesSaveSync
-import com.mozhimen.emulatork.ui.dagger.works.WorkSaveSync
-import dagger.android.support.AndroidSupportInjection
+import com.mozhimen.emulatork.ui.hilt.works.WorkSaveSync
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 /**
@@ -21,7 +21,7 @@ import javax.inject.Inject
  * @Date 2024/5/14
  * @Version 1.0
  */
-
+@AndroidEntryPoint
 class SaveSyncFragment : PreferenceFragmentCompat() {
 
     @Inject
@@ -30,11 +30,6 @@ class SaveSyncFragment : PreferenceFragmentCompat() {
     @Inject
     lateinit var saveSyncManager: SaveSyncManager
     private lateinit var saveSyncPreferences: PreferencesSaveSync
-
-    override fun onAttach(context: Context) {
-        AndroidSupportInjection.inject(this)
-        super.onAttach(context)
-    }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         preferenceManager.preferenceDataStore =
@@ -60,6 +55,6 @@ class SaveSyncFragment : PreferenceFragmentCompat() {
         }
     }
 
-    @dagger.Module
-    class Module
+//    @dagger.Module
+//    class Module
 }

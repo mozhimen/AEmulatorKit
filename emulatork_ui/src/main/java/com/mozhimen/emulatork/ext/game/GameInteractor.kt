@@ -1,5 +1,6 @@
 package com.mozhimen.emulatork.ext.game
 
+import android.content.Context
 import com.mozhimen.basick.utilk.android.widget.showToast
 import com.mozhimen.emulatork.basic.game.GameBusyActivity
 import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
@@ -18,7 +19,7 @@ import kotlinx.coroutines.launch
  * @Version 1.0
  */
 open class GameInteractor constructor(
-    private val activity: GameBusyActivity,
+    private val activity: Context,
     private val gameActivityClazz: Class<out AbsGameActivity>,
     private val retrogradeDb: RetrogradeDatabase,
     private val useLeanback: Boolean,
@@ -26,6 +27,7 @@ open class GameInteractor constructor(
     private val gameLauncher: GameLauncher
 ) {
     fun onGamePlay(game: Game) {
+        if (activity !is GameBusyActivity) return
         if (activity.isBusy()) {
             R.string.game_interactory_busy.showToast()
             return
@@ -34,6 +36,7 @@ open class GameInteractor constructor(
     }
 
     fun onGameRestart(game: Game) {
+        if (activity !is GameBusyActivity) return
         if (activity.isBusy()) {
             R.string.game_interactory_busy.showToast()
             return

@@ -3,6 +3,7 @@ import android.content.Context
 import com.mozhimen.emulatork.basic.save.SaveStateManager
 import com.mozhimen.emulatork.basic.save.SaveStatePreviewManager
 import com.mozhimen.emulatork.ui.game.menu.AbsGameMenuLoadFragment
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 /**
@@ -12,6 +13,7 @@ import javax.inject.Inject
  * @Date 2024/5/20 22:15
  * @Version 1.0
  */
+@AndroidEntryPoint
 class GameMenuLoadFragment: AbsGameMenuLoadFragment() {
     @Inject
     lateinit var saveStateManager: SaveStateManager

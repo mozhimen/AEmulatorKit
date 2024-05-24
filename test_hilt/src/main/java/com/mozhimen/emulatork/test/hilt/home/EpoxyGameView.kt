@@ -8,8 +8,8 @@ import com.airbnb.epoxy.EpoxyHolder
 import com.airbnb.epoxy.EpoxyModelClass
 import com.airbnb.epoxy.EpoxyModelWithHolder
 import com.mozhimen.emulatork.basic.game.db.entities.Game
-import com.mozhimen.emulatork.test.dagger.R
-import com.mozhimen.emulatork.test.dagger.games.GameContextMenuListener
+import com.mozhimen.emulatork.test.hilt.R
+import com.mozhimen.emulatork.test.hilt.games.GameContextMenuListener
 import com.mozhimen.emulatork.ext.game.GameInteractor
 import com.mozhimen.emulatork.ext.covers.CoverLoader
 import com.mozhimen.emulatork.basic.game.GameUtil

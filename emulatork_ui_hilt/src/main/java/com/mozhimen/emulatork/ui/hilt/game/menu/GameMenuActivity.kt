@@ -2,6 +2,7 @@ package com.mozhimen.emulatork.ui.hilt.game.menu
 
 import com.mozhimen.emulatork.ui.game.menu.AbsGameMenuActivity
 import com.mozhimen.emulatork.ui.hilt.R
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * @ClassName GameMenuActivity
@@ -10,6 +11,7 @@ import com.mozhimen.emulatork.ui.hilt.R
  * @Date 2024/5/20 21:50
  * @Version 1.0
  */
+@AndroidEntryPoint
 class GameMenuActivity : AbsGameMenuActivity() {
 
     override fun getGraphId(): Int {

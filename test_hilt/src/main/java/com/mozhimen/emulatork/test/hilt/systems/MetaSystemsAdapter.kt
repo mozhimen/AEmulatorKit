@@ -43,15 +43,15 @@ class MetaSystemViewHolder(parent: View) : RecyclerView.ViewHolder(parent) {
 
 class MetaSystemsAdapter(
     private val onSystemClick: (GameSystemMetaID) -> Unit
-) : ListAdapter<GameSystemMetaInfo, com.mozhimen.emulatork.test.dagger.systems.MetaSystemViewHolder>(com.mozhimen.emulatork.test.dagger.systems.MetaSystemsAdapter.Companion.DIFF_CALLBACK) {
+) : ListAdapter<GameSystemMetaInfo, MetaSystemViewHolder>(DIFF_CALLBACK) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): com.mozhimen.emulatork.test.dagger.systems.MetaSystemViewHolder {
-        return com.mozhimen.emulatork.test.dagger.systems.MetaSystemViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MetaSystemViewHolder {
+        return MetaSystemViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.layout_system, parent, false)
         )
     }
 
-    override fun onBindViewHolder(holder: com.mozhimen.emulatork.test.dagger.systems.MetaSystemViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: MetaSystemViewHolder, position: Int) {
         getItem(position)?.let { holder.bind(it, onSystemClick) }
     }
 

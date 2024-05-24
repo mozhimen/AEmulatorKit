@@ -9,6 +9,7 @@ import com.mozhimen.emulatork.ui.hilt.works.WorkSaveSync
 import com.mozhimen.emulatork.ui.hilt.works.WorkStorageCacheCleaner
 import com.mozhimen.emulatork.ui.works.AbsWorkSaveSync
 import com.mozhimen.emulatork.ui.works.AbsWorkStorageCacheCleaner
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 /**
@@ -18,6 +19,7 @@ import javax.inject.Inject
  * @Date 2024/5/21
  * @Version 1.0
  */
+@AndroidEntryPoint
 class ExternalGameLauncherActivity :AbsExternalGameLauncherActivity() {
     @Inject
     lateinit var retrogradeDatabase: RetrogradeDatabase

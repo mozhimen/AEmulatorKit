@@ -8,6 +8,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.ProgressBar
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
@@ -17,45 +18,20 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.elevation.SurfaceColors
 import com.mozhimen.basick.utilk.kotlinx.coroutines.launchSafe
-import com.mozhimen.emulatork.basic.dagger.annors.PerActivity
-import com.mozhimen.emulatork.basic.dagger.annors.PerFragment
-import com.mozhimen.emulatork.basic.dagger.android.DaggerAppCompatActivity
-import com.mozhimen.emulatork.basic.game.system.GameSystemID
-import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
-import com.mozhimen.emulatork.basic.save.sync.SaveSyncManager
-import com.mozhimen.emulatork.basic.storage.StorageDirectoriesManager
-import com.mozhimen.emulatork.basic.game.review.GameReviewManager
-import com.mozhimen.emulatork.ui.R
-import com.mozhimen.emulatork.test.dagger.favorites.FavoritesFragment
-import com.mozhimen.emulatork.test.dagger.games.GamesFragment
-import com.mozhimen.emulatork.test.dagger.home.HomeFragment
-import com.mozhimen.emulatork.test.dagger.search.SearchFragment
-import com.mozhimen.emulatork.test.dagger.settings.AdvancedSettingsFragment
-import com.mozhimen.emulatork.test.dagger.settings.BiosSettingsFragment
-import com.mozhimen.emulatork.test.dagger.settings.CoresSelectionFragment
-import com.mozhimen.emulatork.test.dagger.settings.GamepadSettingsFragment
-import com.mozhimen.emulatork.test.dagger.settings.SaveSyncFragment
-import com.mozhimen.emulatork.test.dagger.settings.SettingsFragment
-import com.mozhimen.emulatork.test.dagger.systems.MetaSystemsFragment
-import com.mozhimen.emulatork.ui.dagger.game.GameActivity
-import com.mozhimen.emulatork.ext.library.SettingsInteractor
-import com.mozhimen.emulatork.ext.covers.CoverShortcutGenerator
-import com.mozhimen.emulatork.ext.game.GameInteractor
-import com.mozhimen.emulatork.ext.game.GameLauncher
-import com.mozhimen.emulatork.input.device.InputDeviceManager
 import com.mozhimen.emulatork.basic.game.GameBusyActivity
-import com.mozhimen.emulatork.ext.game.GameLaunchTaskHandler
-import com.mozhimen.emulatork.ext.game.pad.GamePadPreferencesManager
+import com.mozhimen.emulatork.basic.game.review.GameReviewManager
+import com.mozhimen.emulatork.basic.game.system.GameSystemID
+import com.mozhimen.emulatork.basic.save.sync.SaveSyncManager
 import com.mozhimen.emulatork.ext.game.BaseGameActivity
+import com.mozhimen.emulatork.ext.game.GameLaunchTaskHandler
 import com.mozhimen.emulatork.ext.works.WorkScheduler
-import com.mozhimen.emulatork.ui.dagger.game.pad.GamePadBindingActivity
-import dagger.Provides
-import dagger.android.ContributesAndroidInjector
+import com.mozhimen.emulatork.ui.R
+import com.mozhimen.emulatork.ui.hilt.works.WorkSaveSync
+import com.mozhimen.emulatork.ui.hilt.works.WorkStorageCacheCleaner
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import javax.inject.Inject
-import com.mozhimen.emulatork.ui.dagger.works.WorkSaveSync
-import com.mozhimen.emulatork.ui.dagger.works.WorkStorageCacheCleaner
 
 /**
  * @ClassName MainActivity
@@ -64,8 +40,9 @@ import com.mozhimen.emulatork.ui.dagger.works.WorkStorageCacheCleaner
  * @Date 2024/5/7
  * @Version 1.0
  */
+@AndroidEntryPoint
 @OptIn(DelicateCoroutinesApi::class)
-class MainActivity : DaggerAppCompatActivity(), GameBusyActivity {
+class MainActivity : AppCompatActivity(), GameBusyActivity {
 
     @Inject
     lateinit var gameLaunchTaskHandler: GameLaunchTaskHandler
@@ -80,7 +57,7 @@ class MainActivity : DaggerAppCompatActivity(), GameBusyActivity {
         super.onCreate(savedInstanceState)
         window.navigationBarColor = SurfaceColors.SURFACE_2.getColor(this)
         window.statusBarColor = SurfaceColors.SURFACE_2.getColor(this)
-        setContentView(com.mozhimen.emulatork.test.dagger.R.layout.activity_main)
+        setContentView(com.mozhimen.emulatork.test.hilt.R.layout.activity_main)
         initializeActivity()
     }
 
@@ -94,7 +71,7 @@ class MainActivity : DaggerAppCompatActivity(), GameBusyActivity {
             gameReviewManager.initialize(applicationContext)
         }
 
-        val navView: BottomNavigationView = findViewById(com.mozhimen.emulatork.test.dagger.R.id.nav_view)
+        val navView: BottomNavigationView = findViewById(com.mozhimen.emulatork.test.hilt.R.id.nav_view)
         val navController = findNavController(R.id.nav_host_fragment)
 
         val topLevelIds = setOf(
@@ -171,78 +148,78 @@ class MainActivity : DaggerAppCompatActivity(), GameBusyActivity {
 
     override fun onSupportNavigateUp() = findNavController(R.id.nav_host_fragment).navigateUp()
 
-    @dagger.Module
-    abstract class Module {
-
-        @PerFragment
-        @ContributesAndroidInjector(modules = [SettingsFragment.Module::class])
-        abstract fun settingsFragment(): SettingsFragment
-
-        @PerFragment
-        @ContributesAndroidInjector(modules = [GamesFragment.Module::class])
-        abstract fun gamesFragment(): GamesFragment
-
-        @PerFragment
-        @ContributesAndroidInjector(modules = [MetaSystemsFragment.Module::class])
-        abstract fun systemsFragment(): MetaSystemsFragment
-
-        @PerFragment
-        @ContributesAndroidInjector(modules = [HomeFragment.Module::class])
-        abstract fun homeFragment(): HomeFragment
-
-        @PerFragment
-        @ContributesAndroidInjector(modules = [SearchFragment.Module::class])
-        abstract fun searchFragment(): SearchFragment
-
-        @PerFragment
-        @ContributesAndroidInjector(modules = [FavoritesFragment.Module::class])
-        abstract fun favoritesFragment(): FavoritesFragment
-
-        @PerFragment
-        @ContributesAndroidInjector(modules = [GamepadSettingsFragment.Module::class])
-        abstract fun gamepadSettings(): GamepadSettingsFragment
-
-        @PerFragment
-        @ContributesAndroidInjector(modules = [BiosSettingsFragment.Module::class])
-        abstract fun biosInfoFragment(): BiosSettingsFragment
-
-        @PerFragment
-        @ContributesAndroidInjector(modules = [AdvancedSettingsFragment.Module::class])
-        abstract fun advancedSettingsFragment(): AdvancedSettingsFragment
-
-        @PerFragment
-        @ContributesAndroidInjector(modules = [SaveSyncFragment.Module::class])
-        abstract fun saveSyncFragment(): SaveSyncFragment
-
-        @PerFragment
-        @ContributesAndroidInjector(modules = [CoresSelectionFragment.Module::class])
-        abstract fun coresSelectionFragment(): CoresSelectionFragment
-
-        @dagger.Module
-        companion object {
-
-            @Provides
-            @PerActivity
-            @JvmStatic
-            fun settingsInteractor(activity: MainActivity, storageDirectoriesManager: StorageDirectoriesManager) =
-                SettingsInteractor(activity, storageDirectoriesManager)
-
-            @Provides
-            @PerActivity
-            @JvmStatic
-            fun gamePadPreferencesHelper(inputDeviceManager: InputDeviceManager) =
-                GamePadPreferencesManager(inputDeviceManager, GamePadBindingActivity::class.java, false)
-
-            @Provides
-            @PerActivity
-            @JvmStatic
-            fun gameInteractor(
-                activity: MainActivity,
-                retrogradeDb: RetrogradeDatabase,
-                coverShortcutGenerator: CoverShortcutGenerator,
-                gameLauncher: GameLauncher
-            ) =
-                GameInteractor(activity, GameActivity::class.java, retrogradeDb, false, coverShortcutGenerator, gameLauncher)
-        }
-    }
+//    @dagger.Module
+//    abstract class Module {
+//
+//        @PerFragment
+//        @ContributesAndroidInjector(modules = [SettingsFragment.Module::class])
+//        abstract fun settingsFragment(): SettingsFragment
+//
+//        @PerFragment
+//        @ContributesAndroidInjector(modules = [GamesFragment.Module::class])
+//        abstract fun gamesFragment(): GamesFragment
+//
+//        @PerFragment
+//        @ContributesAndroidInjector(modules = [MetaSystemsFragment.Module::class])
+//        abstract fun systemsFragment(): MetaSystemsFragment
+//
+//        @PerFragment
+//        @ContributesAndroidInjector(modules = [HomeFragment.Module::class])
+//        abstract fun homeFragment(): HomeFragment
+//
+//        @PerFragment
+//        @ContributesAndroidInjector(modules = [SearchFragment.Module::class])
+//        abstract fun searchFragment(): SearchFragment
+//
+//        @PerFragment
+//        @ContributesAndroidInjector(modules = [FavoritesFragment.Module::class])
+//        abstract fun favoritesFragment(): FavoritesFragment
+//
+//        @PerFragment
+//        @ContributesAndroidInjector(modules = [GamepadSettingsFragment.Module::class])
+//        abstract fun gamepadSettings(): GamepadSettingsFragment
+//
+//        @PerFragment
+//        @ContributesAndroidInjector(modules = [BiosSettingsFragment.Module::class])
+//        abstract fun biosInfoFragment(): BiosSettingsFragment
+//
+//        @PerFragment
+//        @ContributesAndroidInjector(modules = [AdvancedSettingsFragment.Module::class])
+//        abstract fun advancedSettingsFragment(): AdvancedSettingsFragment
+//
+//        @PerFragment
+//        @ContributesAndroidInjector(modules = [SaveSyncFragment.Module::class])
+//        abstract fun saveSyncFragment(): SaveSyncFragment
+//
+//        @PerFragment
+//        @ContributesAndroidInjector(modules = [CoresSelectionFragment.Module::class])
+//        abstract fun coresSelectionFragment(): CoresSelectionFragment
+//
+//        @dagger.Module
+//        companion object {
+//
+//            @Provides
+//            @PerActivity
+//            @JvmStatic
+//            fun settingsInteractor(activity: MainActivity, storageDirectoriesManager: StorageDirectoriesManager) =
+//                SettingsInteractor(activity, storageDirectoriesManager)
+//
+//            @Provides
+//            @PerActivity
+//            @JvmStatic
+//            fun gamePadPreferencesHelper(inputDeviceManager: InputDeviceManager) =
+//                GamePadPreferencesManager(inputDeviceManager, GamePadBindingActivity::class.java, false)
+//
+//            @Provides
+//            @PerActivity
+//            @JvmStatic
+//            fun gameInteractor(
+//                activity: MainActivity,
+//                retrogradeDb: RetrogradeDatabase,
+//                coverShortcutGenerator: CoverShortcutGenerator,
+//                gameLauncher: GameLauncher
+//            ) =
+//                GameInteractor(activity, GameActivity::class.java, retrogradeDb, false, coverShortcutGenerator, gameLauncher)
+//        }
+//    }
 }

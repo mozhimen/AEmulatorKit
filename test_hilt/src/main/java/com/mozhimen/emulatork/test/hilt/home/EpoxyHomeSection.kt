@@ -6,7 +6,7 @@ import com.airbnb.epoxy.EpoxyAttribute
 import com.airbnb.epoxy.EpoxyHolder
 import com.airbnb.epoxy.EpoxyModelClass
 import com.airbnb.epoxy.EpoxyModelWithHolder
-import com.mozhimen.emulatork.test.dagger.R
+import com.mozhimen.emulatork.test.hilt.R
 
 /**
  * @ClassName EpoxyHomeSection

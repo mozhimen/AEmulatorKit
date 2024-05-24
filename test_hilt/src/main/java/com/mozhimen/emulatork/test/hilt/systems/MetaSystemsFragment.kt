@@ -11,9 +11,9 @@ import com.mozhimen.emulatork.basic.game.system.GameSystemMetaID
 import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
 import com.mozhimen.emulatork.ui.R
 import com.mozhimen.emulatork.basic.android.RecyclerViewFragment
-import com.mozhimen.emulatork.basic.dagger.android.DaggerRecyclerViewFragment
 import com.mozhimen.xmlk.recyclerk.decoration.RecyclerKDecorationSpaceGrid
 import com.mozhimen.xmlk.recyclerk.manager.RecyclerKDynamicGridLayoutManager
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 /**
@@ -23,12 +23,13 @@ import javax.inject.Inject
  * @Date 2024/5/14
  * @Version 1.0
  */
-class MetaSystemsFragment : DaggerRecyclerViewFragment() {
+@AndroidEntryPoint
+class MetaSystemsFragment : RecyclerViewFragment() {
 
     @Inject
     lateinit var retrogradeDb: RetrogradeDatabase
 
-    private var metaSystemsAdapter: com.mozhimen.emulatork.test.dagger.systems.MetaSystemsAdapter? = null
+    private var metaSystemsAdapter: MetaSystemsAdapter? = null
 
     private lateinit var metaSystemsViewModel: MetaSystemsViewModel
 
@@ -38,7 +39,7 @@ class MetaSystemsFragment : DaggerRecyclerViewFragment() {
         val factory = MetaSystemsViewModel.Factory(retrogradeDb, requireContext().applicationContext)
         metaSystemsViewModel = ViewModelProvider(this, factory)[MetaSystemsViewModel::class.java]
 
-        metaSystemsAdapter = com.mozhimen.emulatork.test.dagger.systems.MetaSystemsAdapter { navigateToGames(it) }
+        metaSystemsAdapter = MetaSystemsAdapter { navigateToGames(it) }
 
         runOnViewLifecycleState(Lifecycle.State.CREATED) {
             metaSystemsViewModel.availableMetaSystems.collect {
@@ -65,6 +66,6 @@ class MetaSystemsFragment : DaggerRecyclerViewFragment() {
         findNavController().navigate(action)
     }
 
-    @dagger.Module
-    class Module
+//    @dagger.Module
+//    class Module
 }

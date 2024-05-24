@@ -1,6 +1,5 @@
 package com.mozhimen.emulatork.test.hilt.settings
 
-import android.content.Context
 import android.os.Bundle
 import android.view.InputDevice
 import android.view.View
@@ -14,7 +13,7 @@ import com.mozhimen.emulatork.ui.R
 import com.mozhimen.emulatork.input.device.InputDeviceManager
 import com.mozhimen.emulatork.ext.game.pad.GamePadPreferencesManager
 import com.mozhimen.basick.elemk.mos.NTuple2
-import dagger.android.support.AndroidSupportInjection
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
@@ -28,6 +27,7 @@ import javax.inject.Inject
  * @Date 2024/5/14
  * @Version 1.0
  */
+@AndroidEntryPoint
 class GamepadSettingsFragment : PreferenceFragmentCompat() {
 
     @Inject
@@ -35,11 +35,6 @@ class GamepadSettingsFragment : PreferenceFragmentCompat() {
 
     @Inject
     lateinit var inputDeviceManager: InputDeviceManager
-
-    override fun onAttach(context: Context) {
-        AndroidSupportInjection.inject(this)
-        super.onAttach(context)
-    }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         preferenceManager.preferenceDataStore =
@@ -103,6 +98,6 @@ class GamepadSettingsFragment : PreferenceFragmentCompat() {
         )
     }
 
-    @dagger.Module
-    class Module
+//    @dagger.Module
+//    class Module
 }

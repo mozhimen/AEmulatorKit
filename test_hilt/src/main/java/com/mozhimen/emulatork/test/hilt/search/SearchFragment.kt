@@ -12,12 +12,13 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mozhimen.basick.utilk.androidx.fragment.runOnViewLifecycleState
+import com.mozhimen.emulatork.basic.android.RecyclerViewFragment
 import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
 import com.mozhimen.emulatork.ext.game.GameInteractor
-import com.mozhimen.emulatork.test.dagger.games.GamesAdapter
+import com.mozhimen.emulatork.test.hilt.games.GamesAdapter
 import com.mozhimen.emulatork.ext.covers.CoverLoader
-import com.mozhimen.emulatork.basic.dagger.android.DaggerRecyclerViewFragment
 import com.mozhimen.emulatork.ui.R
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.debounce
@@ -30,7 +31,8 @@ import javax.inject.Inject
  * @Date 2024/5/10
  * @Version 1.0
  */
-class SearchFragment : DaggerRecyclerViewFragment() {
+@AndroidEntryPoint
+class SearchFragment : RecyclerViewFragment() {
 
     @Inject
     lateinit var retrogradeDb: RetrogradeDatabase
@@ -88,9 +90,9 @@ class SearchFragment : DaggerRecyclerViewFragment() {
             override fun onMenuClosed(menu: Menu) {}
 
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menuInflater.inflate(com.mozhimen.emulatork.ui.R.menu.search_menu, menu)
+                menuInflater.inflate(R.menu.search_menu, menu)
 
-                val searchItem = menu.findItem(com.mozhimen.emulatork.ui.R.id.action_search)
+                val searchItem = menu.findItem(R.id.action_search)
                 setupSearchMenuItem(searchItem)
             }
         }
@@ -128,6 +130,6 @@ class SearchFragment : DaggerRecyclerViewFragment() {
         searchView.setQuery(searchViewModel.queryString.value, false)
     }
 
-    @dagger.Module
-    class Module
+//    @dagger.Module
+//    class Module
 }

@@ -18,6 +18,7 @@ import javax.inject.Inject
  * @Date 2024/5/20 21:41
  * @Version 1.0
  */
+@HiltWorker
 class WorkSaveSync constructor(context: Context, workerParams: WorkerParameters) : AbsWorkSaveSync(context, workerParams) {
 
     @Inject
