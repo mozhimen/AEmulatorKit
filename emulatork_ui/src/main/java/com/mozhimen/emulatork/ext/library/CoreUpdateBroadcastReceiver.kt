@@ -14,6 +14,6 @@ import com.mozhimen.emulatork.ext.works.WorkScheduler
  */
  class CoreUpdateBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
-        WorkScheduler.cancelCoreUpdate(context!!.applicationContext)
+        WorkScheduler.cancelCoreUpdate(context!!)
     }
 }

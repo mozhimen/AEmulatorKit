@@ -6,10 +6,12 @@ import androidx.paging.PagingData
 import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
 import com.mozhimen.emulatork.basic.game.db.entities.Game
 import com.mozhimen.pagingk.paging3.basic.utils.Paging3Util
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
+import javax.inject.Inject
 
 /**
  * @ClassName SearchViewModel
@@ -18,8 +20,9 @@ import kotlinx.coroutines.flow.flatMapLatest
  * @Date 2024/5/10
  * @Version 1.0
  */
+@HiltViewModel
 @OptIn(ExperimentalCoroutinesApi::class)
-class SearchViewModel(private val retrogradeDb: RetrogradeDatabase) : ViewModel() {
+class SearchViewModel @Inject constructor(private val retrogradeDb: RetrogradeDatabase) : ViewModel() {
 
     class Factory(val retrogradeDb: RetrogradeDatabase) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {

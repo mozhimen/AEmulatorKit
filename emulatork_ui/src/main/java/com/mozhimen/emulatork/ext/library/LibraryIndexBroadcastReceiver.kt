@@ -14,6 +14,6 @@ import com.mozhimen.emulatork.ext.works.WorkScheduler
  */
 class LibraryIndexBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
-        WorkScheduler.cancelLibrarySync(context!!.applicationContext)
+        WorkScheduler.cancelLibrarySync(context!!)
     }
 }

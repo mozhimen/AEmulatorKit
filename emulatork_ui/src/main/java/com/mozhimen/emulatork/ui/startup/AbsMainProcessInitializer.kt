@@ -27,7 +27,7 @@ abstract class AbsMainProcessInitializer : Initializer<Unit>, IUtilK {
     }
 
     override fun dependencies(): List<Class<out Initializer<*>>> {
-        return listOf(WorkManagerInitializer::class.java, DebugInitializer::class.java)
+        return listOf(/*WorkManagerInitializer::class.java,*/ DebugInitializer::class.java)
     }
 }
 

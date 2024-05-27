@@ -3,10 +3,12 @@ package com.mozhimen.emulatork.test.hilt.systems
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.mozhimen.basick.utilk.androidx.fragment.runOnViewLifecycleState
+import com.mozhimen.basick.utilk.androidx.lifecycle.UtilKViewModel
 import com.mozhimen.emulatork.basic.game.system.GameSystemMetaID
 import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
 import com.mozhimen.emulatork.ui.R
@@ -31,13 +33,13 @@ class MetaSystemsFragment : RecyclerViewFragment() {
 
     private var metaSystemsAdapter: MetaSystemsAdapter? = null
 
-    private lateinit var metaSystemsViewModel: MetaSystemsViewModel
+    @Inject
+    lateinit var metaSystemsFactory: MetaSystemsViewModel.Factory
+
+    private val metaSystemsViewModel: MetaSystemsViewModel by viewModels { MetaSystemsViewModel.provideFactory(metaSystemsFactory, requireContext()) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val factory = MetaSystemsViewModel.Factory(retrogradeDb, requireContext().applicationContext)
-        metaSystemsViewModel = ViewModelProvider(this, factory)[MetaSystemsViewModel::class.java]
 
         metaSystemsAdapter = MetaSystemsAdapter { navigateToGames(it) }
 

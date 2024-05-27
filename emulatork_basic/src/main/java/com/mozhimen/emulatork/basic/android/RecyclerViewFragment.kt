@@ -37,7 +37,7 @@ open class RecyclerViewFragment : Fragment() {
     }
 
     fun updateEmptyViewVisibility(loadState: CombinedLoadStates, itemCount: Int) {
-        val emptyViewConditions = UtilKSequence.lazySequenceOf<Boolean>(
+        val emptyViewConditions = UtilKSequence.lazySequenceOf(
             { loadState.source.refresh is LoadState.NotLoading },
             { loadState.append.endOfPaginationReached },
             { itemCount == 0 }

@@ -7,6 +7,10 @@ import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
 import com.mozhimen.emulatork.basic.game.system.GameSystems
 import com.mozhimen.emulatork.basic.game.system.metaSystemID
 import com.mozhimen.emulatork.basic.game.system.GameSystemMetaInfo
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -17,15 +21,20 @@ import kotlinx.coroutines.flow.map
  * @Date 2024/5/14
  * @Version 1.0
  */
-class MetaSystemsViewModel(retrogradeDb: RetrogradeDatabase, appContext: Context) : ViewModel() {
+class MetaSystemsViewModel @AssistedInject constructor(retrogradeDb: RetrogradeDatabase,@Assisted appContext: Context) : ViewModel() {
 
-    class Factory(
-        val retrogradeDb: RetrogradeDatabase,
-        val appContext: Context
-    ) : ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return MetaSystemsViewModel(retrogradeDb, appContext) as T
-        }
+    @AssistedFactory
+    interface Factory{
+        fun create(appContext: Context):MetaSystemsViewModel
+    }
+
+    companion object{
+        fun provideFactory(factory: Factory,appContext: Context):ViewModelProvider.Factory =
+            object :ViewModelProvider.Factory{
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    return factory.create(appContext) as T
+                }
+            }
     }
 
     val availableMetaSystems: Flow<List<GameSystemMetaInfo>> = retrogradeDb.gameDao()

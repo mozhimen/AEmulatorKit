@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.mozhimen.emulatork.ext.works.WorkPendingOperationsMonitor
+import dagger.hilt.android.lifecycle.HiltViewModel
 
 /**
  * @ClassName MainViewModel

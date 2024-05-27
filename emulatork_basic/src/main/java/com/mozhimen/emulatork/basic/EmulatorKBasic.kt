@@ -1,6 +1,7 @@
 package com.mozhimen.emulatork.basic
 
 import android.util.Log
+import com.mozhimen.basick.utilk.commons.IUtilK
 import com.mozhimen.basick.utilk.kotlinx.coroutines.batch_ofSizeTime
 import com.mozhimen.emulatork.basic.bios.BiosManager
 import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
@@ -39,7 +40,7 @@ open class EmulatorKBasic(
     private val storageProviderRegistry: Lazy<StorageProviderRegistry>,
     private val gameMetadataProvider: Lazy<GameMetadataProvider>,
     private val biosManager: BiosManager
-) {
+) : IUtilK {
     companion object {
         // We batch database updates to avoid unnecessary UI updates.
         const val MAX_BUFFER_SIZE = 200
@@ -252,7 +253,7 @@ open class EmulatorKBasic(
         return runCatching {
             provider.getStorageFile(storageBaseFile)
         }.apply {
-            Log.w("Library>>>>>", "safeStorageFile $this")
+            Log.w(TAG, "safeStorageFile $this")
         }
             .getOrNull()
     }

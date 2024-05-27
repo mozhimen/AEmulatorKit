@@ -164,6 +164,6 @@ class PreferencesSaveSync(private val saveSyncManager: SaveSyncManager):IUtilK {
     }
 
     private fun handleSaveSyncRefresh(workSaveSyncClazz: Class<out AbsWorkSaveSync>, context: Context) {
-        WorkScheduler.enqueueManualWork(TAG,workSaveSyncClazz, context.applicationContext)
+        WorkScheduler.enqueueManualWork(TAG,workSaveSyncClazz, context)
     }
 }

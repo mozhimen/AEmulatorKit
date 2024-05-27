@@ -11,13 +11,16 @@ import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.epoxy.Carousel
 import com.mozhimen.basick.utilk.android.app.UtilKActivityStart
 import com.mozhimen.basick.utilk.androidx.fragment.runOnViewLifecycleState
+import com.mozhimen.basick.utilk.androidx.lifecycle.UtilKViewModel
 import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
 import com.mozhimen.emulatork.test.hilt.R
 import com.mozhimen.emulatork.ext.library.SettingsInteractor
@@ -50,7 +53,13 @@ class HomeFragment : Fragment() {
     @Inject
     lateinit var settingsInteractor: SettingsInteractor
 
-    private lateinit var homeViewModel: HomeViewModel
+    @Inject
+    lateinit var homeViewModelFactory: HomeViewModel.Factory
+
+    private val homeViewModel: HomeViewModel by viewModels { HomeViewModel.provideFactory(
+        homeViewModelFactory,
+        requireContext()
+    ) }
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -69,8 +78,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val factory = HomeViewModel.Factory(requireContext().applicationContext, retrogradeDb)
-        homeViewModel = ViewModelProvider(this, factory)[HomeViewModel::class.java]
+        homeViewModel.refreshData()
 
         // Disable snapping in carousel view
         Carousel.setDefaultGlobalSnapHelperFactory(null)
@@ -92,6 +100,7 @@ class HomeFragment : Fragment() {
 
         runOnViewLifecycleState(Lifecycle.State.RESUMED) {
             homeViewModel.getViewStates().collect {
+                Timber.d("getViewStates + $it")
                 pagingController.updateState(it)
             }
         }

@@ -1,5 +1,7 @@
 package com.mozhimen.emulatork.ui.dagger.startup
 
+import androidx.startup.Initializer
+import com.mozhimen.emulatork.basic.startup.DebugInitializer
 import com.mozhimen.emulatork.ui.startup.AbsMainProcessInitializer
 import com.mozhimen.emulatork.ui.works.AbsWorkCoreUpdate
 import com.mozhimen.emulatork.ui.works.AbsWorkSaveSync
@@ -20,5 +22,9 @@ class MainProcessInitializer : AbsMainProcessInitializer() {
 
     override fun workCoreUpdateClazz(): Class<out AbsWorkCoreUpdate> {
         return WorkCoreUpdate::class.java
+    }
+
+    override fun dependencies(): List<Class<out Initializer<*>>> {
+        return listOf(androidx.work.WorkManagerInitializer::class.java, DebugInitializer::class.java)
     }
 }

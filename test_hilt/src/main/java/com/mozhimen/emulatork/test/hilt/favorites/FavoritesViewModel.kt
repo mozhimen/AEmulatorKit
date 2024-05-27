@@ -6,7 +6,9 @@ import androidx.paging.PagingData
 import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
 import com.mozhimen.emulatork.basic.game.db.entities.Game
 import com.mozhimen.pagingk.paging3.basic.utils.Paging3Util
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
 /**
  * @ClassName FavoritesViewModel
@@ -15,7 +17,8 @@ import kotlinx.coroutines.flow.Flow
  * @Date 2024/5/10
  * @Version 1.0
  */
-class FavoritesViewModel(retrogradeDb: RetrogradeDatabase) : ViewModel() {
+@HiltViewModel
+class FavoritesViewModel @Inject constructor(retrogradeDb: RetrogradeDatabase) : ViewModel() {
 
     class Factory(val retrogradeDb: RetrogradeDatabase) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {

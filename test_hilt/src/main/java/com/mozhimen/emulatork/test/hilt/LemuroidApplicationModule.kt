@@ -63,6 +63,7 @@ import java.io.InputStream
 import java.lang.reflect.Type
 import java.util.concurrent.TimeUnit
 import java.util.zip.ZipInputStream
+import javax.inject.Singleton
 
 /**
  * @ClassName LemuroidApplicationModule
@@ -75,6 +76,7 @@ import java.util.zip.ZipInputStream
 @InstallIn(SingletonComponent::class)
 abstract class LemuroidApplicationModule {
     @Binds
+    @Singleton
     abstract fun saveSyncManager(saveSyncManagerImpl: SaveSyncManagerImpl): SaveSyncManager
 }
 
@@ -83,14 +85,17 @@ abstract class LemuroidApplicationModule {
 class LemuroidApplicationModule2 {
 
     @Provides
+    @Singleton
     fun gamePadPreferencesHelper(inputDeviceManager: InputDeviceManager) =
         GamePadPreferencesManager(inputDeviceManager, GamePadBindingActivity::class.java, false)
 
     @Provides
+    @Singleton
     fun libretroDBManager(@ApplicationContext context: Context): LibretroDBManager =
         LibretroDBManager(context)
 
     @Provides
+    @Singleton
     fun retrogradeDb(@ApplicationContext context: Context): RetrogradeDatabase =
         Room.databaseBuilder(context, RetrogradeDatabase::class.java, RetrogradeDatabase.DB_NAME)
             .addCallback(GameSearchDao.CALLBACK)
@@ -99,16 +104,19 @@ class LemuroidApplicationModule2 {
             .build()
 
     @Provides
+    @Singleton
     fun gameMetadataProvider(libretroDBManager: LibretroDBManager): GameMetadataProvider =
         LibretroDBMetadataProvider(libretroDBManager)
 
     @Provides
     @IntoSet
+    @Singleton
     fun localSAFStorageProvider(@ApplicationContext context: Context): StorageProvider =
         StorageLocalAccessFrameworkProvider(context)
 
     @Provides
     @IntoSet
+    @Singleton
     fun localGameStorageProvider(
         @ApplicationContext context: Context,
         storageDirectoriesManager: StorageDirectoriesManager
@@ -116,6 +124,7 @@ class LemuroidApplicationModule2 {
         StorageLocalProvider(context, storageDirectoriesManager)
 
     @Provides
+    @Singleton
     fun gameStorageProviderRegistry(
         @ApplicationContext context: Context,
         providers: Set<@JvmSuppressWildcards StorageProvider>
@@ -123,6 +132,7 @@ class LemuroidApplicationModule2 {
         StorageProviderRegistry(context, providers)
 
     @Provides
+    @Singleton
     fun lemuroidLibrary(
         db: RetrogradeDatabase,
         storageProviderRegistry: Lazy<StorageProviderRegistry>,
@@ -131,12 +141,14 @@ class LemuroidApplicationModule2 {
     ) = EmulatorKBasic(db, lazy { storageProviderRegistry.get() }, lazy { gameMetadataProvider.get() }, biosManager)
 
     @Provides
+    @Singleton
     fun okHttpClient(): OkHttpClient = OkHttpClient.Builder()
         .connectTimeout(1, TimeUnit.MINUTES)
         .readTimeout(1, TimeUnit.MINUTES)
         .build()
 
     @Provides
+    @Singleton
     fun retrofit(): Retrofit = Retrofit.Builder()
         .baseUrl("https://example.com")
         .addConverterFactory(
@@ -163,28 +175,35 @@ class LemuroidApplicationModule2 {
         .build()
 
     @Provides
+    @Singleton
     fun directoriesManager(@ApplicationContext context: Context) = StorageDirectoriesManager(context)
 
     @Provides
+    @Singleton
     fun statesManager(storageDirectoriesManager: StorageDirectoriesManager) = SaveStateManager(storageDirectoriesManager)
 
     @Provides
+    @Singleton
     fun savesManager(storageDirectoriesManager: StorageDirectoriesManager) = SaveManager(storageDirectoriesManager)
 
     @Provides
+    @Singleton
     fun statesPreviewManager(storageDirectoriesManager: StorageDirectoriesManager) =
         SaveStatePreviewManager(storageDirectoriesManager)
 
     @Provides
+    @Singleton
     fun coreManager(
         storageDirectoriesManager: StorageDirectoriesManager,
         retrofit: Retrofit
     ): CoreUpdater = CoreUpdaterImpl(storageDirectoriesManager, retrofit)
 
+    @Singleton
     @Provides
     fun coreVariablesManager(sharedPreferences: Lazy<SharedPreferences>) =
         CoreVariablesManager(lazy { sharedPreferences.get() })
 
+    @Singleton
     @Provides
     fun gameLoader(
         lemuroidLibrary: EmulatorKBasic,
@@ -206,53 +225,66 @@ class LemuroidApplicationModule2 {
         biosManager
     )
 
+    @Singleton
     @Provides
     fun inputDeviceManager(@ApplicationContext context: Context, sharedPreferences: Lazy<SharedPreferences>) =
         InputDeviceManager(context, lazy { sharedPreferences.get() })
 
+    @Singleton
     @Provides
     fun biosManager(storageDirectoriesManager: StorageDirectoriesManager) = BiosManager(storageDirectoriesManager)
 
+    @Singleton
     @Provides
     fun biosPreferences(biosManager: BiosManager) = PreferencesBios(biosManager)
 
+    @Singleton
     @Provides
     fun coresSelection(sharedPreferences: Lazy<SharedPreferences>) =
         CoreSelection(lazy { sharedPreferences.get() })
 
+    @Singleton
     @Provides
     fun coreSelectionPreferences() = PreferencesCoreSelection()
 
+    @Singleton
     @Provides
     fun savesCoherencyEngine(saveManager: SaveManager, saveStateManager: SaveStateManager) =
         SaveCoherencyEngine(saveManager, saveStateManager)
 
+    @Singleton
     @Provides
     fun saveSyncManagerImpl(
         @ApplicationContext context: Context,
         storageDirectoriesManager: StorageDirectoriesManager
     ) = SaveSyncManagerImpl(context, storageDirectoriesManager)
 
+    @Singleton
     @Provides
     fun postGameHandler(retrogradeDatabase: RetrogradeDatabase) =
         GameLaunchTaskHandler(GameReviewManager(), retrogradeDatabase)
 
+    @Singleton
     @Provides
     fun shortcutsGenerator(@ApplicationContext context: Context, retrofit: Retrofit) =
         CoverShortcutGenerator(context, retrofit)
 
+    @Singleton
     @Provides
     fun retroControllerManager(sharedPreferences: Lazy<SharedPreferences>) =
         ControllerConfigsManager(lazy { sharedPreferences.get() })
 
+    @Singleton
     @Provides
     fun settingsManager(@ApplicationContext context: Context, sharedPreferences: Lazy<SharedPreferences>) =
         GameSettingsManager(context, lazy { sharedPreferences.get() })
 
+    @Singleton
     @Provides
     fun sharedPreferences(@ApplicationContext context: Context) =
         SharedPreferencesMgr.getSharedPreferences(context)
 
+    @Singleton
     @Provides
     fun gameLauncher(
         coresSelection: CoreSelection,
@@ -260,6 +292,7 @@ class LemuroidApplicationModule2 {
     ) =
         GameLauncher(coresSelection, gameLaunchTaskHandler)
 
+    @Singleton
     @Provides
     fun rumbleManager(
         @ApplicationContext context: Context,
@@ -268,6 +301,7 @@ class LemuroidApplicationModule2 {
     ) =
         GameRumbleManager(context, gameSettingsManager, inputDeviceManager)
 
+    @Singleton
     @Provides
     fun coverLoader(
         @ApplicationContext context: Context
@@ -277,6 +311,7 @@ class LemuroidApplicationModule2 {
 @Module
 @InstallIn(ActivityComponent::class)
 class LemuroidApplicationModule3 {
+
     @ActivityScoped
     @Provides
     fun gameInteractor(

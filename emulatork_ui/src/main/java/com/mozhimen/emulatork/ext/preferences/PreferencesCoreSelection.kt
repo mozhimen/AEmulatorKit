@@ -48,7 +48,7 @@ class PreferencesCoreSelection : IUtilK {
             .toTypedArray()
 
         preference.setOnPreferenceChangeListener { _, _ ->
-            WorkScheduler.scheduleCoreUpdate(TAG,workCoreUpdateClazz, context.applicationContext)
+            WorkScheduler.scheduleCoreUpdate(TAG,workCoreUpdateClazz, context)
             true
         }
 

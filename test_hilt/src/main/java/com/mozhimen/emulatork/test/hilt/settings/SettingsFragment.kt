@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.documentfile.provider.DocumentFile
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -12,6 +13,7 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.fredporciuncula.flow.preferences.FlowSharedPreferences
 import com.mozhimen.basick.utilk.androidx.fragment.runOnViewLifecycleState
+import com.mozhimen.basick.utilk.androidx.lifecycle.UtilKViewModel
 import com.mozhimen.basick.utilk.commons.IUtilK
 import com.mozhimen.emulatork.basic.preferences.SharedPreferencesMgr
 import com.mozhimen.emulatork.basic.save.sync.SaveSyncManager
@@ -61,16 +63,15 @@ class SettingsFragment : PreferenceFragmentCompat(), IUtilK {
         }
     }
 
+    lateinit var settingsViewModelFactory: SettingsViewModel.Factory
+
+
+    val settingsViewModel: SettingsViewModel by viewModels { SettingsViewModel.provideFactory(settingsViewModelFactory, requireContext()) }
+
     override fun onResume() {
         super.onResume()
 
-        val factory = SettingsViewModel.Factory(
-            requireContext(),
-            FlowSharedPreferences(
-                SharedPreferencesMgr.getLegacySharedPreferences(requireContext())
-            )
-        )
-        val settingsViewModel = ViewModelProvider(this, factory)[SettingsViewModel::class.java]
+        settingsViewModel.refreshData()
 
         val currentDirectory: Preference? = findPreference(getString(com.mozhimen.emulatork.basic.R.string.pref_key_extenral_folder))
         val rescanPreference: Preference? = findPreference(getString(R.string.pref_key_rescan))
@@ -164,7 +165,7 @@ class SettingsFragment : PreferenceFragmentCompat(), IUtilK {
     }
 
     private fun rescanLibrary() {
-        context?.let { WorkScheduler.scheduleLibrarySync(TAG, WorkLibraryIndex::class.java, it) }
+        context?.let { WorkScheduler.scheduleLibrarySync(TAG, WorkLibraryIndex::class.java, it.applicationContext) }
     }
 
     private fun stopRescanLibrary() {

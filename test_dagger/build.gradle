@@ -50,6 +50,7 @@ android {
 
 dependencies {
     implementation project(':emulatork_ui_dagger')
+    implementation project(':emulatork_basic_dagger')
     implementation project(':emulatork_libretro_db')
     implementation project(':emulatork_cores')
 

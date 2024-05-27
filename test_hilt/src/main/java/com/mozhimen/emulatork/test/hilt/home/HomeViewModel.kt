@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
+import com.mozhimen.basick.utilk.android.util.UtilKLogWrapper
+import com.mozhimen.basick.utilk.commons.IUtilK
 import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
 import com.mozhimen.emulatork.basic.game.db.entities.Game
 import kotlinx.coroutines.Dispatchers
@@ -16,6 +18,11 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import com.mozhimen.emulatork.ext.works.WorkPendingOperationsMonitor
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
+import dagger.hilt.android.lifecycle.HiltViewModel
+
 /**
  * @ClassName HomeViewModel
  * @Description TODO
@@ -24,19 +31,22 @@ import com.mozhimen.emulatork.ext.works.WorkPendingOperationsMonitor
  * @Version 1.0
  */
 @OptIn(FlowPreview::class)
-class HomeViewModel(appContext: Context, retrogradeDb: RetrogradeDatabase) : ViewModel() {
+class HomeViewModel @AssistedInject constructor(@Assisted private val appContext: Context, private val retrogradeDb: RetrogradeDatabase) : ViewModel(), IUtilK {
+    @AssistedFactory
+    interface Factory {
+        fun create(appContext: Context): HomeViewModel
+    }
 
     companion object {
         const val CAROUSEL_MAX_ITEMS = 10
         const val DEBOUNCE_TIME = 100L
-    }
 
-    class Factory(
-        val appContext: Context,
-        val retrogradeDb: RetrogradeDatabase
-    ) : ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return HomeViewModel(appContext, retrogradeDb) as T
+        fun provideFactory(factory: Factory, appContext: Context): ViewModelProvider.Factory {
+            return object : ViewModelProvider.Factory {
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    return factory.create(appContext) as T
+                }
+            }
         }
     }
 
@@ -77,12 +87,12 @@ class HomeViewModel(appContext: Context, retrogradeDb: RetrogradeDatabase) : Vie
         )
     }
 
-    init {
+    fun refreshData() {
         viewModelScope.launch {
             val uiStatesFlow = combine(
                 favoritesGames(retrogradeDb),
                 recentGames(retrogradeDb),
-                discoveryGames(retrogradeDb),
+                discoveryGames(retrogradeDb).also { UtilKLogWrapper.d(TAG,"discoveryGames $it") },
                 indexingInProgress(appContext),
                 notificationsEnabledState,
                 ::buildViewState
@@ -91,7 +101,10 @@ class HomeViewModel(appContext: Context, retrogradeDb: RetrogradeDatabase) : Vie
             uiStatesFlow
                 .debounce(DEBOUNCE_TIME)
                 .flowOn(Dispatchers.IO)
-                .collect { uiStates.value = it }
+                .collect {
+                    UtilKLogWrapper.v(TAG, "refreshData: collect")
+                    uiStates.value = it
+                }
         }
     }
 

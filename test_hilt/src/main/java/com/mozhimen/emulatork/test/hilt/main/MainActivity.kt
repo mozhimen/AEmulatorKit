@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity(), GameBusyActivity,IUtilK {
             gameReviewManager.initialize(applicationContext)
         }
 
-        val navView: BottomNavigationView = findViewById(com.mozhimen.emulatork.test.hilt.R.id.nav_view)
+//        val navView: BottomNavigationView = findViewById(com.mozhimen.emulatork.test.hilt.R.id.nav_view)
         val navController = findNavController(R.id.nav_host_fragment)
 
         val topLevelIds = setOf(

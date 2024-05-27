@@ -1,6 +1,7 @@
 package com.mozhimen.emulatork.ext.works
 
 import android.content.Context
+import androidx.work.Configuration
 import androidx.work.Constraints
 import androidx.work.Data
 import androidx.work.ExistingPeriodicWorkPolicy
@@ -40,7 +41,7 @@ object WorkScheduler : IUtilK {
     ////////////////////////////////////////////////////////////////////////////////////
 
     fun scheduleLibrarySync(tag: String, workLibraryIndexClazz: Class<out AbsWorkLibraryIndex>, applicationContext: Context) {
-        UtilKLogWrapper.w(TAG, "scheduleLibrarySync $tag")
+        UtilKLogWrapper.w(TAG, "scheduleLibrarySync $tag isProvider ${applicationContext is Configuration.Provider}")
 
         WorkManager.getInstance(applicationContext)
             .beginUniqueWork(
@@ -52,7 +53,7 @@ object WorkScheduler : IUtilK {
     }
 
     fun scheduleCoreUpdate(tag: String, workCoreUpdateClazz: Class<out AbsWorkCoreUpdate>, applicationContext: Context) {
-        UtilKLogWrapper.w(TAG, "scheduleCoreUpdate $tag")
+        UtilKLogWrapper.w(TAG, "scheduleCoreUpdate $tag isProvider ${applicationContext is Configuration.Provider}")
 
         WorkManager.getInstance(applicationContext)
             .beginUniqueWork(
@@ -64,7 +65,7 @@ object WorkScheduler : IUtilK {
     }
 
     fun enqueueManualWork(tag: String, workSaveSyncClazz: Class<out AbsWorkSaveSync>, applicationContext: Context) {
-        UtilKLogWrapper.w(TAG, "enqueueManualWork $tag")
+        UtilKLogWrapper.w(TAG, "enqueueManualWork $tag isProvider ${applicationContext is Configuration.Provider}")
 
         val inputData: Data = workDataOf(SAVE_SYNC_IS_AUTO to false)
 
@@ -78,7 +79,7 @@ object WorkScheduler : IUtilK {
     }
 
     fun enqueueAutoWork(tag: String, workSaveSyncClazz: Class<out AbsWorkSaveSync>, applicationContext: Context, delayMinutes: Long = 0) {
-        UtilKLogWrapper.w(TAG, "enqueueAutoWork $tag")
+        UtilKLogWrapper.w(TAG, "enqueueAutoWork $tag isProvider ${applicationContext is Configuration.Provider}")
 
         val inputData: Data = workDataOf(SAVE_SYNC_IS_AUTO to true)
 
@@ -99,7 +100,7 @@ object WorkScheduler : IUtilK {
     }
 
     fun enqueueCleanCacheLRU(tag: String, workStorageCacheCleanerClazz: Class<out AbsWorkStorageCacheCleaner>, applicationContext: Context) {
-        UtilKLogWrapper.w(TAG, "enqueueCleanCacheLRU $tag")
+        UtilKLogWrapper.w(TAG, "enqueueCleanCacheLRU $tag isProvider ${applicationContext is Configuration.Provider}")
 
         WorkManager.getInstance(applicationContext).enqueueUniqueWork(
             WORK_ID_STORAGE_CACHE_CLEANER,
@@ -109,7 +110,7 @@ object WorkScheduler : IUtilK {
     }
 
     fun enqueueCleanCacheAll(tag: String, workStorageCacheCleanerClazz: Class<out AbsWorkStorageCacheCleaner>, applicationContext: Context) {
-        UtilKLogWrapper.w(TAG, "enqueueCleanCacheAll $tag")
+        UtilKLogWrapper.w(TAG, "enqueueCleanCacheAll $tag isProvider ${applicationContext is Configuration.Provider}")
 
         val inputData: Data = workDataOf(STORAGE_CACHE_CLEANER_CLEAN_EVERYTHING to true)
 

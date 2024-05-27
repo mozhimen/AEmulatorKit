@@ -1,43 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application>
-        <activity
-            android:name="com.mozhimen.emulatork.ui.hilt.com.mozhimen.emulatork.test.hilt.game.ExternalGameLauncherActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:exported="true"
-            android:theme="@style/Theme.AGameKit_Emulator.Game">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data
-                    android:host="${applicationId}"
-                    android:pathPattern="/play-game/id/.*"
-                    android:scheme="mozhimen" />
-            </intent-filter>
-        </activity>
 
-        <service
-            android:name="com.mozhimen.emulatork.ui.hilt.com.mozhimen.emulatork.test.hilt.game.GameService"
-            android:process=":game" />
-
-        <activity
-            android:name="com.mozhimen.emulatork.ui.hilt.com.mozhimen.emulatork.test.hilt.game.GameActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleInstance"
-            android:process=":game"
-            android:theme="@style/Theme.AGameKit_Emulator.Game" />
-
-        <activity
-            android:name="com.mozhimen.emulatork.ui.hilt.com.mozhimen.emulatork.test.hilt.game.menu.GameMenuActivity"
-            android:process=":game"
-            android:theme="@style/Theme.AGameKit_Emulator.Menu" />
-
-        <activity
-            android:name="com.mozhimen.emulatork.ui.hilt.com.mozhimen.emulatork.test.hilt.settings.StorageFrameworkPickerActivity"
-            android:theme="@style/Theme.AGameKit_Emulator.Invisible" />
-
-        <activity
-            android:name="com.mozhimen.emulatork.ui.hilt.com.mozhimen.emulatork.test.hilt.game.pad.GamePadBindingActivity"
-            android:theme="@style/Theme.AGameKit_Emulator.Invisible" />
     </application>
 </manifest>
