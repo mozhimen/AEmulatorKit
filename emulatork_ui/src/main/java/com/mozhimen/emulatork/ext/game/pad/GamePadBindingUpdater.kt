@@ -4,9 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.view.InputDevice
 import android.view.KeyEvent
-import com.mozhimen.emulatork.input.InputKey
-import com.mozhimen.emulatork.input.InputRetroKey
-import com.mozhimen.emulatork.input.device.InputDeviceManager
+import com.mozhimen.emulatork.input.key.InputKey
+import com.mozhimen.emulatork.input.key.InputKeyRetro
+import com.mozhimen.emulatork.input.unit.InputUnitManager
 import com.mozhimen.emulatork.ui.R
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -22,7 +22,7 @@ import timber.log.Timber
  * @Version 1.0
  */
 @OptIn(DelicateCoroutinesApi::class)
-class GamePadBindingUpdater(private val inputDeviceManager: InputDeviceManager, intent: Intent) {
+class GamePadBindingUpdater(private val inputUnitManager: InputUnitManager, intent: Intent) {
 
     val extras = parseExtras(intent)
 
@@ -53,7 +53,7 @@ class GamePadBindingUpdater(private val inputDeviceManager: InputDeviceManager, 
 
         runBlocking {
             GlobalScope.async {
-                inputDeviceManager.updateBinding(event.device, InputRetroKey(extras.retroKey), InputKey(event.keyCode))
+                inputUnitManager.updateBinding(event.device, InputKeyRetro(extras.retroKey), InputKey(event.keyCode))
             }
         }
 

@@ -1,13 +1,11 @@
 package com.mozhimen.emulatork.test.dagger
 
 import android.annotation.SuppressLint
-import android.content.Context
 import androidx.startup.AppInitializer
 import androidx.work.ListenableWorker
 import com.google.android.material.color.DynamicColors
 import com.mozhimen.basick.utilk.android.content.isMainProcess
 import com.mozhimen.emulatork.basic.dagger.interfaces.HasWorkerInjector
-import com.mozhimen.emulatork.basic.android.ContextHandler
 import com.mozhimen.emulatork.ui.dagger.startup.MainProcessInitializer
 import com.mozhimen.emulatork.basic.startup.GameProcessInitializer
 import dagger.android.AndroidInjector
@@ -32,11 +30,6 @@ class LemuroidApplication : dagger.android.support.DaggerApplication(), HasWorke
         AppInitializer.getInstance(this).initializeComponent(initializeComponent)
 
         DynamicColors.applyToActivitiesIfAvailable(this)
-    }
-
-    override fun attachBaseContext(base: Context) {
-        super.attachBaseContext(base)
-        ContextHandler.attachBaseContext(base)
     }
 
     override fun applicationInjector(): AndroidInjector<out dagger.android.support.DaggerApplication> {

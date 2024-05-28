@@ -10,11 +10,11 @@ import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceScreen
 import androidx.preference.SwitchPreference
 import com.mozhimen.emulatork.input.InputMenuShortcut
-import com.mozhimen.emulatork.input.InputKey
-import com.mozhimen.emulatork.input.InputRetroKey
-import com.mozhimen.emulatork.input.device.InputDeviceManager
+import com.mozhimen.emulatork.input.key.InputKey
+import com.mozhimen.emulatork.input.key.InputKeyRetro
+import com.mozhimen.emulatork.input.unit.InputUnitManager
 import com.mozhimen.emulatork.ui.R
-import com.mozhimen.emulatork.input.device.getLemuroidInputDevice
+import com.mozhimen.emulatork.input.unit.getEmulatorKInputDevice
 import com.mozhimen.emulatork.ui.game.pad.AbsGamePadBindingActivity
 import java.util.Locale
 
@@ -26,7 +26,7 @@ import java.util.Locale
  * @Version 1.0
  */
 open class GamePadPreferencesManager constructor(
-    private val inputDeviceManager: InputDeviceManager,
+    private val inputUnitManager: InputUnitManager,
     private val _gamePadBindingActivityClazz: Class<out AbsGamePadBindingActivity>,
     private val isLeanback: Boolean
 ) {
@@ -133,7 +133,7 @@ open class GamePadPreferencesManager constructor(
         val category = createCategory(context, preferenceScreen, inputDevice.name)
         preferenceScreen.addPreference(category)
 
-        inputDevice.getLemuroidInputDevice().getCustomizableKeys()
+        inputDevice.getEmulatorKInputDevice().getCustomizableKeys()
             .map { buildKeyBindingPreference(context, inputDevice, it) }
             .forEach {
                 category.addPreference(it)
@@ -148,14 +148,14 @@ open class GamePadPreferencesManager constructor(
         preferenceScreen: PreferenceScreen,
         inputDevice: InputDevice
     ) {
-        val inverseBindings: Map<InputRetroKey, InputKey> = inputDeviceManager.getBindings(inputDevice)
+        val inverseBindings: Map<InputKeyRetro, InputKey> = inputUnitManager.getBindings(inputDevice)
             .map { it.value to it.key }
             .toMap()
 
-        inputDevice.getLemuroidInputDevice().getCustomizableKeys()
+        inputDevice.getEmulatorKInputDevice().getCustomizableKeys()
             .forEach { retroKey ->
                 val boundKey = inverseBindings[retroKey]?.keyCode ?: KeyEvent.KEYCODE_UNKNOWN
-                val preferenceKey = InputDeviceManager.computeKeyBindingRetroKeyPreference(inputDevice, retroKey)
+                val preferenceKey = InputUnitManager.computeKeyBindingRetroKeyPreference(inputDevice, retroKey)
                 val preference = preferenceScreen.findPreference<Preference>(preferenceKey)
                 preference?.summaryProvider = Preference.SummaryProvider<Preference> {
                     displayNameForKeyCode(boundKey)
@@ -168,9 +168,9 @@ open class GamePadPreferencesManager constructor(
         inputDevice: InputDevice
     ): Preference {
         val preference = SwitchPreference(context)
-        preference.key = InputDeviceManager.computeEnabledGamePadPreference(inputDevice)
+        preference.key = InputUnitManager.computeEnabledGamePadPreference(inputDevice)
         preference.title = inputDevice.name
-        preference.setDefaultValue(inputDevice.getLemuroidInputDevice().isEnabledByDefault(context))
+        preference.setDefaultValue(inputDevice.getEmulatorKInputDevice().isEnabledByDefault(context))
         preference.isIconSpaceReserved = false
         return preference
     }
@@ -178,13 +178,13 @@ open class GamePadPreferencesManager constructor(
     private fun buildKeyBindingPreference(
         context: Context,
         inputDevice: InputDevice,
-        inputRetroKey: InputRetroKey
+        inputKeyRetro: InputKeyRetro
     ): Preference {
         val preference = Preference(context)
-        preference.key = InputDeviceManager.computeKeyBindingRetroKeyPreference(inputDevice, inputRetroKey)
-        preference.title = getRetroPadKeyName(context, inputRetroKey.keyCode)
+        preference.key = InputUnitManager.computeKeyBindingRetroKeyPreference(inputDevice, inputKeyRetro)
+        preference.title = getRetroPadKeyName(context, inputKeyRetro.keyCode)
         preference.setOnPreferenceClickListener {
-            displayChangeDialog(context, inputDevice, inputRetroKey.keyCode)
+            displayChangeDialog(context, inputDevice, inputKeyRetro.keyCode)
             true
         }
         preference.isIconSpaceReserved = false
@@ -210,10 +210,10 @@ open class GamePadPreferencesManager constructor(
         inputDevice: InputDevice
     ): Preference? {
         val default = InputMenuShortcut.getDefault(inputDevice) ?: return null
-        val supportedShortcuts = inputDevice.getLemuroidInputDevice().getSupportedShortcuts()
+        val supportedShortcuts = inputDevice.getEmulatorKInputDevice().getSupportedShortcuts()
 
         val preference = ListPreference(context)
-        preference.key = InputDeviceManager.computeGameMenuShortcutPreference(inputDevice)
+        preference.key = InputUnitManager.computeGameMenuShortcutPreference(inputDevice)
         preference.title = context.getString(R.string.settings_gamepad_title_game_menu)
         preference.entries = supportedShortcuts.map { it.name }.toTypedArray()
         preference.entryValues = supportedShortcuts.map { it.name }.toTypedArray()

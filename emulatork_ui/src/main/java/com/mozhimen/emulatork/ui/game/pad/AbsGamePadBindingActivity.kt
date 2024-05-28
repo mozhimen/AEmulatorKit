@@ -5,7 +5,7 @@ import android.view.KeyEvent
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.FragmentActivity
 import com.mozhimen.emulatork.ext.game.pad.GamePadBindingUpdater
-import com.mozhimen.emulatork.input.device.InputDeviceManager
+import com.mozhimen.emulatork.input.unit.InputUnitManager
 
 /**
  * @ClassName GamePadBindingActivity
@@ -18,7 +18,7 @@ abstract class AbsGamePadBindingActivity : FragmentActivity() {
 
 //    @Inject
 //    lateinit var inputDeviceManager: InputDeviceManager
-    abstract fun inputDeviceManager(): InputDeviceManager
+    abstract fun inputDeviceManager(): InputUnitManager
 
     private lateinit var gamePadBindingUpdater: GamePadBindingUpdater
 

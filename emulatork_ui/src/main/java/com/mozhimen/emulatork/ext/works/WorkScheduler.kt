@@ -1,25 +1,20 @@
 package com.mozhimen.emulatork.ext.works
 
 import android.content.Context
-import androidx.work.Configuration
 import androidx.work.Constraints
 import androidx.work.Data
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequest
-import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequest
-import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
-import com.mozhimen.basick.utilk.android.util.UtilKLogWrapper
 import com.mozhimen.basick.utilk.commons.IUtilK
 import com.mozhimen.emulatork.ui.works.AbsWorkCoreUpdate
 import com.mozhimen.emulatork.ui.works.AbsWorkLibraryIndex
 import com.mozhimen.emulatork.ui.works.AbsWorkSaveSync
 import com.mozhimen.emulatork.ui.works.AbsWorkStorageCacheCleaner
-import com.squareup.moshi.internal.Util
 import java.util.concurrent.TimeUnit
 
 /**
@@ -40,9 +35,7 @@ object WorkScheduler : IUtilK {
 
     ////////////////////////////////////////////////////////////////////////////////////
 
-    fun scheduleLibrarySync(tag: String, workLibraryIndexClazz: Class<out AbsWorkLibraryIndex>, applicationContext: Context) {
-        UtilKLogWrapper.w(TAG, "scheduleLibrarySync $tag isProvider ${applicationContext is Configuration.Provider}")
-
+    fun scheduleLibrarySync(workLibraryIndexClazz: Class<out AbsWorkLibraryIndex>, applicationContext: Context) {
         WorkManager.getInstance(applicationContext)
             .beginUniqueWork(
                 WORK_ID_LIBRARY_INDEX,
@@ -52,9 +45,7 @@ object WorkScheduler : IUtilK {
             .enqueue()
     }
 
-    fun scheduleCoreUpdate(tag: String, workCoreUpdateClazz: Class<out AbsWorkCoreUpdate>, applicationContext: Context) {
-        UtilKLogWrapper.w(TAG, "scheduleCoreUpdate $tag isProvider ${applicationContext is Configuration.Provider}")
-
+    fun scheduleCoreUpdate(workCoreUpdateClazz: Class<out AbsWorkCoreUpdate>, applicationContext: Context) {
         WorkManager.getInstance(applicationContext)
             .beginUniqueWork(
                 WORK_ID_CORE_UPDATE,
@@ -64,9 +55,7 @@ object WorkScheduler : IUtilK {
             .enqueue()
     }
 
-    fun enqueueManualWork(tag: String, workSaveSyncClazz: Class<out AbsWorkSaveSync>, applicationContext: Context) {
-        UtilKLogWrapper.w(TAG, "enqueueManualWork $tag isProvider ${applicationContext is Configuration.Provider}")
-
+    fun enqueueManualWork(workSaveSyncClazz: Class<out AbsWorkSaveSync>, applicationContext: Context) {
         val inputData: Data = workDataOf(SAVE_SYNC_IS_AUTO to false)
 
         WorkManager.getInstance(applicationContext).enqueueUniqueWork(
@@ -78,9 +67,7 @@ object WorkScheduler : IUtilK {
         )
     }
 
-    fun enqueueAutoWork(tag: String, workSaveSyncClazz: Class<out AbsWorkSaveSync>, applicationContext: Context, delayMinutes: Long = 0) {
-        UtilKLogWrapper.w(TAG, "enqueueAutoWork $tag isProvider ${applicationContext is Configuration.Provider}")
-
+    fun enqueueAutoWork(workSaveSyncClazz: Class<out AbsWorkSaveSync>, applicationContext: Context, delayMinutes: Long = 0) {
         val inputData: Data = workDataOf(SAVE_SYNC_IS_AUTO to true)
 
         WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork(
@@ -99,9 +86,7 @@ object WorkScheduler : IUtilK {
         )
     }
 
-    fun enqueueCleanCacheLRU(tag: String, workStorageCacheCleanerClazz: Class<out AbsWorkStorageCacheCleaner>, applicationContext: Context) {
-        UtilKLogWrapper.w(TAG, "enqueueCleanCacheLRU $tag isProvider ${applicationContext is Configuration.Provider}")
-
+    fun enqueueCleanCacheLRU(workStorageCacheCleanerClazz: Class<out AbsWorkStorageCacheCleaner>, applicationContext: Context) {
         WorkManager.getInstance(applicationContext).enqueueUniqueWork(
             WORK_ID_STORAGE_CACHE_CLEANER,
             ExistingWorkPolicy.APPEND,
@@ -109,9 +94,7 @@ object WorkScheduler : IUtilK {
         )
     }
 
-    fun enqueueCleanCacheAll(tag: String, workStorageCacheCleanerClazz: Class<out AbsWorkStorageCacheCleaner>, applicationContext: Context) {
-        UtilKLogWrapper.w(TAG, "enqueueCleanCacheAll $tag isProvider ${applicationContext is Configuration.Provider}")
-
+    fun enqueueCleanCacheAll(workStorageCacheCleanerClazz: Class<out AbsWorkStorageCacheCleaner>, applicationContext: Context) {
         val inputData: Data = workDataOf(STORAGE_CACHE_CLEANER_CLEAN_EVERYTHING to true)
 
         WorkManager.getInstance(applicationContext).enqueueUniqueWork(

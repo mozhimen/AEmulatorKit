@@ -168,7 +168,7 @@ class SettingsFragment : PreferenceFragmentCompat(), IUtilK {
     }
 
     private fun rescanLibrary() {
-        context?.let { WorkScheduler.scheduleLibrarySync(TAG, WorkLibraryIndex::class.java, it) }
+        context?.let { WorkScheduler.scheduleLibrarySync(WorkLibraryIndex::class.java, it) }
     }
 
     private fun stopRescanLibrary() {

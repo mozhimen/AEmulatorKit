@@ -28,8 +28,8 @@ class SettingsInteractor constructor(
     fun resetAllSettings(workLibraryIndexClazz: Class<out AbsWorkLibraryIndex>, workStorageCacheCleanerClazz: Class<out AbsWorkStorageCacheCleaner>) {
         SharedPreferencesMgr.getLegacySharedPreferences(context).edit().clear().apply()
         SharedPreferencesMgr.getSharedPreferences(context).edit().clear().apply()
-        WorkScheduler.scheduleLibrarySync(TAG,workLibraryIndexClazz, context)
-        WorkScheduler.enqueueCleanCacheAll(TAG,workStorageCacheCleanerClazz, context)
+        WorkScheduler.scheduleLibrarySync(workLibraryIndexClazz, context)
+        WorkScheduler.enqueueCleanCacheAll(workStorageCacheCleanerClazz, context)
         deleteDownloadedCores()
     }
 

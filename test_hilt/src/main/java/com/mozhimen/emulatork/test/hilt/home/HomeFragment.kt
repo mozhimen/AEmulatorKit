@@ -26,7 +26,7 @@ import com.mozhimen.emulatork.test.hilt.R
 import com.mozhimen.emulatork.ext.library.SettingsInteractor
 import com.mozhimen.emulatork.ext.game.GameInteractor
 import com.mozhimen.emulatork.ext.covers.CoverLoader
-import com.mozhimen.emulatork.test.hilt.settings.StorageFrameworkPickerActivity
+import com.mozhimen.emulatork.ui.hilt.settings.StorageFrameworkPickerActivity
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import javax.inject.Inject

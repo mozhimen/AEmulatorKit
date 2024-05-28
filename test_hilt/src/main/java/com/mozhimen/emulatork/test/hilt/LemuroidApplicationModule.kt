@@ -39,11 +39,11 @@ import com.mozhimen.emulatork.ext.game.pad.GamePadPreferencesManager
 import com.mozhimen.emulatork.ext.library.SettingsInteractor
 import com.mozhimen.emulatork.ext.preferences.PreferencesBios
 import com.mozhimen.emulatork.ext.preferences.PreferencesCoreSelection
-import com.mozhimen.emulatork.input.device.InputDeviceManager
-import com.mozhimen.emulatork.libretro.db.LibretroDBManager
+import com.mozhimen.emulatork.input.unit.InputUnitManager
+import com.mozhimen.emulatork.libretro.db.database.LibretroDBManager
 import com.mozhimen.emulatork.libretro.db.LibretroDBMetadataProvider
-import com.mozhimen.emulatork.test.hilt.game.GameActivity
-import com.mozhimen.emulatork.test.hilt.game.pad.GamePadBindingActivity
+import com.mozhimen.emulatork.ui.hilt.game.GameActivity
+import com.mozhimen.emulatork.ui.hilt.game.pad.GamePadBindingActivity
 import dagger.Binds
 import dagger.Lazy
 import dagger.Module
@@ -86,8 +86,8 @@ class LemuroidApplicationModule2 {
 
     @Provides
     @Singleton
-    fun gamePadPreferencesHelper(inputDeviceManager: InputDeviceManager) =
-        GamePadPreferencesManager(inputDeviceManager, GamePadBindingActivity::class.java, false)
+    fun gamePadPreferencesHelper(inputUnitManager: InputUnitManager) =
+        GamePadPreferencesManager(inputUnitManager, GamePadBindingActivity::class.java, false)
 
     @Provides
     @Singleton
@@ -228,7 +228,7 @@ class LemuroidApplicationModule2 {
     @Singleton
     @Provides
     fun inputDeviceManager(@ApplicationContext context: Context, sharedPreferences: Lazy<SharedPreferences>) =
-        InputDeviceManager(context, lazy { sharedPreferences.get() })
+        InputUnitManager(context, lazy { sharedPreferences.get() })
 
     @Singleton
     @Provides
@@ -297,9 +297,9 @@ class LemuroidApplicationModule2 {
     fun rumbleManager(
         @ApplicationContext context: Context,
         gameSettingsManager: GameSettingsManager,
-        inputDeviceManager: InputDeviceManager
+        inputUnitManager: InputUnitManager
     ) =
-        GameRumbleManager(context, gameSettingsManager, inputDeviceManager)
+        GameRumbleManager(context, gameSettingsManager, inputUnitManager)
 
     @Singleton
     @Provides

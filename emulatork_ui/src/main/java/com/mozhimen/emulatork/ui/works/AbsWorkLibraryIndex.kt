@@ -49,7 +49,7 @@ abstract class AbsWorkLibraryIndex(context: Context, workerParams: WorkerParamet
             Timber.e("Library indexing work terminated with an exception:", it)
         }
 
-        WorkScheduler.scheduleCoreUpdate(TAG,workCoreUpdateClazz(), applicationContext)
+        WorkScheduler.scheduleCoreUpdate(workCoreUpdateClazz(), applicationContext)
 
         return Result.success()
     }

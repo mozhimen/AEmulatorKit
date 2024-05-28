@@ -1,6 +1,5 @@
 package com.mozhimen.emulatork.test.hilt
 
-import android.content.Context
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.startup.AppInitializer
 import androidx.work.Configuration
@@ -9,8 +8,7 @@ import com.mozhimen.basick.elemk.android.app.bases.BaseApplication
 import com.mozhimen.basick.lintk.optins.OApiMultiDex_InApplication
 import com.mozhimen.basick.utilk.android.content.isMainProcess
 import com.mozhimen.basick.utilk.android.util.UtilKLogWrapper
-import com.mozhimen.emulatork.basic.android.ContextHandler
-import com.mozhimen.emulatork.test.hilt.startup.MainProcessInitializer
+import com.mozhimen.emulatork.ui.hilt.startup.MainProcessInitializer
 import com.mozhimen.emulatork.basic.startup.GameProcessInitializer
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
@@ -34,11 +32,6 @@ class LemuroidApplication : BaseApplication(), Configuration.Provider {
         AppInitializer.getInstance(this).initializeComponent(initializeComponent)
 
         DynamicColors.applyToActivitiesIfAvailable(this)
-    }
-
-    override fun attachBaseContext(base: Context) {
-        super.attachBaseContext(base)
-        ContextHandler.attachBaseContext(base)
     }
 
     override fun getWorkManagerConfiguration(): Configuration {

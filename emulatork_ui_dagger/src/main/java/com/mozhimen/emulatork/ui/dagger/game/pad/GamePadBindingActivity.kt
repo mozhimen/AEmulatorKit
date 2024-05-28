@@ -2,7 +2,7 @@ package com.mozhimen.emulatork.ui.dagger.game.pad
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.mozhimen.emulatork.ui.game.pad.AbsGamePadBindingActivity
-import com.mozhimen.emulatork.input.device.InputDeviceManager
+import com.mozhimen.emulatork.input.unit.InputUnitManager
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -19,10 +19,10 @@ import javax.inject.Inject
  */
 class GamePadBindingActivity : AbsGamePadBindingActivity(), HasFragmentInjector, HasSupportFragmentInjector {
     @Inject
-    lateinit var inputDeviceManager: InputDeviceManager
+    lateinit var inputUnitManager: InputUnitManager
 
-    override fun inputDeviceManager(): InputDeviceManager {
-        return inputDeviceManager
+    override fun inputDeviceManager(): InputUnitManager {
+        return inputUnitManager
     }
 
     @Inject

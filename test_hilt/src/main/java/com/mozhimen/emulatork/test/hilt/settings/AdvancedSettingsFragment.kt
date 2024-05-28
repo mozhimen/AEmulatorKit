@@ -1,6 +1,5 @@
 package com.mozhimen.emulatork.test.hilt.settings
 
-import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.preference.Preference

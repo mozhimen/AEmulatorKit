@@ -8,7 +8,7 @@ import android.view.InputDevice
 import com.mozhimen.basick.utilk.kotlinx.coroutines.collectSafe
 import com.mozhimen.emulatork.basic.game.setting.GameSettingsManager
 import com.mozhimen.emulatork.basic.game.system.GameSystemCoreConfig
-import com.mozhimen.emulatork.input.device.InputDeviceManager
+import com.mozhimen.emulatork.input.unit.InputUnitManager
 import com.swordfish.libretrodroid.RumbleEvent
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -33,7 +33,7 @@ import kotlin.math.roundToInt
 class GameRumbleManager(
     applicationContext: Context,
     private val settingsManager: GameSettingsManager,
-    private val inputDeviceManager: InputDeviceManager
+    private val inputUnitManager: InputUnitManager
 ) {
     private val deviceVibrator = applicationContext.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
     private val rumbleContext = newSingleThreadContext("Rumble")
@@ -49,7 +49,7 @@ class GameRumbleManager(
             return
         }
 
-        inputDeviceManager.getEnabledInputsObservable()
+        inputUnitManager.getEnabledInputsObservable()
             .map { getVibrators(it) }
             .flatMapLatest { vibrators ->
                 rumbleEventsObservable

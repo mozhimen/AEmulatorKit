@@ -2,7 +2,6 @@ package com.mozhimen.emulatork.ui.startup
 
 import android.content.Context
 import androidx.startup.Initializer
-import androidx.work.WorkManagerInitializer
 import com.mozhimen.basick.utilk.commons.IUtilK
 import com.mozhimen.emulatork.basic.startup.DebugInitializer
 import com.mozhimen.emulatork.ext.works.WorkScheduler
@@ -22,8 +21,8 @@ abstract class AbsMainProcessInitializer : Initializer<Unit>, IUtilK {
     abstract fun workCoreUpdateClazz(): Class<out AbsWorkCoreUpdate>
     override fun create(context: Context) {
         Timber.i("Requested initialization of main process tasks")
-            WorkScheduler.enqueueAutoWork(TAG,workSaveSyncClazz(), context, 0)
-            WorkScheduler.scheduleCoreUpdate(TAG,workCoreUpdateClazz(), context)
+            WorkScheduler.enqueueAutoWork(workSaveSyncClazz(), context, 0)
+            WorkScheduler.scheduleCoreUpdate(workCoreUpdateClazz(), context)
     }
 
     override fun dependencies(): List<Class<out Initializer<*>>> {

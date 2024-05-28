@@ -238,7 +238,7 @@ open class EmulatorKBasic(
                 safeStorageFile(provider, it)
             }
             .mapNotNull { storageFile ->
-                val metadata = metadataProvider.retrieveMetadata(storageFile)
+                val metadata = metadataProvider.retrieveGameMetadata(storageFile)
                 convertGameMetadataToGame(groupedStorageFile, storageFile, metadata, startedAtMs)
             }
             .firstOrNull()

@@ -3,7 +3,7 @@ package com.mozhimen.emulatork.ui.dagger.game.menu
 import android.content.Context
 import dagger.android.support.AndroidSupportInjection
 import com.mozhimen.emulatork.ui.game.menu.AbsGameMenuCoreOptionsFragment
-import com.mozhimen.emulatork.input.device.InputDeviceManager
+import com.mozhimen.emulatork.input.unit.InputUnitManager
 import javax.inject.Inject
 
 /**
@@ -15,10 +15,10 @@ import javax.inject.Inject
  */
 open class GameMenuCoreOptionsFragment : AbsGameMenuCoreOptionsFragment() {
     @Inject
-    lateinit var inputDeviceManager: InputDeviceManager
+    lateinit var inputUnitManager: InputUnitManager
 
-    override fun inputDeviceManager(): InputDeviceManager {
-        return inputDeviceManager
+    override fun inputDeviceManager(): InputUnitManager {
+        return inputUnitManager
     }
 
     override fun onAttach(context: Context) {

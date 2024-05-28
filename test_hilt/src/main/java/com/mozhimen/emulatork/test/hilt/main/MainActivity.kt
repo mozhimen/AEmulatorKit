@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity(), GameBusyActivity,IUtilK {
             gameReviewManager.initialize(applicationContext)
         }
 
-//        val navView: BottomNavigationView = findViewById(com.mozhimen.emulatork.test.hilt.R.id.nav_view)
+        val navView: BottomNavigationView = findViewById(com.mozhimen.emulatork.test.hilt.R.id.nav_view)
         val navController = findNavController(R.id.nav_host_fragment)
 
         val topLevelIds = setOf(
@@ -127,7 +127,7 @@ class MainActivity : AppCompatActivity(), GameBusyActivity,IUtilK {
             }
 
             R.id.menu_options_sync -> {
-                WorkScheduler.enqueueManualWork(TAG,WorkSaveSync::class.java, this)
+                WorkScheduler.enqueueManualWork(WorkSaveSync::class.java, this)
                 true
             }
 

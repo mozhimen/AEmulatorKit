@@ -40,7 +40,7 @@ import com.mozhimen.emulatork.basic.save.SaveStateManager
 import com.mozhimen.emulatork.basic.save.SaveStatePreviewManager
 import com.mozhimen.emulatork.basic.storage.StorageRomFile
 import com.mozhimen.emulatork.basic.BuildConfig
-import com.mozhimen.emulatork.input.classes.getInputClass
+import com.mozhimen.emulatork.input.type.getInputClass
 import com.mozhimen.basick.elemk.mos.NTuple2
 import com.mozhimen.basick.elemk.mos.NTuple4
 import com.mozhimen.basick.utilk.android.content.get_of_config_longAnimTime
@@ -54,8 +54,8 @@ import com.mozhimen.emulatork.ui.R
 import com.mozhimen.emulatork.basic.game.shader.GameShaderChooser
 import com.mozhimen.emulatork.basic.core.options.CoreOption
 import com.mozhimen.emulatork.basic.core.options.CoreOptionSetting
-import com.mozhimen.emulatork.input.device.InputDeviceManager
-import com.mozhimen.emulatork.input.InputKey
+import com.mozhimen.emulatork.input.unit.InputUnitManager
+import com.mozhimen.emulatork.input.key.InputKey
 import com.mozhimen.emulatork.basic.android.ImmersiveFragmentActivity
 import com.mozhimen.emulatork.basic.game.system.GameSystems
 import com.mozhimen.emulatork.basic.game.rumble.GameRumbleManager
@@ -174,7 +174,7 @@ abstract class BaseGameActivity : ImmersiveFragmentActivity(), IUtilK {
 
     //    @Inject
 //    lateinit var inputDeviceManager: InputDeviceManager
-    abstract fun inputDeviceManager(): InputDeviceManager
+    abstract fun inputDeviceManager(): InputUnitManager
 
     //    @Inject
 //    lateinit var gameLoader: GameLoader

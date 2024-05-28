@@ -1,6 +1,6 @@
 package com.mozhimen.emulatork.basic.controller.touch
 
-import com.mozhimen.emulatork.input.InputKind
+import com.mozhimen.emulatork.input.kind.EInputKind
 
 /**
  * @ClassName TouchControllerID
@@ -37,8 +37,8 @@ enum class ControllerTouchID {
     NINTENDO_3DS;
 
     class Config(
-        val leftConfig: InputKind,
-        val rightConfig: InputKind,
+        val leftConfig: EInputKind,
+        val rightConfig: EInputKind,
         val leftScale: Float = 1.0f,
         val rightScale: Float = 1.0f,
         val verticalMarginDP: Float = 0f
@@ -48,109 +48,109 @@ enum class ControllerTouchID {
         fun getConfig(id: ControllerTouchID): Config {
             return when (id) {
                 GB -> Config(
-                    InputKind.GB_LEFT,
-                    InputKind.GB_RIGHT
+                    EInputKind.GB_LEFT,
+                    EInputKind.GB_RIGHT
                 )
                 NES -> Config(
-                    InputKind.NES_LEFT,
-                    InputKind.NES_RIGHT
+                    EInputKind.NES_LEFT,
+                    EInputKind.NES_RIGHT
                 )
                 DESMUME -> Config(
-                    InputKind.DESMUME_LEFT,
-                    InputKind.DESMUME_RIGHT
+                    EInputKind.DESMUME_LEFT,
+                    EInputKind.DESMUME_RIGHT
                 )
                 MELONDS -> Config(
-                    InputKind.MELONDS_NDS_LEFT,
-                    InputKind.MELONDS_NDS_RIGHT
+                    EInputKind.MELONDS_NDS_LEFT,
+                    EInputKind.MELONDS_NDS_RIGHT
                 )
                 PSX -> Config(
-                    InputKind.PSX_LEFT,
-                    InputKind.PSX_RIGHT
+                    EInputKind.PSX_LEFT,
+                    EInputKind.PSX_RIGHT
                 )
                 PSX_DUALSHOCK -> Config(
-                    InputKind.PSX_DUALSHOCK_LEFT,
-                    InputKind.PSX_DUALSHOCK_RIGHT
+                    EInputKind.PSX_DUALSHOCK_LEFT,
+                    EInputKind.PSX_DUALSHOCK_RIGHT
                 )
                 N64 -> Config(
-                    InputKind.N64_LEFT,
-                    InputKind.N64_RIGHT,
+                    EInputKind.N64_LEFT,
+                    EInputKind.N64_RIGHT,
                     verticalMarginDP = 8f
                 )
                 PSP -> Config(
-                    InputKind.PSP_LEFT,
-                    InputKind.PSP_RIGHT
+                    EInputKind.PSP_LEFT,
+                    EInputKind.PSP_RIGHT
                 )
                 SNES -> Config(
-                    InputKind.SNES_LEFT,
-                    InputKind.SNES_RIGHT
+                    EInputKind.SNES_LEFT,
+                    EInputKind.SNES_RIGHT
                 )
                 GBA -> Config(
-                    InputKind.GBA_LEFT,
-                    InputKind.GBA_RIGHT
+                    EInputKind.GBA_LEFT,
+                    EInputKind.GBA_RIGHT
                 )
                 GENESIS_3 -> Config(
-                    InputKind.GENESIS_3_LEFT,
-                    InputKind.GENESIS_3_RIGHT
+                    EInputKind.GENESIS_3_LEFT,
+                    EInputKind.GENESIS_3_RIGHT
                 )
                 GENESIS_6 -> Config(
-                    InputKind.GENESIS_6_LEFT,
-                    InputKind.GENESIS_6_RIGHT,
+                    EInputKind.GENESIS_6_LEFT,
+                    EInputKind.GENESIS_6_RIGHT,
                     1.0f,
                     1.2f
                 )
                 ATARI2600 -> Config(
-                    InputKind.ATARI2600_LEFT,
-                    InputKind.ATARI2600_RIGHT
+                    EInputKind.ATARI2600_LEFT,
+                    EInputKind.ATARI2600_RIGHT
                 )
                 SMS -> Config(
-                    InputKind.SMS_LEFT,
-                    InputKind.SMS_RIGHT
+                    EInputKind.SMS_LEFT,
+                    EInputKind.SMS_RIGHT
                 )
                 GG -> Config(
-                    InputKind.GG_LEFT,
-                    InputKind.GG_RIGHT
+                    EInputKind.GG_LEFT,
+                    EInputKind.GG_RIGHT
                 )
                 ARCADE_4 -> Config(
-                    InputKind.ARCADE_4_LEFT,
-                    InputKind.ARCADE_4_RIGHT
+                    EInputKind.ARCADE_4_LEFT,
+                    EInputKind.ARCADE_4_RIGHT
                 )
                 ARCADE_6 -> Config(
-                    InputKind.ARCADE_6_LEFT,
-                    InputKind.ARCADE_6_RIGHT,
+                    EInputKind.ARCADE_6_LEFT,
+                    EInputKind.ARCADE_6_RIGHT,
                     1.0f,
                     1.2f
                 )
                 LYNX -> Config(
-                    InputKind.LYNX_LEFT,
-                    InputKind.LYNX_RIGHT
+                    EInputKind.LYNX_LEFT,
+                    EInputKind.LYNX_RIGHT
                 )
                 ATARI7800 -> Config(
-                    InputKind.ATARI7800_LEFT,
-                    InputKind.ATARI7800_RIGHT
+                    EInputKind.ATARI7800_LEFT,
+                    EInputKind.ATARI7800_RIGHT
                 )
                 PCE -> Config(
-                    InputKind.PCE_LEFT,
-                    InputKind.PCE_RIGHT
+                    EInputKind.PCE_LEFT,
+                    EInputKind.PCE_RIGHT
                 )
                 NGP -> Config(
-                    InputKind.NGP_LEFT,
-                    InputKind.NGP_RIGHT
+                    EInputKind.NGP_LEFT,
+                    EInputKind.NGP_RIGHT
                 )
                 DOS -> Config(
-                    InputKind.DOS_LEFT,
-                    InputKind.DOS_RIGHT
+                    EInputKind.DOS_LEFT,
+                    EInputKind.DOS_RIGHT
                 )
                 WS_LANDSCAPE -> Config(
-                    InputKind.WS_LANDSCAPE_LEFT,
-                    InputKind.WS_LANDSCAPE_RIGHT
+                    EInputKind.WS_LANDSCAPE_LEFT,
+                    EInputKind.WS_LANDSCAPE_RIGHT
                 )
                 WS_PORTRAIT -> Config(
-                    InputKind.WS_PORTRAIT_LEFT,
-                    InputKind.WS_PORTRAIT_RIGHT
+                    EInputKind.WS_PORTRAIT_LEFT,
+                    EInputKind.WS_PORTRAIT_RIGHT
                 )
                 NINTENDO_3DS -> Config(
-                    InputKind.NINTENDO_3DS_LEFT,
-                    InputKind.NINTENDO_3DS_RIGHT
+                    EInputKind.NINTENDO_3DS_LEFT,
+                    EInputKind.NINTENDO_3DS_RIGHT
                 )
             }
         }

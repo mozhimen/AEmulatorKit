@@ -49,6 +49,7 @@ include ':ANavigateKit:navigatek_navigation'
 include ':APagingKit'
 project(':APagingKit').projectDir = new File("D:\\WorkSpace\\GitHub\\APagingKit")
 include ':APagingKit:pagingk_paging3_basic'
+include ':APagingKit:pagingk_paging3_data'
 include ':APagingKit:pagingk_epoxy4'
 //AAbilityKit_Jetpack
 include ':AAbilityKit_Jetpack'

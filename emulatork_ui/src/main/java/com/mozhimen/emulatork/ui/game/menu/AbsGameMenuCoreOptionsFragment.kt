@@ -6,7 +6,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.preference.PreferenceFragmentCompat
 import com.mozhimen.basick.utilk.androidx.fragment.runOnViewLifecycleState
 import com.mozhimen.emulatork.basic.preferences.SharedPreferencesMgr
-import com.mozhimen.emulatork.input.device.InputDeviceManager
+import com.mozhimen.emulatork.input.unit.InputUnitManager
 import com.mozhimen.emulatork.basic.core.options.CoreOptionSetting
 import com.mozhimen.emulatork.ui.R
 import java.security.InvalidParameterException
@@ -26,7 +26,7 @@ abstract class AbsGameMenuCoreOptionsFragment : PreferenceFragmentCompat() {
 
 //    @Inject
 //    lateinit var inputDeviceManager: InputDeviceManager
-    abstract fun inputDeviceManager(): InputDeviceManager
+    abstract fun inputDeviceManager(): InputUnitManager
 
 //    override fun onAttach(context: Context) {
 //        AndroidSupportInjection.inject(this)

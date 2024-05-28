@@ -43,7 +43,7 @@ import com.mozhimen.emulatork.ext.library.SettingsInteractor
 import com.mozhimen.emulatork.ext.covers.CoverShortcutGenerator
 import com.mozhimen.emulatork.ext.game.GameInteractor
 import com.mozhimen.emulatork.ext.game.GameLauncher
-import com.mozhimen.emulatork.input.device.InputDeviceManager
+import com.mozhimen.emulatork.input.unit.InputUnitManager
 import com.mozhimen.emulatork.basic.game.GameBusyActivity
 import com.mozhimen.emulatork.ext.game.GameLaunchTaskHandler
 import com.mozhimen.emulatork.ext.game.pad.GamePadPreferencesManager
@@ -150,7 +150,7 @@ class MainActivity : DaggerAppCompatActivity(), GameBusyActivity ,IUtilK{
             }
 
             R.id.menu_options_sync -> {
-                WorkScheduler.enqueueManualWork(TAG,WorkSaveSync::class.java, this)
+                WorkScheduler.enqueueManualWork(WorkSaveSync::class.java, this)
                 true
             }
 
@@ -231,8 +231,8 @@ class MainActivity : DaggerAppCompatActivity(), GameBusyActivity ,IUtilK{
             @Provides
             @PerActivity
             @JvmStatic
-            fun gamePadPreferencesHelper(inputDeviceManager: InputDeviceManager) =
-                GamePadPreferencesManager(inputDeviceManager, GamePadBindingActivity::class.java, false)
+            fun gamePadPreferencesHelper(inputUnitManager: InputUnitManager) =
+                GamePadPreferencesManager(inputUnitManager, GamePadBindingActivity::class.java, false)
 
             @Provides
             @PerActivity

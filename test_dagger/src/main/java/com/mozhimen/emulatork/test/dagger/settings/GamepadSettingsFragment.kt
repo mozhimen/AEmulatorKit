@@ -11,7 +11,7 @@ import androidx.preference.PreferenceFragmentCompat
 import com.mozhimen.basick.utilk.androidx.fragment.runOnViewLifecycleState
 import com.mozhimen.emulatork.basic.preferences.SharedPreferencesMgr
 import com.mozhimen.emulatork.ui.R
-import com.mozhimen.emulatork.input.device.InputDeviceManager
+import com.mozhimen.emulatork.input.unit.InputUnitManager
 import com.mozhimen.emulatork.ext.game.pad.GamePadPreferencesManager
 import com.mozhimen.basick.elemk.mos.NTuple2
 import dagger.android.support.AndroidSupportInjection
@@ -34,7 +34,7 @@ class GamepadSettingsFragment : PreferenceFragmentCompat() {
     lateinit var gamePadPreferencesManager: GamePadPreferencesManager
 
     @Inject
-    lateinit var inputDeviceManager: InputDeviceManager
+    lateinit var inputUnitManager: InputUnitManager
 
     override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
@@ -51,8 +51,8 @@ class GamepadSettingsFragment : PreferenceFragmentCompat() {
         super.onViewCreated(view, savedInstanceState)
         runOnViewLifecycleState(Lifecycle.State.CREATED) {
             val gamePadStatus = combine(
-                inputDeviceManager.getGamePadsObservable(),
-                inputDeviceManager.getEnabledInputsObservable(),
+                inputUnitManager.getGamePadsObservable(),
+                inputUnitManager.getEnabledInputsObservable(),
                 ::NTuple2
             )
 
@@ -62,7 +62,7 @@ class GamepadSettingsFragment : PreferenceFragmentCompat() {
         }
 
         runOnViewLifecycleState(Lifecycle.State.RESUMED) {
-            inputDeviceManager.getEnabledInputsObservable()
+            inputUnitManager.getEnabledInputsObservable()
                 .distinctUntilChanged()
                 .collect { refreshGamePads(it) }
         }
@@ -96,10 +96,10 @@ class GamepadSettingsFragment : PreferenceFragmentCompat() {
     }
 
     private suspend fun handleResetBindings() {
-        inputDeviceManager.resetAllBindings()
+        inputUnitManager.resetAllBindings()
         addGamePads(
-            inputDeviceManager.getGamePadsObservable().first(),
-            inputDeviceManager.getEnabledInputsObservable().first()
+            inputUnitManager.getGamePadsObservable().first(),
+            inputUnitManager.getEnabledInputsObservable().first()
         )
     }
 

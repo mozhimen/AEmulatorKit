@@ -1,6 +1,5 @@
 package com.mozhimen.emulatork.test.hilt.settings
 
-import android.content.Context
 import android.os.Bundle
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat

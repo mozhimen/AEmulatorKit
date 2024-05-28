@@ -34,7 +34,7 @@ import com.mozhimen.emulatork.basic.core.CoreUpdaterImpl
 import com.mozhimen.emulatork.basic.game.review.GameReviewManager
 import com.mozhimen.emulatork.basic.save.sync.SaveSyncManagerImpl
 import com.mozhimen.emulatork.libretro.db.LibretroDBMetadataProvider
-import com.mozhimen.emulatork.libretro.db.LibretroDBManager
+import com.mozhimen.emulatork.libretro.db.database.LibretroDBManager
 import com.mozhimen.emulatork.basic.controller.ControllerConfigsManager
 import dagger.Binds
 import dagger.Lazy
@@ -56,7 +56,7 @@ import com.mozhimen.emulatork.ui.dagger.game.GameActivity
 import com.mozhimen.emulatork.ui.dagger.game.menu.GameMenuActivity
 import com.mozhimen.emulatork.ui.dagger.game.pad.GamePadBindingActivity
 import com.mozhimen.emulatork.ui.dagger.settings.StorageFrameworkPickerActivity
-import com.mozhimen.emulatork.input.device.InputDeviceManager
+import com.mozhimen.emulatork.input.unit.InputUnitManager
 import com.mozhimen.emulatork.ext.preferences.PreferencesBios
 import com.mozhimen.emulatork.basic.game.setting.GameSettingsManager
 import com.mozhimen.emulatork.basic.core.CoreVariablesManager
@@ -259,7 +259,7 @@ abstract class LemuroidApplicationModule {
         @PerApp
         @JvmStatic
         fun inputDeviceManager(context: Context, sharedPreferences: Lazy<SharedPreferences>) =
-            InputDeviceManager(context, lazy { sharedPreferences.get() })
+            InputUnitManager(context, lazy { sharedPreferences.get() })
 
         @Provides
         @PerApp
@@ -351,9 +351,9 @@ abstract class LemuroidApplicationModule {
         fun rumbleManager(
             context: Context,
             gameSettingsManager: GameSettingsManager,
-            inputDeviceManager: InputDeviceManager
+            inputUnitManager: InputUnitManager
         ) =
-            GameRumbleManager(context, gameSettingsManager, inputDeviceManager)
+            GameRumbleManager(context, gameSettingsManager, inputUnitManager)
 
         @Provides
         @PerApp

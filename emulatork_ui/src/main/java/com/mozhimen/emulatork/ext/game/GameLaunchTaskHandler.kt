@@ -63,8 +63,8 @@ class GameLaunchTaskHandler(
 
     private fun rescheduleBackgroundWork(context: Context, workSaveSyncClazz: Class<out AbsWorkSaveSync>, workStorageCacheCleanerClazz: Class<out AbsWorkStorageCacheCleaner>) {
         // Let's slightly delay the sync. Maybe the user wants to play another game.
-        WorkScheduler.enqueueAutoWork(TAG,workSaveSyncClazz, context, 5)
-        WorkScheduler.enqueueCleanCacheLRU(TAG,workStorageCacheCleanerClazz, context)
+        WorkScheduler.enqueueAutoWork(workSaveSyncClazz, context, 5)
+        WorkScheduler.enqueueCleanCacheLRU(workStorageCacheCleanerClazz, context)
     }
 
     private fun handleUnsuccessfulGameFinish(

@@ -1,7 +1,7 @@
 package com.mozhimen.emulatork.input
 
 import android.view.InputDevice
-import com.mozhimen.emulatork.input.device.getLemuroidInputDevice
+import com.mozhimen.emulatork.input.unit.getEmulatorKInputDevice
 /**
  * @ClassName GameMenuShortcut
  * @Description TODO
@@ -10,11 +10,9 @@ import com.mozhimen.emulatork.input.device.getLemuroidInputDevice
  * @Version 1.0
  */
 data class InputMenuShortcut(val name: String, val keys: Set<Int>) {
-
     companion object {
-
         fun getDefault(inputDevice: InputDevice): InputMenuShortcut? {
-            return inputDevice.getLemuroidInputDevice()
+            return inputDevice.getEmulatorKInputDevice()
                 .getSupportedShortcuts()
                 .firstOrNull { shortcut ->
                     if (shortcut!=null){
@@ -24,7 +22,7 @@ data class InputMenuShortcut(val name: String, val keys: Set<Int>) {
         }
 
         fun findByName(device: InputDevice, name: String): InputMenuShortcut? {
-            return device.getLemuroidInputDevice()
+            return device.getEmulatorKInputDevice()
                 .getSupportedShortcuts()
                 .firstOrNull { it?.name == name }
         }

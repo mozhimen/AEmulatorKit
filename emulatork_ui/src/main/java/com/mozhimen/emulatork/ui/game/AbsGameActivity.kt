@@ -29,14 +29,14 @@ import com.mozhimen.emulatork.basic.game.system.GameSystemCoreConfig
 import com.mozhimen.emulatork.basic.game.db.entities.Game
 import com.mozhimen.emulatork.ext.game.BaseGameActivity
 import com.mozhimen.emulatork.ext.input.InputVirtualLongPressHandler
-import com.mozhimen.emulatork.input.sensors.InputSensorTilt
+import com.mozhimen.emulatork.input.sensor.InputSensorTilt
 import com.mozhimen.emulatork.ui.R
-import com.mozhimen.emulatork.input.tilt.TiltTracker
-import com.mozhimen.emulatork.input.tilt.TiltTrackerStick
-import com.mozhimen.emulatork.input.tilt.TiltTrackerCross
-import com.mozhimen.emulatork.input.tilt.TiltTrackerTwoButtons
+import com.mozhimen.emulatork.input.virtual.gyro.Gyro
+import com.mozhimen.emulatork.input.virtual.gyro.GyroStick
+import com.mozhimen.emulatork.input.virtual.gyro.GyroCross
+import com.mozhimen.emulatork.input.virtual.gyro.GyroTwoButtons
 import com.mozhimen.emulatork.input.InputOverlayThemes
-import com.mozhimen.emulatork.input.InputConfigs
+import com.mozhimen.emulatork.input.config.InputConfigRadialGamePadProvider
 import com.mozhimen.emulatork.basic.game.menu.GameMenuContract
 import com.swordfish.libretrodroid.GLRetroView
 import com.swordfish.radialgamepad.library.RadialGamePad
@@ -87,7 +87,7 @@ abstract class AbsGameActivity : BaseGameActivity() {
     private var serviceController: AbsGameService.GameServiceController? = null
 
     private lateinit var inputSensorTilt: InputSensorTilt
-    private var currentTiltTracker: TiltTracker? = null
+    private var currentGyro: Gyro? = null
 
     private var leftPad: RadialGamePad? = null
     private var rightPad: RadialGamePad? = null
@@ -235,7 +235,7 @@ abstract class AbsGameActivity : BaseGameActivity() {
 
         val theme = InputOverlayThemes.getGamePadTheme(leftGamePadContainer)
 
-        val leftConfig = InputConfigs.getRadialGamePadConfig(
+        val leftConfig = InputConfigRadialGamePadProvider.getRadialGamePadConfig(
             touchControllerConfig.leftConfig,
             hapticConfig,
             theme
@@ -243,7 +243,7 @@ abstract class AbsGameActivity : BaseGameActivity() {
         val leftPad = RadialGamePad(leftConfig, DEFAULT_MARGINS_DP, this)
         leftGamePadContainer.addView(leftPad)
 
-        val rightConfig = InputConfigs.getRadialGamePadConfig(
+        val rightConfig = InputConfigRadialGamePadProvider.getRadialGamePadConfig(
             touchControllerConfig.rightConfig,
             hapticConfig,
             theme
@@ -297,7 +297,7 @@ abstract class AbsGameActivity : BaseGameActivity() {
                 .filterIsInstance<Event.Gesture>()
                 .filter { it.type == GestureType.FIRST_TOUCH }
                 .collectSafe { event ->
-                    currentTiltTracker?.let { tracker ->
+                    currentGyro?.let { tracker ->
                         if (event.id in tracker.trackedIds()) {
                             stopTrackingId(tracker)
                         }
@@ -343,30 +343,30 @@ abstract class AbsGameActivity : BaseGameActivity() {
 
     private fun handleTripleTaps(events: List<Event.Gesture>) {
         val eventsTracker = when (events.map { it.id }.toSet()) {
-            setOf(InputConfigs.MOTION_SOURCE_LEFT_STICK) -> TiltTrackerStick(
-                InputConfigs.MOTION_SOURCE_LEFT_STICK
+            setOf(InputConfigRadialGamePadProvider.MOTION_SOURCE_LEFT_STICK) -> GyroStick(
+                InputConfigRadialGamePadProvider.MOTION_SOURCE_LEFT_STICK
             )
 
-            setOf(InputConfigs.MOTION_SOURCE_RIGHT_STICK) -> TiltTrackerStick(
-                InputConfigs.MOTION_SOURCE_RIGHT_STICK
+            setOf(InputConfigRadialGamePadProvider.MOTION_SOURCE_RIGHT_STICK) -> GyroStick(
+                InputConfigRadialGamePadProvider.MOTION_SOURCE_RIGHT_STICK
             )
 
-            setOf(InputConfigs.MOTION_SOURCE_DPAD) -> TiltTrackerCross(
-                InputConfigs.MOTION_SOURCE_DPAD
+            setOf(InputConfigRadialGamePadProvider.MOTION_SOURCE_DPAD) -> GyroCross(
+                InputConfigRadialGamePadProvider.MOTION_SOURCE_DPAD
             )
 
-            setOf(InputConfigs.MOTION_SOURCE_DPAD_AND_LEFT_STICK) -> TiltTrackerCross(
-                InputConfigs.MOTION_SOURCE_DPAD_AND_LEFT_STICK
+            setOf(InputConfigRadialGamePadProvider.MOTION_SOURCE_DPAD_AND_LEFT_STICK) -> GyroCross(
+                InputConfigRadialGamePadProvider.MOTION_SOURCE_DPAD_AND_LEFT_STICK
             )
 
-            setOf(InputConfigs.MOTION_SOURCE_RIGHT_DPAD) -> TiltTrackerCross(
-                InputConfigs.MOTION_SOURCE_RIGHT_DPAD
+            setOf(InputConfigRadialGamePadProvider.MOTION_SOURCE_RIGHT_DPAD) -> GyroCross(
+                InputConfigRadialGamePadProvider.MOTION_SOURCE_RIGHT_DPAD
             )
 
             setOf(
                 KeyEvent.KEYCODE_BUTTON_L1,
                 KeyEvent.KEYCODE_BUTTON_R1
-            ) -> TiltTrackerTwoButtons(
+            ) -> GyroTwoButtons(
                 KeyEvent.KEYCODE_BUTTON_L1,
                 KeyEvent.KEYCODE_BUTTON_R1
             )
@@ -374,7 +374,7 @@ abstract class AbsGameActivity : BaseGameActivity() {
             setOf(
                 KeyEvent.KEYCODE_BUTTON_L2,
                 KeyEvent.KEYCODE_BUTTON_R2
-            ) -> TiltTrackerTwoButtons(
+            ) -> GyroTwoButtons(
                 KeyEvent.KEYCODE_BUTTON_L2,
                 KeyEvent.KEYCODE_BUTTON_R2
             )
@@ -410,11 +410,11 @@ abstract class AbsGameActivity : BaseGameActivity() {
 
     private fun handleGamePadDirection(it: Event.Direction) {
         when (it.id) {
-            InputConfigs.MOTION_SOURCE_DPAD -> {
+            InputConfigRadialGamePadProvider.MOTION_SOURCE_DPAD -> {
                 retroGameView?.sendMotionEvent(GLRetroView.MOTION_SOURCE_DPAD, it.xAxis, it.yAxis)
             }
 
-            InputConfigs.MOTION_SOURCE_LEFT_STICK -> {
+            InputConfigRadialGamePadProvider.MOTION_SOURCE_LEFT_STICK -> {
                 retroGameView?.sendMotionEvent(
                     GLRetroView.MOTION_SOURCE_ANALOG_LEFT,
                     it.xAxis,
@@ -422,7 +422,7 @@ abstract class AbsGameActivity : BaseGameActivity() {
                 )
             }
 
-            InputConfigs.MOTION_SOURCE_RIGHT_STICK -> {
+            InputConfigRadialGamePadProvider.MOTION_SOURCE_RIGHT_STICK -> {
                 retroGameView?.sendMotionEvent(
                     GLRetroView.MOTION_SOURCE_ANALOG_RIGHT,
                     it.xAxis,
@@ -430,7 +430,7 @@ abstract class AbsGameActivity : BaseGameActivity() {
                 )
             }
 
-            InputConfigs.MOTION_SOURCE_DPAD_AND_LEFT_STICK -> {
+            InputConfigRadialGamePadProvider.MOTION_SOURCE_DPAD_AND_LEFT_STICK -> {
                 retroGameView?.sendMotionEvent(
                     GLRetroView.MOTION_SOURCE_ANALOG_LEFT,
                     it.xAxis,
@@ -439,7 +439,7 @@ abstract class AbsGameActivity : BaseGameActivity() {
                 retroGameView?.sendMotionEvent(GLRetroView.MOTION_SOURCE_DPAD, it.xAxis, it.yAxis)
             }
 
-            InputConfigs.MOTION_SOURCE_RIGHT_DPAD -> {
+            InputConfigRadialGamePadProvider.MOTION_SOURCE_RIGHT_DPAD -> {
                 retroGameView?.sendMotionEvent(
                     GLRetroView.MOTION_SOURCE_ANALOG_RIGHT,
                     it.xAxis,
@@ -472,23 +472,23 @@ abstract class AbsGameActivity : BaseGameActivity() {
     }
 
     private fun sendTiltEvent(sensorValues: FloatArray) {
-        currentTiltTracker?.let {
+        currentGyro?.let {
             val xTilt = (sensorValues[0] + 1f) / 2f
             val yTilt = (sensorValues[1] + 1f) / 2f
             it.updateTracking(xTilt, yTilt, sequenceOf(leftPad, rightPad).filterNotNull())
         }
     }
 
-    private fun stopTrackingId(trackedEvent: TiltTracker) {
-        currentTiltTracker = null
+    private fun stopTrackingId(trackedEvent: Gyro) {
+        currentGyro = null
         inputSensorTilt.shouldRun = false
         trackedEvent.stopTracking(sequenceOf(leftPad, rightPad).filterNotNull())
     }
 
-    private fun startTrackingId(trackedEvent: TiltTracker) {
-        if (currentTiltTracker != trackedEvent) {
-            currentTiltTracker?.let { stopTrackingId(it) }
-            currentTiltTracker = trackedEvent
+    private fun startTrackingId(trackedEvent: Gyro) {
+        if (currentGyro != trackedEvent) {
+            currentGyro?.let { stopTrackingId(it) }
+            currentGyro = trackedEvent
             inputSensorTilt.shouldRun = true
             simulateTouchControllerHaptic()
         }

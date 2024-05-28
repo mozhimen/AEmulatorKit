@@ -93,7 +93,7 @@ abstract class AbsStorageFrameworkPickerActivity : FragmentActivity(), IUtilK {
     }
 
     private fun startLibraryIndexWork() {
-        WorkScheduler.scheduleLibrarySync(TAG, workLibraryIndexClazz(), applicationContext)
+        WorkScheduler.scheduleLibrarySync(workLibraryIndexClazz(), applicationContext)
     }
 
     companion object {

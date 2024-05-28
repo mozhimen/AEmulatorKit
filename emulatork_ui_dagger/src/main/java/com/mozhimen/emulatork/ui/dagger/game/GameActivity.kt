@@ -12,7 +12,7 @@ import com.mozhimen.emulatork.basic.save.SaveStatePreviewManager
 import com.mozhimen.emulatork.ui.dagger.game.menu.GameMenuActivity
 import com.mozhimen.emulatork.ui.game.AbsGameActivity
 import com.mozhimen.emulatork.ui.game.AbsGameService
-import com.mozhimen.emulatork.input.device.InputDeviceManager
+import com.mozhimen.emulatork.input.unit.InputUnitManager
 import com.mozhimen.emulatork.basic.game.rumble.GameRumbleManager
 import com.mozhimen.emulatork.basic.controller.ControllerConfigsManager
 import com.mozhimen.emulatork.basic.game.setting.GameSettingsManager
@@ -48,7 +48,7 @@ class GameActivity : AbsGameActivity(), HasFragmentInjector, HasSupportFragmentI
     lateinit var coreVariablesManager: CoreVariablesManager
 
     @Inject
-    lateinit var inputDeviceManager: InputDeviceManager
+    lateinit var inputUnitManager: InputUnitManager
 
     @Inject
     lateinit var gameLoader: GameLoader
@@ -110,8 +110,8 @@ class GameActivity : AbsGameActivity(), HasFragmentInjector, HasSupportFragmentI
         return coreVariablesManager
     }
 
-    override fun inputDeviceManager(): InputDeviceManager {
-        return inputDeviceManager
+    override fun inputDeviceManager(): InputUnitManager {
+        return inputUnitManager
     }
 
     override fun gameLoader(): GameLoader {

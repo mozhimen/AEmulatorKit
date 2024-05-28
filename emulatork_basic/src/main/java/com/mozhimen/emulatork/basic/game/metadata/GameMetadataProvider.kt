@@ -10,5 +10,5 @@ import com.mozhimen.emulatork.basic.storage.StorageFile
  * @Version 1.0
  */
 interface GameMetadataProvider {
-    suspend fun retrieveMetadata(storageFile: StorageFile): GameMetadata?
+    suspend fun retrieveGameMetadata(storageFile: StorageFile): GameMetadata?
 }
