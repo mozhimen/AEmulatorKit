@@ -4,11 +4,13 @@ import android.content.Context
 import android.view.InputDevice
 import android.view.KeyEvent
 import com.mozhimen.emulatork.input.key.InputKey
-import com.mozhimen.emulatork.input.InputMenuShortcut
+import com.mozhimen.emulatork.input.virtual.menu.Menu
 import com.mozhimen.emulatork.input.key.InputKeyRetro
+import com.mozhimen.emulatork.input.utils.getInputKeyMap
 import com.mozhimen.emulatork.input.utils.intKeyCodePair2inputKeyPair
 import com.mozhimen.emulatork.input.utils.inputKeyListOf
 import com.mozhimen.emulatork.input.utils.inputKeyRetroListOf
+import com.mozhimen.emulatork.input.utils.isInputKeysSupport
 
 /**
  * @ClassName LemuroidInputDeviceGamePad
@@ -19,7 +21,7 @@ import com.mozhimen.emulatork.input.utils.inputKeyRetroListOf
  */
 class InputUnitGamePad(private val device: InputDevice) : InputUnit {
 
-    override fun getDefaultBindings(): Map<InputKey, InputKeyRetro> {
+    override fun getInputKeyMap(): Map<InputKey, InputKeyRetro> {
         val allAvailableInputs = InputUnitManager.OUTPUT_KEYS
             .associate {
                 InputKey(it.keyCode) to getDefaultBindingForKey(device, it)
@@ -48,15 +50,15 @@ class InputUnitGamePad(private val device: InputDevice) : InputUnit {
     }
 
     override fun isEnabledByDefault(appContext: Context): Boolean {
-        return device.supportsAllKeys(MINIMAL_KEYS_DEFAULT_ENABLED)
+        return device.isInputKeysSupport(MINIMAL_KEYS_DEFAULT_ENABLED)
     }
 
-    override fun getSupportedShortcuts(): List<InputMenuShortcut> = listOf(
-        InputMenuShortcut(
+    override fun getSupportMenus(): List<Menu> = listOf(
+        Menu(
             "L3 + R3",
             setOf(KeyEvent.KEYCODE_BUTTON_THUMBL, KeyEvent.KEYCODE_BUTTON_THUMBR)
         ),
-        InputMenuShortcut(
+        Menu(
             "Select + Start",
             setOf(KeyEvent.KEYCODE_BUTTON_START, KeyEvent.KEYCODE_BUTTON_SELECT)
         )
@@ -65,7 +67,7 @@ class InputUnitGamePad(private val device: InputDevice) : InputUnit {
     override fun isSupported(): Boolean {
         return sequenceOf(
             device.sources and InputDevice.SOURCE_GAMEPAD == InputDevice.SOURCE_GAMEPAD,
-            device.supportsAllKeys(MINIMAL_SUPPORTED_KEYS),
+            device.isInputKeysSupport(MINIMAL_SUPPORTED_KEYS),
             device.isVirtual.not(),
             device.controllerNumber > 0
         ).all { it }
@@ -76,7 +78,7 @@ class InputUnitGamePad(private val device: InputDevice) : InputUnit {
             .map { it.axis }
             .toSet()
 
-        val keysMappedToAxis = device.getInputType().getAxesMap()
+        val keysMappedToAxis = device.getInputKeyMap().getAxesMap()
             .filter { it.key in deviceAxis }
             .map { it.value }
             .toSet()

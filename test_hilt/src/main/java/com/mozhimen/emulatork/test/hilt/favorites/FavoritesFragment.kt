@@ -12,7 +12,7 @@ import com.mozhimen.emulatork.test.hilt.games.GamesAdapter
 import com.mozhimen.emulatork.ext.covers.CoverLoader
 import com.mozhimen.xmlk.recyclerk.decoration.RecyclerKDecorationSpaceGrid
 import com.mozhimen.xmlk.recyclerk.manager.RecyclerKDynamicGridLayoutManager
-import com.mozhimen.emulatork.basic.android.RecyclerViewFragment
+import com.mozhimen.emulatork.common.android.RecyclerViewFragment
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

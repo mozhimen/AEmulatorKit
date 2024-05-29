@@ -21,7 +21,7 @@ import com.mozhimen.basick.utilk.commons.IUtilK
 import com.mozhimen.basick.utilk.kotlinx.coroutines.launchSafe
 import com.mozhimen.emulatork.basic.game.GameBusyActivity
 import com.mozhimen.emulatork.basic.game.review.GameReviewManager
-import com.mozhimen.emulatork.basic.game.system.GameSystemID
+import com.mozhimen.emulatork.basic.system.ESystemType
 import com.mozhimen.emulatork.basic.save.sync.SaveSyncManager
 import com.mozhimen.emulatork.ext.game.BaseGameActivity
 import com.mozhimen.emulatork.ext.game.GameLaunchTaskHandler
@@ -136,7 +136,7 @@ class MainActivity : AppCompatActivity(), GameBusyActivity,IUtilK {
     }
 
     private fun displayLemuroidHelp() {
-        val systemFolders = GameSystemID.values()
+        val systemFolders = ESystemType.values()
             .map { it.dbname }
             .map { "<i>$it</i>" }
             .joinToString(", ")

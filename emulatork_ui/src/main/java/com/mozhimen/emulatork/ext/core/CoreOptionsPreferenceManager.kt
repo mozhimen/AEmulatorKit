@@ -8,8 +8,8 @@ import androidx.preference.PreferenceGroup
 import androidx.preference.PreferenceScreen
 import androidx.preference.SwitchPreference
 import com.mozhimen.emulatork.basic.controller.touch.ControllerTouchConfig
-import com.mozhimen.emulatork.basic.core.CoreVariablesManager
-import com.mozhimen.emulatork.basic.core.CoreID
+import com.mozhimen.emulatork.core.CoreVariablesManager
+import com.mozhimen.emulatork.core.ECoreId
 import com.mozhimen.emulatork.basic.controller.ControllerConfigsManager
 import com.mozhimen.emulatork.ui.R
 import com.mozhimen.emulatork.basic.core.options.CoreOptionSetting
@@ -47,7 +47,7 @@ object CoreOptionsPreferenceManager {
     fun addControllers(
         preferenceScreen: PreferenceScreen,
         systemID: String,
-        coreID: CoreID,
+        coreID: com.mozhimen.emulatork.core.ECoreId,
         connectedGamePads: Int,
         controllers: Map<Int, List<ControllerTouchConfig>>
     ) {
@@ -98,7 +98,7 @@ object CoreOptionsPreferenceManager {
         systemID: String
     ): ListPreference {
         val preference = ListPreference(context)
-        preference.key = CoreVariablesManager.computeSharedPreferenceKey(it.getKey(), systemID)
+        preference.key = com.mozhimen.emulatork.core.CoreVariablesManager.computeSharedPreferenceKey(it.getKey(), systemID)
         preference.title = it.getDisplayName(context)
         preference.entries = it.getEntries(context).toTypedArray()
         preference.entryValues = it.getEntriesValues().toTypedArray()
@@ -115,7 +115,7 @@ object CoreOptionsPreferenceManager {
         systemID: String
     ): SwitchPreference {
         val preference = SwitchPreference(context)
-        preference.key = CoreVariablesManager.computeSharedPreferenceKey(it.getKey(), systemID)
+        preference.key = com.mozhimen.emulatork.core.CoreVariablesManager.computeSharedPreferenceKey(it.getKey(), systemID)
         preference.title = it.getDisplayName(context)
         preference.setDefaultValue(it.getCurrentValue() == "enabled")
         preference.isChecked = it.getCurrentValue() == "enabled"
@@ -126,7 +126,7 @@ object CoreOptionsPreferenceManager {
     private fun buildControllerPreference(
         context: Context,
         systemID: String,
-        coreID: CoreID,
+        coreID: com.mozhimen.emulatork.core.ECoreId,
         port: Int,
         controllerConfigs: List<ControllerTouchConfig>
     ): Preference {

@@ -2,7 +2,7 @@ package com.mozhimen.emulatork.ui.dagger.settings
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import com.mozhimen.emulatork.basic.storage.StorageDirectoriesManager
+import com.mozhimen.emulatork.basic.storage.StorageProvider
 import com.mozhimen.emulatork.ui.dagger.works.WorkLibraryIndex
 import com.mozhimen.emulatork.ui.settings.AbsStorageFrameworkPickerActivity
 import com.mozhimen.emulatork.ui.works.AbsWorkLibraryIndex
@@ -22,7 +22,7 @@ import javax.inject.Inject
  */
 class StorageFrameworkPickerActivity :AbsStorageFrameworkPickerActivity(), HasFragmentInjector, HasSupportFragmentInjector {
     @Inject
-    lateinit var storageDirectoriesManager: StorageDirectoriesManager
+    lateinit var storageProvider: StorageProvider
     @Inject
     lateinit var supportFragmentInjector: DispatchingAndroidInjector<Fragment>
     @Inject
@@ -37,8 +37,8 @@ class StorageFrameworkPickerActivity :AbsStorageFrameworkPickerActivity(), HasFr
 
     override fun fragmentInjector(): AndroidInjector<android.app.Fragment>? = frameworkFragmentInjector
 
-    override fun directoriesManager(): StorageDirectoriesManager {
-        return storageDirectoriesManager
+    override fun directoriesManager(): StorageProvider {
+        return storageProvider
     }
 
     override fun workLibraryIndexClazz(): Class<out AbsWorkLibraryIndex> {

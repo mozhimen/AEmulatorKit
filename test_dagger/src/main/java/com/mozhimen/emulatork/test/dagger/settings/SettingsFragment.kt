@@ -15,7 +15,7 @@ import com.mozhimen.basick.utilk.androidx.fragment.runOnViewLifecycleState
 import com.mozhimen.basick.utilk.commons.IUtilK
 import com.mozhimen.emulatork.basic.preferences.SharedPreferencesMgr
 import com.mozhimen.emulatork.basic.save.sync.SaveSyncManager
-import com.mozhimen.emulatork.basic.storage.StorageDirectoriesManager
+import com.mozhimen.emulatork.basic.storage.StorageProvider
 import com.mozhimen.emulatork.ui.R
 import com.mozhimen.emulatork.ext.works.WorkScheduler
 import com.mozhimen.emulatork.ext.library.SettingsInteractor
@@ -38,7 +38,7 @@ class SettingsFragment : PreferenceFragmentCompat(), IUtilK {
     lateinit var settingsInteractor: SettingsInteractor
 
     @Inject
-    lateinit var storageDirectoriesManager: StorageDirectoriesManager
+    lateinit var storageProvider: StorageProvider
 
     @Inject
     lateinit var saveSyncManager: SaveSyncManager

@@ -12,7 +12,7 @@ import com.mozhimen.basick.utilk.androidx.lifecycle.UtilKViewModel
 import com.mozhimen.emulatork.basic.game.system.GameSystemMetaID
 import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
 import com.mozhimen.emulatork.ui.R
-import com.mozhimen.emulatork.basic.android.RecyclerViewFragment
+import com.mozhimen.emulatork.common.android.RecyclerViewFragment
 import com.mozhimen.xmlk.recyclerk.decoration.RecyclerKDecorationSpaceGrid
 import com.mozhimen.xmlk.recyclerk.manager.RecyclerKDynamicGridLayoutManager
 import dagger.hilt.android.AndroidEntryPoint

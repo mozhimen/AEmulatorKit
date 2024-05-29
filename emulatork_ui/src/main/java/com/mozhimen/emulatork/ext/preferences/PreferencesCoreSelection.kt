@@ -6,7 +6,7 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceScreen
 import com.mozhimen.basick.utilk.commons.IUtilK
 import com.mozhimen.emulatork.basic.core.CoreSelection
-import com.mozhimen.emulatork.basic.game.system.GameSystem
+import com.mozhimen.emulatork.common.system.SystemBundle
 import com.mozhimen.emulatork.basic.game.system.GameSystems
 import com.mozhimen.emulatork.ext.works.WorkScheduler
 import com.mozhimen.emulatork.ui.works.AbsWorkCoreUpdate
@@ -30,7 +30,7 @@ class PreferencesCoreSelection : IUtilK {
             }
     }
 
-    private fun createPreference(context: Context, system: GameSystem, workCoreUpdateClazz: Class<out AbsWorkCoreUpdate>): Preference {
+    private fun createPreference(context: Context, system: com.mozhimen.emulatork.common.system.SystemBundle, workCoreUpdateClazz: Class<out AbsWorkCoreUpdate>): Preference {
         val preference = ListPreference(context)
         preference.key = CoreSelection.computeSystemPreferenceKey(system.id)
         preference.title = context.getString(system.titleResId)

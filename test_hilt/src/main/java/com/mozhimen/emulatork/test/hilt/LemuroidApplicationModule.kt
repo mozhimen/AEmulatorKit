@@ -7,14 +7,13 @@ import com.mozhimen.emulatork.basic.EmulatorKBasic
 import com.mozhimen.emulatork.basic.bios.BiosManager
 import com.mozhimen.emulatork.basic.controller.ControllerConfigsManager
 import com.mozhimen.emulatork.basic.core.CoreSelection
-import com.mozhimen.emulatork.basic.core.CoreUpdater
-import com.mozhimen.emulatork.basic.core.CoreUpdaterImpl
-import com.mozhimen.emulatork.basic.core.CoreVariablesManager
-import com.mozhimen.emulatork.basic.game.GameLoader
+import com.mozhimen.emulatork.core.CoreDownloader
+import com.mozhimen.emulatork.core.CoreDownloaderImpl
+import com.mozhimen.emulatork.core.variable.CoreVariableManager
 import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
 import com.mozhimen.emulatork.basic.game.db.daos.GameSearchDao
 import com.mozhimen.emulatork.basic.game.db.helpers.Migrations
-import com.mozhimen.emulatork.basic.game.metadata.GameMetadataProvider
+import com.mozhimen.emulatork.basic.metadata.MetadataProvider
 import com.mozhimen.emulatork.basic.game.review.GameReviewManager
 import com.mozhimen.emulatork.basic.game.rumble.GameRumbleManager
 import com.mozhimen.emulatork.basic.game.setting.GameSettingsManager
@@ -25,7 +24,6 @@ import com.mozhimen.emulatork.basic.save.SaveStateManager
 import com.mozhimen.emulatork.basic.save.SaveStatePreviewManager
 import com.mozhimen.emulatork.basic.save.sync.SaveSyncManager
 import com.mozhimen.emulatork.basic.save.sync.SaveSyncManagerImpl
-import com.mozhimen.emulatork.basic.storage.StorageDirectoriesManager
 import com.mozhimen.emulatork.basic.storage.StorageProvider
 import com.mozhimen.emulatork.basic.storage.StorageProviderRegistry
 import com.mozhimen.emulatork.basic.storage.local.StorageLocalAccessFrameworkProvider
@@ -41,7 +39,7 @@ import com.mozhimen.emulatork.ext.preferences.PreferencesBios
 import com.mozhimen.emulatork.ext.preferences.PreferencesCoreSelection
 import com.mozhimen.emulatork.input.unit.InputUnitManager
 import com.mozhimen.emulatork.libretro.db.database.LibretroDBManager
-import com.mozhimen.emulatork.libretro.db.LibretroDBMetadataProvider
+import com.mozhimen.emulatork.libretro.db.MetadataProviderLibretroDB
 import com.mozhimen.emulatork.ui.hilt.game.GameActivity
 import com.mozhimen.emulatork.ui.hilt.game.pad.GamePadBindingActivity
 import dagger.Binds
@@ -105,8 +103,8 @@ class LemuroidApplicationModule2 {
 
     @Provides
     @Singleton
-    fun gameMetadataProvider(libretroDBManager: LibretroDBManager): GameMetadataProvider =
-        LibretroDBMetadataProvider(libretroDBManager)
+    fun gameMetadataProvider(libretroDBManager: LibretroDBManager): MetadataProvider =
+        MetadataProviderLibretroDB(libretroDBManager)
 
     @Provides
     @IntoSet
@@ -119,9 +117,9 @@ class LemuroidApplicationModule2 {
     @Singleton
     fun localGameStorageProvider(
         @ApplicationContext context: Context,
-        storageDirectoriesManager: StorageDirectoriesManager
+        storageProvider: StorageProvider
     ): StorageProvider =
-        StorageLocalProvider(context, storageDirectoriesManager)
+        StorageLocalProvider(context, storageProvider)
 
     @Provides
     @Singleton
@@ -136,9 +134,9 @@ class LemuroidApplicationModule2 {
     fun lemuroidLibrary(
         db: RetrogradeDatabase,
         storageProviderRegistry: Lazy<StorageProviderRegistry>,
-        gameMetadataProvider: Lazy<GameMetadataProvider>,
+        metadataProvider: Lazy<MetadataProvider>,
         biosManager: BiosManager
-    ) = EmulatorKBasic(db, lazy { storageProviderRegistry.get() }, lazy { gameMetadataProvider.get() }, biosManager)
+    ) = EmulatorKBasic(db, lazy { storageProviderRegistry.get() }, lazy { metadataProvider.get() }, biosManager)
 
     @Provides
     @Singleton
@@ -176,32 +174,32 @@ class LemuroidApplicationModule2 {
 
     @Provides
     @Singleton
-    fun directoriesManager(@ApplicationContext context: Context) = StorageDirectoriesManager(context)
+    fun directoriesManager(@ApplicationContext context: Context) = StorageProvider(context)
 
     @Provides
     @Singleton
-    fun statesManager(storageDirectoriesManager: StorageDirectoriesManager) = SaveStateManager(storageDirectoriesManager)
+    fun statesManager(storageProvider: StorageProvider) = SaveStateManager(storageProvider)
 
     @Provides
     @Singleton
-    fun savesManager(storageDirectoriesManager: StorageDirectoriesManager) = SaveManager(storageDirectoriesManager)
+    fun savesManager(storageProvider: StorageProvider) = SaveManager(storageProvider)
 
     @Provides
     @Singleton
-    fun statesPreviewManager(storageDirectoriesManager: StorageDirectoriesManager) =
-        SaveStatePreviewManager(storageDirectoriesManager)
+    fun statesPreviewManager(storageProvider: StorageProvider) =
+        SaveStatePreviewManager(storageProvider)
 
     @Provides
     @Singleton
     fun coreManager(
-        storageDirectoriesManager: StorageDirectoriesManager,
+        storageProvider: StorageProvider,
         retrofit: Retrofit
-    ): CoreUpdater = CoreUpdaterImpl(storageDirectoriesManager, retrofit)
+    ): CoreDownloader = CoreDownloaderImpl(storageProvider, retrofit)
 
     @Singleton
     @Provides
     fun coreVariablesManager(sharedPreferences: Lazy<SharedPreferences>) =
-        CoreVariablesManager(lazy { sharedPreferences.get() })
+        CoreVariableManager(lazy { sharedPreferences.get() })
 
     @Singleton
     @Provides
@@ -209,19 +207,19 @@ class LemuroidApplicationModule2 {
         lemuroidLibrary: EmulatorKBasic,
         saveStateManager: SaveStateManager,
         saveManager: SaveManager,
-        coreVariablesManager: CoreVariablesManager,
+        coreVariableManager: CoreVariableManager,
         retrogradeDatabase: RetrogradeDatabase,
         saveCoherencyEngine: SaveCoherencyEngine,
-        storageDirectoriesManager: StorageDirectoriesManager,
+        storageProvider: StorageProvider,
         biosManager: BiosManager
-    ) = GameLoader(
+    ) = com.mozhimen.emulatork.common.game.GameLoader(
         lemuroidLibrary,
         saveStateManager,
         saveManager,
-        coreVariablesManager,
+        coreVariableManager,
         retrogradeDatabase,
         saveCoherencyEngine,
-        storageDirectoriesManager,
+        storageProvider,
         biosManager
     )
 
@@ -232,7 +230,7 @@ class LemuroidApplicationModule2 {
 
     @Singleton
     @Provides
-    fun biosManager(storageDirectoriesManager: StorageDirectoriesManager) = BiosManager(storageDirectoriesManager)
+    fun biosManager(storageProvider: StorageProvider) = BiosManager(storageProvider)
 
     @Singleton
     @Provides
@@ -256,8 +254,8 @@ class LemuroidApplicationModule2 {
     @Provides
     fun saveSyncManagerImpl(
         @ApplicationContext context: Context,
-        storageDirectoriesManager: StorageDirectoriesManager
-    ) = SaveSyncManagerImpl(context, storageDirectoriesManager)
+        storageProvider: StorageProvider
+    ) = SaveSyncManagerImpl(context, storageProvider)
 
     @Singleton
     @Provides
@@ -324,6 +322,6 @@ class LemuroidApplicationModule3 {
 
     @Provides
     @ActivityScoped
-    fun settingsInteractor(@ActivityContext context: Context, storageDirectoriesManager: StorageDirectoriesManager): SettingsInteractor =
-        SettingsInteractor(context, storageDirectoriesManager)
+    fun settingsInteractor(@ActivityContext context: Context, storageProvider: StorageProvider): SettingsInteractor =
+        SettingsInteractor(context, storageProvider)
 }

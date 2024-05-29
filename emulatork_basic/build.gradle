@@ -35,9 +35,6 @@ android {
 }
 
 dependencies {
-    //local lib
-    api project(':emulatork_input')
-
     //other lib
     api project(":SwiftKit:basick")
 
@@ -46,6 +43,7 @@ dependencies {
     api project(':AAbilityKit_Jetpack:preference')
 
     api project(':ATaskKit:taskk_work')
+
     api project(':ANetKit:netk_retrofit2')
     api project(':ANetKit:netk_okio2')
 
@@ -56,7 +54,6 @@ dependencies {
     api project(':ALogKit:logk_timber')
 
     api project(":AEmulatorKit_LibretroDroid:libretrodroid")
-    api "com.dinuscxj:multitouchgesturedetector:1.0.0"
 
     kapt 'androidx.room:room-compiler:2.5.2'
 

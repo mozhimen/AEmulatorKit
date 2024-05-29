@@ -53,7 +53,7 @@ android {
 dependencies {
     implementation project(':emulatork_ui_hilt')
     implementation project(':emulatork_libretro_db')
-    implementation project(':emulatork_cores')
+    implementation project(':emulatork_core')
 
     implementation project(':ARxKit:rxk_epoxy4')
     implementation project(":APagingKit:pagingk_epoxy4")

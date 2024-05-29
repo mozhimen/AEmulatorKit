@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
-import com.mozhimen.emulatork.basic.core.findByName
+import com.mozhimen.emulatork.core.findByName
 import com.mozhimen.emulatork.basic.save.sync.SaveSyncManager
 import com.mozhimen.emulatork.ext.library.NotificationsManager
 import com.mozhimen.emulatork.basic.game.setting.GameSettingsManager
@@ -42,7 +42,7 @@ abstract class AbsWorkSaveSync constructor(context: Context, workerParams: Worke
         displayNotification()
 
         val coresToSync = settingsManager().syncStatesCores()
-            .mapNotNull { findByName(it) }
+            .mapNotNull { com.mozhimen.emulatork.core.findByName(it) }
             .toSet()
 
         try {

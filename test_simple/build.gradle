@@ -34,7 +34,7 @@ android {
 
 dependencies {
     implementation project(':emulatork_basic')
-    implementation project(':emulatork_cores')
+    implementation project(':emulatork_core')
     implementation project(':emulatork_libretro_db')
 
     implementation project(':APagingKit:pagingk_paging3_basic')

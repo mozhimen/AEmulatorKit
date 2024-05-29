@@ -17,7 +17,7 @@ import com.mozhimen.emulatork.basic.core.CoreSelection
 import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
 import com.mozhimen.emulatork.ui.R
 import com.mozhimen.emulatork.ext.game.GameLaunchTaskHandler
-import com.mozhimen.emulatork.basic.android.ImmersiveFragmentActivity
+import com.mozhimen.emulatork.common.android.ImmersiveFragmentActivity
 import com.mozhimen.emulatork.ext.game.BaseGameActivity
 import com.mozhimen.emulatork.ext.game.GameLauncher
 import kotlinx.coroutines.FlowPreview
@@ -45,7 +45,7 @@ import com.mozhimen.emulatork.ui.works.AbsWorkStorageCacheCleaner
  * complete.
  */
 @OptIn(FlowPreview::class)
-abstract class AbsExternalGameLauncherActivity : ImmersiveFragmentActivity() {
+abstract class AbsExternalGameLauncherActivity : com.mozhimen.emulatork.common.android.ImmersiveFragmentActivity() {
 
     abstract fun retrogradeDatabase(): RetrogradeDatabase
 

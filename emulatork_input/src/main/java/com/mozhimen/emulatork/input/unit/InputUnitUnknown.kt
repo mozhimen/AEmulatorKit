@@ -2,7 +2,7 @@ package com.mozhimen.emulatork.input.unit
 
 import android.content.Context
 import com.mozhimen.emulatork.input.key.InputKey
-import com.mozhimen.emulatork.input.InputMenuShortcut
+import com.mozhimen.emulatork.input.virtual.menu.Menu
 import com.mozhimen.emulatork.input.key.InputKeyRetro
 
 /**
@@ -13,13 +13,13 @@ import com.mozhimen.emulatork.input.key.InputKeyRetro
  * @Version 1.0
  */
 object InputUnitUnknown : InputUnit {
-    override fun getDefaultBindings(): Map<InputKey, InputKeyRetro> = emptyMap()
+    override fun getInputKeyMap(): Map<InputKey, InputKeyRetro> = emptyMap()
 
     override fun isSupported(): Boolean = false
 
     override fun isEnabledByDefault(appContext: Context): Boolean = false
 
-    override fun getSupportedShortcuts(): List<InputMenuShortcut> = emptyList()
+    override fun getSupportMenus(): List<Menu> = emptyList()
 
     override fun getCustomizableKeys(): List<InputKeyRetro> = emptyList()
 }

@@ -9,6 +9,8 @@ import com.fredporciuncula.flow.preferences.FlowSharedPreferences
 import com.mozhimen.basick.utilk.android.hardware.UtilKInputManager
 import com.mozhimen.emulatork.input.key.InputKey
 import com.mozhimen.emulatork.input.key.InputKeyRetro
+import com.mozhimen.emulatork.input.utils.findMenuByName
+import com.mozhimen.emulatork.input.utils.getDefaultMenu
 import com.mozhimen.emulatork.input.utils.inputKeyRetroListOf
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -23,7 +25,8 @@ import kotlinx.coroutines.flow.onSubscription
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.builtins.MapSerializer
 import kotlinx.serialization.json.Json
-import com.mozhimen.emulatork.input.InputMenuShortcut
+import com.mozhimen.emulatork.input.virtual.menu.Menu
+import com.mozhimen.emulatork.input.utils.getInputUnit
 
 /**
  * @ClassName InputDeviceManager
@@ -52,7 +55,7 @@ open class InputUnitManager(
             .map { bindings -> { bindings[it] ?: mapOf() } }
     }
 
-    fun getInputMenuShortCutObservable(): Flow<InputMenuShortcut?> {
+    fun getInputMenuShortCutObservable(): Flow<Menu?> {
         return getEnabledInputsObservable()
             .map { devices ->
                 val device = devices.firstOrNull()
@@ -60,10 +63,10 @@ open class InputUnitManager(
                     ?.let {
                         sharedPreferences.getString(
                             computeGameMenuShortcutPreference(it),
-                            InputMenuShortcut.getDefault(it)?.name
+                            it.getDefaultMenu()?.name
                         )
                     }
-                    ?.let { InputMenuShortcut.findByName(device, it) }
+                    ?.let { device.findMenuByName( it) }
             }
     }
 
@@ -151,7 +154,7 @@ open class InputUnitManager(
     }
 
     private fun getDeviceStatus(inputDevice: InputDevice): Flow<DeviceStatus> {
-        val defaultValue = inputDevice.getEmulatorKInputDevice().isEnabledByDefault(context)
+        val defaultValue = inputDevice.getInputUnit().isEnabledByDefault(context)
         return flowSharedPreferences.getBoolean(computeEnabledGamePadPreference(inputDevice), defaultValue)
             .asFlow()
             .map { isEnabled -> DeviceStatus(inputDevice, isEnabled) }
@@ -159,21 +162,22 @@ open class InputUnitManager(
 
     private fun getDefaultBinding(inputDevice: InputDevice): Map<InputKey, InputKeyRetro> {
         return inputDevice
-            .getEmulatorKInputDevice()
-            .getDefaultBindings()
+            .getInputUnit()
+            .getInputKeyMap()
     }
 
     private fun getAllGamePads(): List<InputDevice> {
         return runCatching {
             InputDevice.getDeviceIds()
                 .map { InputDevice.getDevice(it)!! }
-                .filter { it.getEmulatorKInputDevice().isSupported() }
+                .filter { it.getInputUnit().isSupported() }
                 .filter { it.name !in BLACKLISTED_DEVICES }
                 .sortedBy { it.controllerNumber }
         }.getOrNull() ?: listOf()
     }
 
     private data class DeviceStatus(val device: InputDevice, val enabled: Boolean)
+
     companion object {
         private const val GAME_PAD_BINDING_PREFERENCE_BASE_KEY = "pref_key_gamepad_binding_key"
         private const val GAME_PAD_ENABLED_PREFERENCE_BASE_KEY = "pref_key_gamepad_enabled"

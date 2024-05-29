@@ -3,10 +3,10 @@ package com.mozhimen.emulatork.ui.dagger.works
 import android.content.Context
 import androidx.work.ListenableWorker
 import androidx.work.WorkerParameters
-import com.mozhimen.emulatork.basic.dagger.annors.WorkerKey
+import com.mozhimen.emulatork.common.dagger.annors.WorkerKey
 import com.mozhimen.emulatork.basic.EmulatorKBasic
 import com.mozhimen.emulatork.ui.works.AbsWorkLibraryIndex
-import com.mozhimen.emulatork.basic.dagger.AndroidWorkerInjection
+import com.mozhimen.emulatork.common.dagger.AndroidWorkerInjection
 import com.mozhimen.emulatork.ui.dagger.game.GameActivity
 import com.mozhimen.emulatork.ui.game.AbsGameActivity
 import com.mozhimen.emulatork.ui.works.AbsWorkCoreUpdate

@@ -8,7 +8,7 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceScreen
 import androidx.preference.SwitchPreference
 import com.mozhimen.basick.utilk.commons.IUtilK
-import com.mozhimen.emulatork.basic.core.CoreID
+import com.mozhimen.emulatork.core.ECoreId
 import com.mozhimen.emulatork.basic.save.sync.SaveSyncManager
 import com.mozhimen.emulatork.basic.game.system.GameSystems
 import com.mozhimen.emulatork.ui.R
@@ -102,13 +102,13 @@ class PreferencesSaveSync(private val saveSyncManager: SaveSyncManager):IUtilK {
             summary = context.getString(R.string.settings_save_sync_include_states_description)
             dependency = keySyncEnabled(context)
             isEnabled = saveSyncManager.isConfigured() && !syncInProgress
-            entries = CoreID.values().map { getDisplayNameForCore(context, it) }.toTypedArray()
-            entryValues = CoreID.values().map { it.coreName }.toTypedArray()
+            entries = com.mozhimen.emulatork.core.ECoreId.values().map { getDisplayNameForCore(context, it) }.toTypedArray()
+            entryValues = com.mozhimen.emulatork.core.ECoreId.values().map { it.coreName }.toTypedArray()
             isIconSpaceReserved = false
         }
     }
 
-    private fun getDisplayNameForCore(context: Context, coreID: CoreID): String {
+    private fun getDisplayNameForCore(context: Context, coreID: com.mozhimen.emulatork.core.ECoreId): String {
         val systems = GameSystems.findSystemForCore(coreID)
         val systemHasMultipleCores = systems.any { it.systemCoreConfigs.size > 1 }
 

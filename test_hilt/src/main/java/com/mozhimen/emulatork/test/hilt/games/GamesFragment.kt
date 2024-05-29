@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mozhimen.basick.utilk.androidx.fragment.runOnViewLifecycleState
-import com.mozhimen.emulatork.basic.android.RecyclerViewFragment
+import com.mozhimen.emulatork.common.android.RecyclerViewFragment
 import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
 import com.mozhimen.emulatork.ext.game.GameInteractor
 import com.mozhimen.emulatork.ui.R

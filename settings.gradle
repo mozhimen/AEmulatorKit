@@ -24,14 +24,14 @@ include ':test_dagger'
 include ':test_simple'
 include ':test_hilt'
 include ':emulatork_basic'
-include ':emulatork_basic_hilt'
-include ':emulatork_basic_dagger'
+include ':emulatork_common_hilt'
+include ':emulatork_common_dagger'
 include ':emulatork_ui_dagger'
 include ':emulatork_ui_hilt'
 include ':emulatork_ui'
 include ':emulatork_input'
 include ':emulatork_libretro_db'
-include ':emulatork_cores'
+include ':emulatork_core'
 //SwiftKit
 include ':SwiftKit'
 project(':SwiftKit').projectDir = new File("D:\\WorkSpace\\GitHub\\SwiftKit")
@@ -100,3 +100,4 @@ project(':AEmulatorKit_LibretroDroid').projectDir = new File("D:\\WorkSpace\\Git
 include ':AEmulatorKit_LibretroDroid:libretrodroid'
 
 
+include ':emulatork_common'

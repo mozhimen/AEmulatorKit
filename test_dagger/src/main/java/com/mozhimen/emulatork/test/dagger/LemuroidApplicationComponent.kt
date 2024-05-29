@@ -1,7 +1,7 @@
 package com.mozhimen.emulatork.test.dagger
 
-import com.mozhimen.emulatork.basic.dagger.AndroidWorkerInjectionModule
-import com.mozhimen.emulatork.basic.dagger.annors.PerApp
+import com.mozhimen.emulatork.common.dagger.AndroidWorkerInjectionModule
+import com.mozhimen.emulatork.common.dagger.annors.PerApp
 import com.mozhimen.emulatork.ui.dagger.works.WorkLibraryIndex
 import com.mozhimen.emulatork.ui.dagger.works.WorkCoreUpdate
 import com.mozhimen.emulatork.ui.dagger.works.WorkSaveSync

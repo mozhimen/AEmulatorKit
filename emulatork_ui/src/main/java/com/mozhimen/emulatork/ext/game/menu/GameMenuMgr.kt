@@ -9,7 +9,7 @@ import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceScreen
 import androidx.preference.SwitchPreference
-import com.mozhimen.emulatork.basic.core.CoreID
+import com.mozhimen.emulatork.core.ECoreId
 import com.mozhimen.emulatork.basic.game.system.GameSystemCoreConfig
 import com.mozhimen.emulatork.basic.game.db.entities.Game
 import com.mozhimen.emulatork.basic.save.SaveInfo
@@ -59,7 +59,7 @@ object GameMenuMgr {
         systemCoreConfig: GameSystemCoreConfig
     ) {
         screen.findPreference<Preference>(SECTION_CORE_OPTIONS)?.isVisible = sequenceOf(
-            systemCoreConfig.systemExposedSettings.isNotEmpty(),
+            systemCoreConfig.exposedSystemSettings.isNotEmpty(),
             systemCoreConfig.exposedAdvancedSettings.isNotEmpty(),
             systemCoreConfig.controllerConfigs.values.any { it.size > 1 }
         ).any { it }
@@ -216,7 +216,7 @@ object GameMenuMgr {
         saveStatePreviewManager: SaveStatePreviewManager,
         saveStateInfo: SaveInfo,
         game: Game,
-        coreID: CoreID,
+        coreID: com.mozhimen.emulatork.core.ECoreId,
         index: Int
     ): Bitmap? {
         if (!saveStateInfo.exists) return null

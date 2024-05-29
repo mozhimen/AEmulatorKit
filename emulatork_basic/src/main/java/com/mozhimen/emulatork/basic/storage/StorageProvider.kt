@@ -1,39 +1,35 @@
 package com.mozhimen.emulatork.basic.storage
 
-import android.net.Uri
-import com.mozhimen.emulatork.basic.game.db.entities.DataFile
-import com.mozhimen.emulatork.basic.game.db.entities.Game
-import kotlinx.coroutines.flow.Flow
-import java.io.InputStream
+import android.content.Context
+import java.io.File
 
 /**
- * @ClassName StorageProvider
+ * @ClassName DirectoriesManager
  * @Description TODO
  * @Author Mozhimen & Kolin Zhao
  * @Date 2024/5/9
  * @Version 1.0
  */
-interface StorageProvider {
+class StorageProvider(private val appContext: Context) {
+    @Deprecated("Use the external states directory")
+    fun getInternalFileStates(): File =
+        File(appContext.filesDir, "states").apply { mkdirs() }
 
-    val id: String
+    fun getInternalFileCores(): File =
+        File(appContext.filesDir, "cores").apply { mkdirs() }
 
-    val name: String
+    fun getInternalFileSystem(): File =
+        File(appContext.filesDir, "system").apply { mkdirs() }
 
-    val uriSchemes: List<String>
+    fun getExternalFileStates(): File =
+        File(appContext.getExternalFilesDir(null), "states").apply { mkdirs() }
 
-//    val prefsFragmentClass: Class<out LeanbackPreferenceFragment>?
+    fun getExternalFileStatePreviews(): File =
+        File(appContext.getExternalFilesDir(null), "state-previews").apply { mkdirs() }
 
-    val enabledByDefault: Boolean
+    fun getExternalFileSaves(): File =
+        File(appContext.getExternalFilesDir(null), "saves").apply { mkdirs() }
 
-    fun listBaseStorageFiles(): Flow<List<StorageBaseFile>>
-
-    fun getInputStream(uri: Uri): InputStream?
-
-    fun getStorageFile(storageBaseFile: StorageBaseFile): StorageFile?
-
-    fun getGameRomFiles(
-        game: Game,
-        dataFiles: List<DataFile>,
-        allowVirtualFiles: Boolean
-    ): StorageRomFile
+    fun getExternalFileRoms(): File =
+        File(appContext.getExternalFilesDir(null), "roms").apply { mkdirs() }
 }

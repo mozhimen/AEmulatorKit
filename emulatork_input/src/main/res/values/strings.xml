@@ -2,5 +2,19 @@
     <string name="touch_customize_button_done">Done</string>
     <string name="touch_customize_button_reset">Reset</string>
     <string name="touch_customize_info">Drag and Pinch controls to change position and size</string>
+
+    <string name="controller_default">Default</string>
+    <string name="controller_genesis_3">Default (3 buttons)</string>
+    <string name="controller_genesis_6">Default (6 buttons)</string>
+    <string name="controller_dualshock">DualShock</string>
+    <string name="controller_arcade_4">Default (4 buttons)</string>
+    <string name="controller_arcade_6">Default (6 buttons)</string>
+    <string name="controller_dos_auto">Auto</string>
+    <string name="controller_dos_mouse_left">Mouse with Left Stick</string>
+    <string name="controller_dos_mouse_right">Mouse with Right Stick</string>
+    <string name="controller_landscape">Landscape</string>
+    <string name="controller_portrait">Portrait</string>
+    <string name="controller_standard">Standard</string>
+
 </resources>
 

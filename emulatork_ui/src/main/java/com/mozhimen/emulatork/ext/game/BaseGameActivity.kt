@@ -25,12 +25,12 @@ import com.mozhimen.basick.utilk.android.opengl.takeScreenshotOnMain
 import com.mozhimen.basick.utilk.android.util.dp2pxI
 import com.mozhimen.basick.utilk.kotlin.collections.zipOnKeys
 import com.mozhimen.emulatork.basic.controller.touch.ControllerTouchConfig
-import com.mozhimen.emulatork.basic.core.CoreVariable
-import com.mozhimen.emulatork.basic.game.GameLoader
+import com.mozhimen.emulatork.core.CoreVariable
+import com.mozhimen.emulatork.common.game.GameLoader
 import com.mozhimen.emulatork.basic.game.GameLoaderError
 import com.mozhimen.emulatork.basic.game.GameLoaderException
 import com.mozhimen.emulatork.basic.game.system.GameSystemExposedSetting
-import com.mozhimen.emulatork.basic.game.system.GameSystem
+import com.mozhimen.emulatork.common.system.SystemBundle
 import com.mozhimen.emulatork.basic.game.system.GameSystemCoreConfig
 import com.mozhimen.emulatork.basic.game.db.entities.Game
 import com.mozhimen.emulatork.basic.save.SaveStateIncompatibleException
@@ -49,14 +49,14 @@ import com.mozhimen.basick.utilk.android.os.getStrDump
 import com.mozhimen.basick.utilk.android.widget.showToast
 import com.mozhimen.basick.utilk.kotlin.collections.filterNotNullValues
 import com.mozhimen.basick.utilk.kotlin.array2indexedMap
-import com.mozhimen.emulatork.basic.core.CoreVariablesManager
+import com.mozhimen.emulatork.core.CoreVariablesManager
 import com.mozhimen.emulatork.ui.R
 import com.mozhimen.emulatork.basic.game.shader.GameShaderChooser
 import com.mozhimen.emulatork.basic.core.options.CoreOption
 import com.mozhimen.emulatork.basic.core.options.CoreOptionSetting
 import com.mozhimen.emulatork.input.unit.InputUnitManager
 import com.mozhimen.emulatork.input.key.InputKey
-import com.mozhimen.emulatork.basic.android.ImmersiveFragmentActivity
+import com.mozhimen.emulatork.common.android.ImmersiveFragmentActivity
 import com.mozhimen.emulatork.basic.game.system.GameSystems
 import com.mozhimen.emulatork.basic.game.rumble.GameRumbleManager
 import com.mozhimen.emulatork.basic.controller.ControllerConfigsManager
@@ -104,7 +104,7 @@ import kotlin.system.exitProcess
  * @Version 1.0
  */
 @OptIn(FlowPreview::class, DelicateCoroutinesApi::class)
-abstract class BaseGameActivity : ImmersiveFragmentActivity(), IUtilK {
+abstract class BaseGameActivity : com.mozhimen.emulatork.common.android.ImmersiveFragmentActivity(), IUtilK {
 
     companion object {
         const val DIALOG_REQUEST = 100
@@ -128,7 +128,7 @@ abstract class BaseGameActivity : ImmersiveFragmentActivity(), IUtilK {
 
     //////////////////////////////////////////////////////////////////////////////////
 
-    private lateinit var system: GameSystem
+    private lateinit var system: com.mozhimen.emulatork.common.system.SystemBundle
     private lateinit var gameContainerLayout: FrameLayout
     private lateinit var loadingView: ProgressBar
     private lateinit var loadingMessageView: TextView
@@ -170,7 +170,7 @@ abstract class BaseGameActivity : ImmersiveFragmentActivity(), IUtilK {
 
     //    @Inject
 //    lateinit var coreVariablesManager: CoreVariablesManager
-    abstract fun coreVariablesManager(): CoreVariablesManager
+    abstract fun coreVariablesManager(): com.mozhimen.emulatork.core.CoreVariablesManager
 
     //    @Inject
 //    lateinit var inputDeviceManager: InputDeviceManager
@@ -178,7 +178,7 @@ abstract class BaseGameActivity : ImmersiveFragmentActivity(), IUtilK {
 
     //    @Inject
 //    lateinit var gameLoader: GameLoader
-    abstract fun gameLoader(): GameLoader
+    abstract fun gameLoader(): com.mozhimen.emulatork.common.game.GameLoader
 
     //    @Inject
 //    lateinit var controllerConfigsManager: ControllerConfigsManager
@@ -312,7 +312,7 @@ abstract class BaseGameActivity : ImmersiveFragmentActivity(), IUtilK {
 
         val coreOptions = getCoreOptions()
 
-        val options = systemCoreConfig.systemExposedSettings
+        val options = systemCoreConfig.exposedSystemSettings
             .mapNotNull { transformExposedSetting(it, coreOptions) }
 
         val advancedOptions = systemCoreConfig.exposedAdvancedSettings
@@ -485,7 +485,7 @@ abstract class BaseGameActivity : ImmersiveFragmentActivity(), IUtilK {
     }
 
     private fun initializeRetroGameView(
-        gameData: GameLoader.GameData,
+        gameData: com.mozhimen.emulatork.common.game.GameLoader.GameData,
         hdMode: Boolean,
         forceLegacyHdMode: Boolean,
         screenFilter: String,
@@ -604,7 +604,7 @@ abstract class BaseGameActivity : ImmersiveFragmentActivity(), IUtilK {
             ?.map { CoreOption.fromLibretroDroidVariable(it) } ?: listOf()
     }
 
-    private fun updateCoreVariables(options: List<CoreVariable>) {
+    private fun updateCoreVariables(options: List<com.mozhimen.emulatork.core.CoreVariable>) {
         val updatedVariables = options.map { Variable(it.key, it.value) }
             .toTypedArray()
 
@@ -1008,7 +1008,7 @@ abstract class BaseGameActivity : ImmersiveFragmentActivity(), IUtilK {
             }
             .collect { loadingState ->
                 displayLoadingState(loadingState)
-                if (loadingState is GameLoader.LoadingState.Ready) {
+                if (loadingState is com.mozhimen.emulatork.common.game.GameLoader.LoadingState.Ready) {
                     retroGameView = initializeRetroGameView(
                         loadingState.gameData,
                         hdMode,
@@ -1029,10 +1029,10 @@ abstract class BaseGameActivity : ImmersiveFragmentActivity(), IUtilK {
 
     private suspend fun retroGameViewFlow() = retroGameViewFlow.filterNotNull().first()
 
-    private fun displayLoadingState(loadingState: GameLoader.LoadingState) {
+    private fun displayLoadingState(loadingState: com.mozhimen.emulatork.common.game.GameLoader.LoadingState) {
         loadingMessageStateFlow.value = when (loadingState) {
-            is GameLoader.LoadingState.LoadingCore -> getString(R.string.game_loading_download_core)
-            is GameLoader.LoadingState.LoadingGame -> getString(R.string.game_loading_preparing_game)
+            is com.mozhimen.emulatork.common.game.GameLoader.LoadingState.LoadingCore -> getString(R.string.game_loading_download_core)
+            is com.mozhimen.emulatork.common.game.GameLoader.LoadingState.LoadingGame -> getString(R.string.game_loading_preparing_game)
             else -> ""
         }
     }

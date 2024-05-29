@@ -1,6 +1,6 @@
 package com.mozhimen.emulatork.ui.hilt.settings
 
-import com.mozhimen.emulatork.basic.storage.StorageDirectoriesManager
+import com.mozhimen.emulatork.basic.storage.StorageProvider
 import com.mozhimen.emulatork.test.hilt.works.WorkLibraryIndex
 import com.mozhimen.emulatork.ui.settings.AbsStorageFrameworkPickerActivity
 import com.mozhimen.emulatork.ui.works.AbsWorkLibraryIndex
@@ -17,10 +17,10 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class StorageFrameworkPickerActivity :AbsStorageFrameworkPickerActivity() {
     @Inject
-    lateinit var storageDirectoriesManager: StorageDirectoriesManager
+    lateinit var storageProvider: StorageProvider
 
-    override fun directoriesManager(): StorageDirectoriesManager {
-        return storageDirectoriesManager
+    override fun directoriesManager(): StorageProvider {
+        return storageProvider
     }
 
     override fun workLibraryIndexClazz(): Class<out AbsWorkLibraryIndex> {

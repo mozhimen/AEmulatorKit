@@ -2,7 +2,7 @@ package com.mozhimen.emulatork.ui.dagger.game.menu
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import com.mozhimen.emulatork.basic.dagger.annors.PerFragment
+import com.mozhimen.emulatork.common.dagger.annors.PerFragment
 import com.mozhimen.emulatork.ui.game.menu.AbsGameMenuActivity
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector

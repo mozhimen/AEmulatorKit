@@ -2,8 +2,8 @@ package com.mozhimen.emulatork.ui.hilt.game
 
 import android.app.Activity
 import android.content.SharedPreferences
-import com.mozhimen.emulatork.basic.core.CoreVariablesManager
-import com.mozhimen.emulatork.basic.game.GameLoader
+import com.mozhimen.emulatork.core.CoreVariablesManager
+import com.mozhimen.emulatork.common.game.GameLoader
 import com.mozhimen.emulatork.basic.save.SaveManager
 import com.mozhimen.emulatork.basic.save.SaveStateManager
 import com.mozhimen.emulatork.basic.save.SaveStatePreviewManager
@@ -40,13 +40,13 @@ class GameActivity : AbsGameActivity() {
     lateinit var legacySaveManager: SaveManager
 
     @Inject
-    lateinit var coreVariablesManager: CoreVariablesManager
+    lateinit var coreVariablesManager: com.mozhimen.emulatork.core.CoreVariablesManager
 
     @Inject
     lateinit var inputUnitManager: InputUnitManager
 
     @Inject
-    lateinit var gameLoader: GameLoader
+    lateinit var gameLoader: com.mozhimen.emulatork.common.game.GameLoader
 
     @Inject
     lateinit var controllerConfigsManager: ControllerConfigsManager
@@ -85,7 +85,7 @@ class GameActivity : AbsGameActivity() {
         return legacySaveManager
     }
 
-    override fun coreVariablesManager(): CoreVariablesManager {
+    override fun coreVariablesManager(): com.mozhimen.emulatork.core.CoreVariablesManager {
         return coreVariablesManager
     }
 
@@ -93,7 +93,7 @@ class GameActivity : AbsGameActivity() {
         return inputUnitManager
     }
 
-    override fun gameLoader(): GameLoader {
+    override fun gameLoader(): com.mozhimen.emulatork.common.game.GameLoader {
         return gameLoader
     }
 

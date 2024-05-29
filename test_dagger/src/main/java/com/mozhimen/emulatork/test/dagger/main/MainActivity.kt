@@ -18,13 +18,13 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.elevation.SurfaceColors
 import com.mozhimen.basick.utilk.commons.IUtilK
 import com.mozhimen.basick.utilk.kotlinx.coroutines.launchSafe
-import com.mozhimen.emulatork.basic.dagger.annors.PerActivity
-import com.mozhimen.emulatork.basic.dagger.annors.PerFragment
-import com.mozhimen.emulatork.basic.dagger.android.DaggerAppCompatActivity
-import com.mozhimen.emulatork.basic.game.system.GameSystemID
+import com.mozhimen.emulatork.common.dagger.annors.PerActivity
+import com.mozhimen.emulatork.common.dagger.annors.PerFragment
+import com.mozhimen.emulatork.common.dagger.android.DaggerAppCompatActivity
+import com.mozhimen.emulatork.basic.system.ESystemType
 import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
 import com.mozhimen.emulatork.basic.save.sync.SaveSyncManager
-import com.mozhimen.emulatork.basic.storage.StorageDirectoriesManager
+import com.mozhimen.emulatork.basic.storage.StorageProvider
 import com.mozhimen.emulatork.basic.game.review.GameReviewManager
 import com.mozhimen.emulatork.ui.R
 import com.mozhimen.emulatork.test.dagger.favorites.FavoritesFragment
@@ -159,7 +159,7 @@ class MainActivity : DaggerAppCompatActivity(), GameBusyActivity ,IUtilK{
     }
 
     private fun displayLemuroidHelp() {
-        val systemFolders = GameSystemID.values()
+        val systemFolders = ESystemType.values()
             .map { it.dbname }
             .map { "<i>$it</i>" }
             .joinToString(", ")
@@ -225,8 +225,8 @@ class MainActivity : DaggerAppCompatActivity(), GameBusyActivity ,IUtilK{
             @Provides
             @PerActivity
             @JvmStatic
-            fun settingsInteractor(activity: MainActivity, storageDirectoriesManager: StorageDirectoriesManager) =
-                SettingsInteractor(activity, storageDirectoriesManager)
+            fun settingsInteractor(activity: MainActivity, storageProvider: StorageProvider) =
+                SettingsInteractor(activity, storageProvider)
 
             @Provides
             @PerActivity

@@ -33,7 +33,7 @@ android {
 
 dependencies {
     api project(':emulatork_ui')
-    api project(':emulatork_basic_hilt')
+    api project(':emulatork_common_hilt')
 
     implementation 'com.google.dagger:hilt-android:2.46.1'
     kapt 'com.google.dagger:hilt-compiler:2.46.1'

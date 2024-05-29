@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
-import com.mozhimen.emulatork.basic.core.CoreUpdater
+import com.mozhimen.emulatork.core.CoreDownloader
 import com.mozhimen.emulatork.basic.core.CoreSelection
 import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
 import com.mozhimen.emulatork.basic.game.system.GameSystems
@@ -30,7 +30,7 @@ abstract class AbsWorkCoreUpdate(context: Context, workerParams: WorkerParameter
 
     //    @Inject
 //    lateinit var coreUpdater: CoreUpdater
-    abstract fun coreUpdater(): CoreUpdater
+    abstract fun coreUpdater(): com.mozhimen.emulatork.core.CoreDownloader
 
     //    @Inject
 //    lateinit var coresSelection: CoresSelection

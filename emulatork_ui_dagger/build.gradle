@@ -33,7 +33,7 @@ android {
 
 dependencies {
     api project(':emulatork_ui')
-    api project(':emulatork_basic_dagger')
+    api project(':emulatork_common_dagger')
 
     kapt "com.google.dagger:dagger-android-processor:2.19"
     kapt "com.google.dagger:dagger-compiler:2.19"

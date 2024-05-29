@@ -6,8 +6,8 @@ import androidx.work.WorkerParameters
 import com.mozhimen.emulatork.basic.game.setting.GameSettingsManager
 import com.mozhimen.emulatork.ui.works.AbsWorkStorageCacheCleaner
 import javax.inject.Inject
-import com.mozhimen.emulatork.basic.dagger.AndroidWorkerInjection
-import com.mozhimen.emulatork.basic.dagger.annors.WorkerKey
+import com.mozhimen.emulatork.common.dagger.AndroidWorkerInjection
+import com.mozhimen.emulatork.common.dagger.annors.WorkerKey
 import dagger.Binds
 import dagger.android.AndroidInjector
 import dagger.multibindings.IntoMap

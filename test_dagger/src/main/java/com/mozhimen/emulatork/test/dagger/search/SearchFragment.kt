@@ -16,7 +16,7 @@ import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
 import com.mozhimen.emulatork.ext.game.GameInteractor
 import com.mozhimen.emulatork.test.dagger.games.GamesAdapter
 import com.mozhimen.emulatork.ext.covers.CoverLoader
-import com.mozhimen.emulatork.basic.dagger.android.DaggerRecyclerViewFragment
+import com.mozhimen.emulatork.common.dagger.android.DaggerRecyclerViewFragment
 import com.mozhimen.emulatork.ui.R
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow

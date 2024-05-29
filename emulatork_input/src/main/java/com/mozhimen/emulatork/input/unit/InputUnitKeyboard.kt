@@ -3,10 +3,11 @@ package com.mozhimen.emulatork.input.unit
 import android.content.Context
 import android.view.InputDevice
 import android.view.KeyEvent
-import com.mozhimen.emulatork.input.InputMenuShortcut
+import com.mozhimen.emulatork.input.virtual.menu.Menu
 import com.mozhimen.emulatork.input.key.InputKeyRetro
 import com.mozhimen.emulatork.input.utils.intKeyCodePair2inputKeyPair
 import com.mozhimen.emulatork.input.utils.inputKeyListOf
+import com.mozhimen.emulatork.input.utils.isInputKeysSupport
 
 /**
  * @ClassName LemuroidInputDeviceKeyboard
@@ -19,18 +20,18 @@ class InputUnitKeyboard(private val device: InputDevice) : InputUnit {
 
     override fun getCustomizableKeys(): List<InputKeyRetro> = InputUnitManager.OUTPUT_KEYS
 
-    override fun getDefaultBindings() = DEFAULT_BINDINGS
+    override fun getInputKeyMap() = DEFAULT_BINDINGS
 
     override fun isEnabledByDefault(appContext: Context): Boolean {
         return !appContext.packageManager.hasSystemFeature("android.hardware.touchscreen")
     }
 
-    override fun getSupportedShortcuts(): List<InputMenuShortcut> = emptyList()
+    override fun getSupportMenus(): List<Menu> = emptyList()
 
     override fun isSupported(): Boolean {
         return sequenceOf(
             (device.sources and InputDevice.SOURCE_KEYBOARD) == InputDevice.SOURCE_KEYBOARD,
-            device.supportsAllKeys(MINIMAL_SUPPORTED_KEYS),
+            device.isInputKeysSupport(MINIMAL_SUPPORTED_KEYS),
             device.isVirtual.not()
         ).all { it }
     }

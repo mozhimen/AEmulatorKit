@@ -5,7 +5,7 @@ import androidx.startup.AppInitializer
 import androidx.work.ListenableWorker
 import com.google.android.material.color.DynamicColors
 import com.mozhimen.basick.utilk.android.content.isMainProcess
-import com.mozhimen.emulatork.basic.dagger.interfaces.HasWorkerInjector
+import com.mozhimen.emulatork.common.dagger.interfaces.HasWorkerInjector
 import com.mozhimen.emulatork.ui.dagger.startup.MainProcessInitializer
 import com.mozhimen.emulatork.basic.startup.GameProcessInitializer
 import dagger.android.AndroidInjector
