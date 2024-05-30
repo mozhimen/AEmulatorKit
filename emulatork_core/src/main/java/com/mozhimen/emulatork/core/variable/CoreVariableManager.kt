@@ -2,7 +2,7 @@ package com.mozhimen.emulatork.core.variable
 
 import android.content.SharedPreferences
 import com.mozhimen.emulatork.basic.system.ESystemType
-import com.mozhimen.emulatork.core.CoreBundle
+import com.mozhimen.emulatork.common.core.CoreBundle
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.security.InvalidParameterException
@@ -36,9 +36,9 @@ open class CoreVariableManager(
 
     //////////////////////////////////////////////////////////////////////////////
 
-    suspend fun getOptionsForCore(systemID: ESystemType, coreBundle: CoreBundle): List<CoreVariable> {
+    suspend fun getOptionsForCore(eSystemType: ESystemType, coreBundle: com.mozhimen.emulatork.common.core.CoreBundle): List<CoreVariable> {
         val defaultMap = convertCoreVariablesToMap(coreBundle.defaultSettings)
-        val coreVariables = retrieveCustomCoreVariables(systemID, coreBundle)
+        val coreVariables = retrieveCustomCoreVariables(eSystemType, coreBundle)
         val coreVariablesMap = defaultMap + convertCoreVariablesToMap(coreVariables)
         return convertMapToCoreVariables(coreVariablesMap)
     }
@@ -53,13 +53,13 @@ open class CoreVariableManager(
         return coreVariables.associate { it.key to it.value }
     }
 
-    private suspend fun retrieveCustomCoreVariables(systemID: ESystemType, coreBundle: CoreBundle): List<CoreVariable> =
+    private suspend fun retrieveCustomCoreVariables(eSystemType: ESystemType, coreBundle: com.mozhimen.emulatork.common.core.CoreBundle): List<CoreVariable> =
         withContext(Dispatchers.IO) {
             val exposedKeys = coreBundle.exposedSystemSettings
             val exposedAdvancedKeys = coreBundle.exposedAdvancedSettings
 
             val requestedKeys = (exposedKeys + exposedAdvancedKeys).map { it.key }
-                .map { computeSharedPreferenceKey(it, systemID.dbname) }
+                .map { computeSharedPreferenceKey(it, eSystemType.dbname) }
 
             sharedPreferences.value.all.filter { it.key in requestedKeys }
                 .map { (key, value) ->
@@ -68,7 +68,7 @@ open class CoreVariableManager(
                         is String -> value as String
                         else -> throw InvalidParameterException("Invalid setting in SharedPreferences")
                     }
-                    CoreVariable(computeOriginalKey(key, systemID.dbname), result)
+                    CoreVariable(computeOriginalKey(key, eSystemType.dbname), result)
                 }
         }
 }

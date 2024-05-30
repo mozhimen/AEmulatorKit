@@ -2,9 +2,7 @@ package com.mozhimen.emulatork.common.core
 
 import android.content.SharedPreferences
 import com.mozhimen.emulatork.common.system.SystemBundle
-import com.mozhimen.emulatork.basic.game.system.GameSystemCoreConfig
 import com.mozhimen.emulatork.basic.system.ESystemType
-import com.mozhimen.emulatork.core.CoreBundle
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

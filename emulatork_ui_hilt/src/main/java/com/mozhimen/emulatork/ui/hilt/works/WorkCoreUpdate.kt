@@ -3,7 +3,7 @@ package com.mozhimen.emulatork.test.hilt.works
 import android.content.Context
 import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
-import com.mozhimen.emulatork.core.CoreDownloader
+import com.mozhimen.emulatork.core.download.CoreDownload
 import com.mozhimen.emulatork.basic.core.CoreSelection
 import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
 import com.mozhimen.emulatork.ui.works.AbsWorkCoreUpdate
@@ -23,12 +23,12 @@ class WorkCoreUpdate @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted workerParams: WorkerParameters,
     private val retrogradeDatabase: RetrogradeDatabase,
-    private val coreDownloader: com.mozhimen.emulatork.core.CoreDownloader,
+    private val coreDownload: CoreDownload,
     private val coresSelection: CoreSelection
 ) : AbsWorkCoreUpdate(context, workerParams) {
 
-    override fun coreUpdater(): com.mozhimen.emulatork.core.CoreDownloader {
-        return coreDownloader
+    override fun coreUpdater(): CoreDownload {
+        return coreDownload
     }
 
     override fun coresSelection(): CoreSelection {

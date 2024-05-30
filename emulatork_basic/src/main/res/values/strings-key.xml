@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pref_file_harmony_options" translatable="false">harmony_options</string>
+
+</resources>

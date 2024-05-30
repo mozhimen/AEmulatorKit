@@ -1,4 +1,4 @@
-package com.mozhimen.emulatork.core
+package com.mozhimen.emulatork.core.download
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -8,6 +8,9 @@ import com.mozhimen.basick.utilk.java.io.deleteFile
 import com.mozhimen.basick.utilk.java.io.inputStream2file_use_ofCopyTo
 import com.mozhimen.emulatork.basic.preferences.SharedPreferencesMgr
 import com.mozhimen.emulatork.basic.storage.StorageProvider
+import com.mozhimen.emulatork.core.ECoreType
+import com.mozhimen.emulatork.core.utils.getCoreSource
+import com.mozhimen.netk.retrofit2.commons.DownloadApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.onEach
@@ -25,9 +28,8 @@ import java.io.File
  * @Version 1.0
  */
 class CoreDownloaderImpl(
-    private val storageProvider: StorageProvider,
-    retrofit: Retrofit
-) : com.mozhimen.emulatork.core.CoreDownloader {
+    private val storageProvider: StorageProvider, retrofit: Retrofit
+) : CoreDownload {
 
     // This is the last tagged versions of cores.
     companion object {
@@ -38,13 +40,13 @@ class CoreDownloaderImpl(
 
     private val baseUri = Uri.parse("https://github.com/Swordfish90/LemuroidCores/")
 
-    private val api = retrofit.create(CoreApi::class.java)
+    private val api = retrofit.create(DownloadApi::class.java)
 
     /////////////////////////////////////////////////////////////////////////////////////
 
-    override suspend fun downloadCores(context: Context, coreIDs: List<ECoreType>) {
+    override suspend fun downloadCores(context: Context, eCoreTypes: List<ECoreType>) {
         val sharedPreferences = SharedPreferencesMgr.getSharedPreferences(context.applicationContext)
-        coreIDs.asFlow()
+        eCoreTypes.asFlow()
             .onEach { retrieveAssets(it, sharedPreferences) }
             .onEach { retrieveFile(context, it) }
             .collect()
@@ -56,9 +58,9 @@ class CoreDownloaderImpl(
         findBundledLibrary(context, coreID) ?: downloadCoreFromGithub(coreID)
     }
 
-    private suspend fun retrieveAssets(coreID: ECoreType, sharedPreferences: SharedPreferences) {
-        ECoreType.getAssetManager(coreID)
-            .retrieveAssetsIfNeeded(api, storageProvider, sharedPreferences)
+    private suspend fun retrieveAssets(eCoreType: ECoreType, sharedPreferences: SharedPreferences) {
+        eCoreType.getCoreSource()
+            .retrieveCoreSourceIfNeeded(api, storageProvider, sharedPreferences)
     }
 
     private suspend fun downloadCoreFromGithub(coreID: ECoreType): File {

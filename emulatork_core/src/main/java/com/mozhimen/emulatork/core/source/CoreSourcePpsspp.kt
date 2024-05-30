@@ -1,4 +1,4 @@
-package com.mozhimen.emulatork.core.download
+package com.mozhimen.emulatork.core.source
 
 import android.content.SharedPreferences
 import android.net.Uri
@@ -18,7 +18,7 @@ import java.util.zip.ZipInputStream
  * @Date 2024/5/11
  * @Version 1.0
  */
-class CoreDownloadPpsspp : CoreDownload {
+class CoreSourcePpsspp : CoreSource {
 
     companion object {
         const val PPSSPP_ASSETS_VERSION = "1.15"
@@ -35,11 +35,11 @@ class CoreDownloadPpsspp : CoreDownload {
 
     /////////////////////////////////////////////////////////////////////////////////////////////
 
-    override suspend fun clearCores(storageProvider: StorageProvider) {
+    override suspend fun clearCoreSource(storageProvider: StorageProvider) {
         getAssetsDirectory(storageProvider).deleteRecursively()
     }
 
-    override suspend fun retrieveCoresIfNeeded(downloadApi: DownloadApi, storageProvider: StorageProvider, sharedPreferences: SharedPreferences) {
+    override suspend fun retrieveCoreSourceIfNeeded(downloadApi: DownloadApi, storageProvider: StorageProvider, sharedPreferences: SharedPreferences) {
         if (!updatedRequested(storageProvider, sharedPreferences))
             return
         try {
@@ -78,14 +78,15 @@ class CoreDownloadPpsspp : CoreDownload {
             .commit()
     }
 
-    private suspend fun updatedRequested(storageProvider: StorageProvider, sharedPreferences: SharedPreferences): Boolean = withContext(Dispatchers.IO) {
-        val directoryExists = getAssetsDirectory(storageProvider).exists()
+    private suspend fun updatedRequested(storageProvider: StorageProvider, sharedPreferences: SharedPreferences): Boolean =
+        withContext(Dispatchers.IO) {
+            val directoryExists = getAssetsDirectory(storageProvider).exists()
 
-        val currentVersion = sharedPreferences.getString(PPSSPP_ASSETS_VERSION_KEY, "none")
-        val hasCurrentVersion = currentVersion == PPSSPP_ASSETS_VERSION
+            val currentVersion = sharedPreferences.getString(PPSSPP_ASSETS_VERSION_KEY, "none")
+            val hasCurrentVersion = currentVersion == PPSSPP_ASSETS_VERSION
 
-        !directoryExists || !hasCurrentVersion
-    }
+            !directoryExists || !hasCurrentVersion
+        }
 
     private suspend fun getAssetsDirectory(storageProvider: StorageProvider): File {
         return withContext(Dispatchers.IO) {

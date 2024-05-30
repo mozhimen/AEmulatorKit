@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.room.Room
 import com.mozhimen.emulatork.basic.bios.BiosManager
-import com.mozhimen.emulatork.core.CoreDownloader
+import com.mozhimen.emulatork.core.download.CoreDownload
 import com.mozhimen.emulatork.common.dagger.annors.PerActivity
 import com.mozhimen.emulatork.common.dagger.annors.PerApp
 import com.mozhimen.emulatork.basic.EmulatorKBasic
@@ -28,7 +28,7 @@ import com.mozhimen.emulatork.ext.covers.CoverShortcutGenerator
 import com.mozhimen.emulatork.ext.game.GameLauncher
 import com.mozhimen.emulatork.basic.game.rumble.GameRumbleManager
 import com.mozhimen.emulatork.ext.covers.CoverLoader
-import com.mozhimen.emulatork.core.CoreDownloaderImpl
+import com.mozhimen.emulatork.core.download.CoreDownloaderImpl
 import com.mozhimen.emulatork.basic.game.review.GameReviewManager
 import com.mozhimen.emulatork.basic.save.sync.SaveSyncManagerImpl
 import com.mozhimen.emulatork.libretro.db.MetadataProviderLibretroDB
@@ -222,7 +222,7 @@ abstract class LemuroidApplicationModule {
         fun coreManager(
             storageProvider: StorageProvider,
             retrofit: Retrofit
-        ): CoreDownloader = CoreDownloaderImpl(storageProvider, retrofit)
+        ): CoreDownload = CoreDownloaderImpl(storageProvider, retrofit)
 
         @Provides
         @PerApp

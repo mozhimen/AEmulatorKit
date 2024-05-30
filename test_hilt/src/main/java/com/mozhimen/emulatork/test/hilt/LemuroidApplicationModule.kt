@@ -7,8 +7,8 @@ import com.mozhimen.emulatork.basic.EmulatorKBasic
 import com.mozhimen.emulatork.basic.bios.BiosManager
 import com.mozhimen.emulatork.basic.controller.ControllerConfigsManager
 import com.mozhimen.emulatork.basic.core.CoreSelection
-import com.mozhimen.emulatork.core.CoreDownloader
-import com.mozhimen.emulatork.core.CoreDownloaderImpl
+import com.mozhimen.emulatork.core.download.CoreDownload
+import com.mozhimen.emulatork.core.download.CoreDownloaderImpl
 import com.mozhimen.emulatork.core.variable.CoreVariableManager
 import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
 import com.mozhimen.emulatork.basic.game.db.daos.GameSearchDao
@@ -194,7 +194,7 @@ class LemuroidApplicationModule2 {
     fun coreManager(
         storageProvider: StorageProvider,
         retrofit: Retrofit
-    ): CoreDownloader = CoreDownloaderImpl(storageProvider, retrofit)
+    ): CoreDownload = CoreDownloaderImpl(storageProvider, retrofit)
 
     @Singleton
     @Provides

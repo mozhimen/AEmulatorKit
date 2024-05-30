@@ -1,8 +1,8 @@
 package com.mozhimen.emulatork.core
 
-import com.mozhimen.emulatork.common.assets.AssetsManager
-import com.mozhimen.emulatork.common.assets.AssetsManagerNo
-import com.mozhimen.emulatork.common.assets.AssetsManagerPpsspp
+import com.mozhimen.emulatork.core.source.CoreSource
+import com.mozhimen.emulatork.core.source.CoreSourceNo
+import com.mozhimen.emulatork.core.source.CoreSourcePpsspp
 
 /**
  * @ClassName CoreID
@@ -115,14 +115,5 @@ enum class ECoreType(
         "dosbox_pure",
         "DosBox Pure",
         "libdosbox_pure_libretro_android.so"
-    );
-
-    companion object {
-        fun getAssetManager(coreType: ECoreType): com.mozhimen.emulatork.common.assets.AssetsManager {
-            return when (coreType) {
-                PPSSPP -> com.mozhimen.emulatork.common.assets.AssetsManagerPpsspp()
-                else -> com.mozhimen.emulatork.common.assets.AssetsManagerNo()
-            }
-        }
-    }
+    )
 }

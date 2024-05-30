@@ -4,7 +4,7 @@ import com.mozhimen.emulatork.basic.R
 import com.mozhimen.emulatork.basic.controller.touch.ControllerTouchConfigs
 import com.mozhimen.emulatork.common.system.SystemBundle
 import com.mozhimen.emulatork.basic.system.ESystemType
-import com.mozhimen.emulatork.core.CoreBundle
+import com.mozhimen.emulatork.common.core.CoreBundle
 import com.mozhimen.emulatork.core.ECoreId
 import com.mozhimen.emulatork.core.variable.CoreVariable
 import java.util.Locale

@@ -1,6 +1,7 @@
-package com.mozhimen.emulatork.core
+package com.mozhimen.emulatork.common.core
 
 import com.mozhimen.emulatork.basic.controller.touch.ControllerTouchConfig
+import com.mozhimen.emulatork.core.ECoreType
 import com.mozhimen.emulatork.core.variable.CoreVariable
 import java.io.Serializable
 
@@ -25,4 +26,6 @@ data class CoreBundle constructor(
     val supportsLibretroVFS: Boolean = false,
     val skipDuplicateFrames: Boolean = true,
     val supportedOnlyArchitectures: Set<String>? = null
-) : Serializable
+) : Serializable {
+
+}

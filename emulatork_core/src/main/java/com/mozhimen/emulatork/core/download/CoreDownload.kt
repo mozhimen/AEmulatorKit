@@ -1,17 +1,20 @@
 package com.mozhimen.emulatork.core.download
 
-import android.content.SharedPreferences
-import com.mozhimen.emulatork.basic.storage.StorageProvider
-import com.mozhimen.netk.retrofit2.commons.DownloadApi
+import android.content.Context
+import com.mozhimen.emulatork.core.ECoreType
+import com.mozhimen.emulatork.core.source.CoreSource
+import com.mozhimen.emulatork.core.source.CoreSourceNo
+import com.mozhimen.emulatork.core.source.CoreSourcePpsspp
 
 /**
- * @ClassName AssetsManager
+ * @ClassName CoreUpdater
  * @Description TODO
  * @Author Mozhimen & Kolin Zhao
- * @Date 2024/5/22
+ * @Date 2024/5/11
  * @Version 1.0
  */
 interface CoreDownload {
-    suspend fun retrieveCoresIfNeeded(downloadApi: DownloadApi, storageProvider: StorageProvider, sharedPreferences: SharedPreferences)
-    suspend fun clearCores(storageProvider: StorageProvider)
+    suspend fun downloadCores(context: Context, eCoreTypes: List<ECoreType>)
+
+
 }

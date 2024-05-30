@@ -1,4 +1,4 @@
-package com.mozhimen.emulatork.common.preferences
+package com.mozhimen.emulatork.basic.preferences
 
 import android.content.Context
 import android.content.SharedPreferences
