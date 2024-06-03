@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import com.mozhimen.emulatork.basic.system.ESystemMetaType
 import com.mozhimen.emulatork.common.system.SystemBundle
+import com.mozhimen.emulatork.db.game.entities.Game
 
 /**
  * @ClassName CommonUtil

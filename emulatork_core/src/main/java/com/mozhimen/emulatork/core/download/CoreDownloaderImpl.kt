@@ -6,7 +6,7 @@ import android.net.Uri
 import android.os.Build
 import com.mozhimen.basick.utilk.java.io.deleteFile
 import com.mozhimen.basick.utilk.java.io.inputStream2file_use_ofCopyTo
-import com.mozhimen.emulatork.basic.preferences.SharedPreferencesMgr
+import com.mozhimen.emulatork.basic.preferences.SharedPreferencesManager
 import com.mozhimen.emulatork.basic.storage.StorageDirProvider
 import com.mozhimen.emulatork.core.ECoreType
 import com.mozhimen.emulatork.core.utils.getCoreSource
@@ -45,7 +45,7 @@ class CoreDownloaderImpl(
     /////////////////////////////////////////////////////////////////////////////////////
 
     override suspend fun downloadCores(context: Context, eCoreTypes: List<ECoreType>) {
-        val sharedPreferences = SharedPreferencesMgr.getSharedPreferences(context.applicationContext)
+        val sharedPreferences = SharedPreferencesManager.getSharedPreferences(context.applicationContext)
         eCoreTypes.asFlow()
             .onEach { retrieveAssets(it, sharedPreferences) }
             .onEach { retrieveFile(context, it) }

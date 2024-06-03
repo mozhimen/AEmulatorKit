@@ -2,7 +2,7 @@ package com.mozhimen.emulatork.ext.library
 
 import android.content.Context
 import com.mozhimen.basick.utilk.commons.IUtilK
-import com.mozhimen.emulatork.basic.preferences.SharedPreferencesMgr
+import com.mozhimen.emulatork.basic.preferences.SharedPreferencesManager
 import com.mozhimen.emulatork.basic.storage.StorageDirProvider
 import com.mozhimen.emulatork.ext.works.WorkScheduler
 import com.mozhimen.emulatork.ui.settings.AbsStorageFrameworkPickerActivity
@@ -26,8 +26,8 @@ class SettingsInteractor constructor(
     }
 
     fun resetAllSettings(workLibraryIndexClazz: Class<out AbsWorkLibraryIndex>, workStorageCacheCleanerClazz: Class<out AbsWorkStorageCacheCleaner>) {
-        SharedPreferencesMgr.getLegacySharedPreferences(context).edit().clear().apply()
-        SharedPreferencesMgr.getSharedPreferences(context).edit().clear().apply()
+        SharedPreferencesManager.getLegacySharedPreferences(context).edit().clear().apply()
+        SharedPreferencesManager.getSharedPreferences(context).edit().clear().apply()
         WorkScheduler.scheduleLibrarySync(workLibraryIndexClazz, context)
         WorkScheduler.enqueueCleanCacheAll(workStorageCacheCleanerClazz, context)
         deleteDownloadedCores()

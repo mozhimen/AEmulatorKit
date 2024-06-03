@@ -1,4 +1,4 @@
-package com.mozhimen.emulatork.common.save
+package com.mozhimen.emulatork.basic.archive
 
 /**
  * @ClassName SaveInfo
@@ -7,4 +7,4 @@ package com.mozhimen.emulatork.common.save
  * @Date 2024/5/13
  * @Version 1.0
  */
-data class SaveInfo(val exists: Boolean, val date: Long)
+data class ArchiveInfo(val exists: Boolean, val date: Long)

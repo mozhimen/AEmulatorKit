@@ -12,7 +12,7 @@ import androidx.preference.PreferenceFragmentCompat
 import com.fredporciuncula.flow.preferences.FlowSharedPreferences
 import com.mozhimen.basick.utilk.androidx.fragment.runOnViewLifecycleState
 import com.mozhimen.basick.utilk.commons.IUtilK
-import com.mozhimen.emulatork.basic.preferences.SharedPreferencesMgr
+import com.mozhimen.emulatork.basic.preferences.SharedPreferencesManager
 import com.mozhimen.emulatork.basic.save.sync.SaveSyncManager
 import com.mozhimen.emulatork.basic.storage.StorageDirProvider
 import com.mozhimen.emulatork.ui.R
@@ -52,7 +52,7 @@ class SettingsFragment : PreferenceFragmentCompat(), IUtilK {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         preferenceManager.preferenceDataStore =
-            SharedPreferencesMgr.getSharedPreferencesDataStore(requireContext())
+            SharedPreferencesManager.getSharedPreferencesDataStore(requireContext())
         setPreferencesFromResource(R.xml.mobile_settings, rootKey)
 
         findPreference<Preference>(getString(R.string.pref_key_open_save_sync_settings))?.apply {
@@ -62,7 +62,7 @@ class SettingsFragment : PreferenceFragmentCompat(), IUtilK {
 
     val settingsViewModel: SettingsViewModel by viewModels {
         SettingsViewModel.provideFactory(
-            requireContext(), FlowSharedPreferences(SharedPreferencesMgr.getLegacySharedPreferences(requireContext()))
+            requireContext(), FlowSharedPreferences(SharedPreferencesManager.getLegacySharedPreferences(requireContext()))
         )
     }
 

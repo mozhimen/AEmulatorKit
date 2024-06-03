@@ -3,9 +3,11 @@ package com.mozhimen.emulatork.common.save
 import com.mozhimen.basick.utilk.java.io.file2bytes_use_ofUnzip
 import com.mozhimen.basick.utilk.kotlin.UtilKResult
 import com.mozhimen.basick.utilk.kotlin.bytes2file_ofGZip
-import com.mozhimen.emulatork.core.ECoreId
-import com.mozhimen.emulatork.basic.game.db.entities.Game
+import com.mozhimen.emulatork.basic.archive.ArchiveState
+import com.mozhimen.emulatork.basic.archive.ArchiveInfo
 import com.mozhimen.emulatork.basic.storage.StorageDirProvider
+import com.mozhimen.emulatork.core.ECoreType
+import com.mozhimen.emulatork.db.game.entities.Game
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
@@ -25,58 +27,58 @@ class SaveStateManager(private val storageProvider: StorageDirProvider) {
 
     suspend fun getSlotSave(
         game: Game,
-        coreID: com.mozhimen.emulatork.core.ECoreId,
+        eCoreType: ECoreType,
         index: Int
-    ): SaveState? = withContext(Dispatchers.IO) {
+    ): ArchiveState? = withContext(Dispatchers.IO) {
         assert(index in 0 until MAX_STATES)
-        getSaveState(getSlotSaveFileName(game, index), coreID.coreName)
+        getSaveState(getSlotSaveFileName(game, index), eCoreType.coreName)
     }
 
     suspend fun setSlotSave(
         game: Game,
-        saveState: SaveState,
-        coreID: com.mozhimen.emulatork.core.ECoreId,
+        archiveState: ArchiveState,
+        eCoreType: ECoreType,
         index: Int
     ) = withContext(Dispatchers.IO) {
         assert(index in 0 until MAX_STATES)
-        setSaveState(getSlotSaveFileName(game, index), coreID.coreName, saveState)
+        setSaveState(getSlotSaveFileName(game, index), eCoreType.coreName, archiveState)
     }
 
     suspend fun getAutoSaveInfo(
         game: Game,
-        coreID: com.mozhimen.emulatork.core.ECoreId
-    ): SaveInfo = withContext(Dispatchers.IO) {
-        val autoSaveFile = getStateFile(getAutoSaveFileName(game), coreID.coreName)
+        eCoreType: ECoreType
+    ): ArchiveInfo = withContext(Dispatchers.IO) {
+        val autoSaveFile = getStateFile(getAutoSaveFileName(game), eCoreType.coreName)
         val autoSaveHasData = autoSaveFile.length() > 0
-        SaveInfo(autoSaveFile.exists() && autoSaveHasData, autoSaveFile.lastModified())
+        ArchiveInfo(autoSaveFile.exists() && autoSaveHasData, autoSaveFile.lastModified())
     }
 
-    suspend fun getAutoSave(game: Game, coreID: com.mozhimen.emulatork.core.ECoreId) = withContext(Dispatchers.IO) {
+    suspend fun getAutoSave(game: Game, coreID: ECoreType) = withContext(Dispatchers.IO) {
         getSaveState(getAutoSaveFileName(game), coreID.coreName)
     }
 
     suspend fun setAutoSave(
         game: Game,
-        coreID: com.mozhimen.emulatork.core.ECoreId,
-        saveState: SaveState
+        eCoreType: ECoreType,
+        archiveState: ArchiveState
     ) = withContext(Dispatchers.IO) {
-        setSaveState(getAutoSaveFileName(game), coreID.coreName, saveState)
+        setSaveState(getAutoSaveFileName(game), eCoreType.coreName, archiveState)
     }
 
     suspend fun getSavedSlotsInfo(
         game: Game,
-        coreID: com.mozhimen.emulatork.core.ECoreId
-    ): List<SaveInfo> = withContext(Dispatchers.IO) {
+        eCoreType: ECoreType
+    ): List<ArchiveInfo> = withContext(Dispatchers.IO) {
         (0 until MAX_STATES)
-            .map { getStateFileOrDeprecated(getSlotSaveFileName(game, it), coreID.coreName) }
-            .map { SaveInfo(it.exists(), it.lastModified()) }
+            .map { getStateFileOrDeprecated(getSlotSaveFileName(game, it), eCoreType.coreName) }
+            .map { ArchiveInfo(it.exists(), it.lastModified()) }
             .toList()
     }
 
     private suspend fun getSaveState(
         fileName: String,
         coreName: String
-    ): SaveState? {
+    ): ArchiveState? {
         return UtilKResult.runCatching_ofRetry(FILE_ACCESS_RETRIES) {
             val saveFile = getStateFileOrDeprecated(fileName, coreName)
             val metadataFile = getMetadataStateFile(fileName, coreName)
@@ -84,11 +86,11 @@ class SaveStateManager(private val storageProvider: StorageDirProvider) {
                 val byteArray = saveFile.file2bytes_use_ofUnzip()!!
                 val stateMetadata = runCatching {
                     Json.Default.decodeFromString(
-                        SaveState.SaveMetadata.serializer(),
+                        ArchiveState.SaveMetadata.serializer(),
                         metadataFile.readText()
                     )
                 }
-                SaveState(byteArray, stateMetadata.getOrNull() ?: SaveState.SaveMetadata())
+                ArchiveState(byteArray, stateMetadata.getOrNull() ?: ArchiveState.SaveMetadata())
             } else {
                 null
             }
@@ -98,21 +100,21 @@ class SaveStateManager(private val storageProvider: StorageDirProvider) {
     private suspend fun setSaveState(
         fileName: String,
         coreName: String,
-        saveState: SaveState
+        archiveState: ArchiveState
     ) {
         UtilKResult.runCatching_ofRetry(FILE_ACCESS_RETRIES) {
-            writeStateToDisk(fileName, coreName, saveState.state)
-            writeMetadataToDisk(fileName, coreName, saveState.metadata)
+            writeStateToDisk(fileName, coreName, archiveState.state)
+            writeMetadataToDisk(fileName, coreName, archiveState.metadata)
         }
     }
 
     private fun writeMetadataToDisk(
         fileName: String,
         coreName: String,
-        metadata: SaveState.SaveMetadata
+        metadata: ArchiveState.SaveMetadata
     ) {
         val metadataFile = getMetadataStateFile(fileName, coreName)
-        metadataFile.writeText(Json.encodeToString(SaveState.SaveMetadata.serializer(), metadata))
+        metadataFile.writeText(Json.encodeToString(ArchiveState.SaveMetadata.serializer(), metadata))
     }
 
     private fun writeStateToDisk(

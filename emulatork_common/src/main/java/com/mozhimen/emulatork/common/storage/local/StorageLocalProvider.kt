@@ -6,7 +6,7 @@ import androidx.core.net.toUri
 import com.mozhimen.basick.utilk.java.io.isFileZipped
 import com.mozhimen.basick.utilk.java.util.extractEntryToFile_use
 import com.mozhimen.emulatork.common.R
-import com.mozhimen.emulatork.basic.preferences.SharedPreferencesMgr
+import com.mozhimen.emulatork.basic.preferences.SharedPreferencesManager
 import com.mozhimen.emulatork.basic.storage.StorageDirProvider
 import com.mozhimen.emulatork.basic.storage.StorageFile
 import com.mozhimen.emulatork.basic.storage.SStorageRomFileType
@@ -51,7 +51,7 @@ class StorageLocalProvider(
 
     private fun getExternalFolder(): File? {
         val prefString = context.getString(R.string.pref_key_legacy_external_folder)
-        val preferenceManager = SharedPreferencesMgr.getLegacySharedPreferences(context)
+        val preferenceManager = SharedPreferencesManager.getLegacySharedPreferences(context)
         return preferenceManager.getString(prefString, null)?.let { File(it) }
     }
 

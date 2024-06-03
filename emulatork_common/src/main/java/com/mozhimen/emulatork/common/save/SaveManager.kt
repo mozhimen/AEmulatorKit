@@ -1,8 +1,9 @@
 package com.mozhimen.emulatork.common.save
 
 import com.mozhimen.basick.utilk.kotlin.UtilKResult
-import com.mozhimen.emulatork.basic.game.db.entities.Game
+import com.mozhimen.emulatork.basic.archive.ArchiveInfo
 import com.mozhimen.emulatork.basic.storage.StorageDirProvider
+import com.mozhimen.emulatork.db.game.entities.Game
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -21,34 +22,37 @@ class SaveManager(private val storageProvider: StorageDirProvider) {
 
     ///////////////////////////////////////////////////////////////////
 
-    suspend fun getSaveRAM(game: Game): ByteArray? = withContext(Dispatchers.IO) {
-        val result = UtilKResult.runCatching_ofRetry(FILE_ACCESS_RETRIES) {
-            val saveFile = getSaveFile(getSaveRAMFileName(game))
-            if (saveFile.exists() && saveFile.length() > 0) {
-                saveFile.readBytes()
-            } else {
-                null
+    suspend fun getSaveRAM(game: Game): ByteArray? =
+        withContext(Dispatchers.IO) {
+            val result = UtilKResult.runCatching_ofRetry(FILE_ACCESS_RETRIES) {
+                val saveFile = getSaveFile(getSaveRAMFileName(game))
+                if (saveFile.exists() && saveFile.length() > 0) {
+                    saveFile.readBytes()
+                } else {
+                    null
+                }
             }
+            result.getOrNull()
         }
-        result.getOrNull()
-    }
 
-    suspend fun setSaveRAM(game: Game, data: ByteArray): Unit = withContext(Dispatchers.IO) {
-        val result = UtilKResult.runCatching_ofRetry(FILE_ACCESS_RETRIES) {
-            if (data.isEmpty())
-                return@runCatching_ofRetry
+    suspend fun setSaveRAM(game: Game, data: ByteArray): Unit =
+        withContext(Dispatchers.IO) {
+            val result = UtilKResult.runCatching_ofRetry(FILE_ACCESS_RETRIES) {
+                if (data.isEmpty())
+                    return@runCatching_ofRetry
 
+                val saveFile = getSaveFile(getSaveRAMFileName(game))
+                saveFile.writeBytes(data)
+            }
+            result.getOrNull()
+        }
+
+    suspend fun getSaveRAMInfo(game: Game): ArchiveInfo =
+        withContext(Dispatchers.IO) {
             val saveFile = getSaveFile(getSaveRAMFileName(game))
-            saveFile.writeBytes(data)
+            val fileExists = saveFile.exists() && saveFile.length() > 0
+            ArchiveInfo(fileExists, saveFile.lastModified())
         }
-        result.getOrNull()
-    }
-
-    suspend fun getSaveRAMInfo(game: Game): SaveInfo = withContext(Dispatchers.IO) {
-        val saveFile = getSaveFile(getSaveRAMFileName(game))
-        val fileExists = saveFile.exists() && saveFile.length() > 0
-        SaveInfo(fileExists, saveFile.lastModified())
-    }
 
     ///////////////////////////////////////////////////////////////////
 

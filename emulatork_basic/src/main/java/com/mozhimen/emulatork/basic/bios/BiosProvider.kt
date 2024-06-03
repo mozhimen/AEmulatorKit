@@ -11,26 +11,12 @@ import com.mozhimen.emulatork.basic.system.ESystemType
  */
 object BiosProvider {
 
-    private val BIOSS: List<Bios> by lazy {
-        listOf(
-            getPsOne45(),
-            getPsOriginal41(),
-            getPsOriginal3(),
-            getPsOriginal22(),
-            getLynxBoot(),
-            getSegaCdE(),
-            getSegaCdJ(),
-            getSegaCdU(),
-            getNintendoDsArm7(),
-            getNintendoDsArm9(),
-            getNintendoDsFirmware()
-        )
-    }
+    private val BIOSS: List<Bios> by lazy { listOf(getPsOne45(), getPsOriginal41(), getPsOriginal3(), getPsOriginal22(), getLynxBoot(), getSegaCdE(), getSegaCdJ(), getSegaCdU(), getNintendoDsArm7(), getNintendoDsArm9(), getNintendoDsFirmware()) }
+
+    /////////////////////////////////////////////////////////////////////////////
 
     fun getBioss(): List<Bios> =
         BIOSS
-
-    /////////////////////////////////////////////////////////////////////////////
 
     fun getPsOne45() = Bios(
         "scph101.bin",

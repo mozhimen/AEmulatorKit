@@ -5,7 +5,7 @@ import android.view.View
 import androidx.lifecycle.Lifecycle
 import androidx.preference.PreferenceFragmentCompat
 import com.mozhimen.basick.utilk.androidx.fragment.runOnViewLifecycleState
-import com.mozhimen.emulatork.basic.preferences.SharedPreferencesMgr
+import com.mozhimen.emulatork.basic.preferences.SharedPreferencesManager
 import com.mozhimen.emulatork.input.unit.InputUnitManager
 import com.mozhimen.emulatork.basic.core.options.CoreOptionSetting
 import com.mozhimen.emulatork.ui.R
@@ -35,7 +35,7 @@ abstract class AbsGameMenuCoreOptionsFragment : PreferenceFragmentCompat() {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         preferenceManager.preferenceDataStore =
-            SharedPreferencesMgr.getSharedPreferencesDataStore(requireContext())
+            SharedPreferencesManager.getSharedPreferencesDataStore(requireContext())
         addPreferencesFromResource(R.xml.empty_preference_screen)
     }
 

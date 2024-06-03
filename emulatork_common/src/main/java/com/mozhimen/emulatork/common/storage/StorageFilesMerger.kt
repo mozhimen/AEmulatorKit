@@ -3,7 +3,7 @@ package com.mozhimen.emulatork.common.storage
 import android.net.Uri
 import com.mozhimen.basick.utilk.java.io.inputStream2strs_use_ofBufferedReader_forEachLine
 import com.mozhimen.emulatork.basic.storage.StorageBaseFile
-import com.mozhimen.emulatork.basic.storage.StorageGroupedFiles
+import com.mozhimen.emulatork.basic.storage.StorageFileGroup
 
 /**
  * @ClassName StorageFilesMerger
@@ -18,7 +18,7 @@ object StorageFilesMerger {
     fun mergeDataFiles(
         storageProvider: StorageProvider,
         storageBaseFiles: List<StorageBaseFile>
-    ): List<StorageGroupedFiles> {
+    ): List<StorageFileGroup> {
         val allFiles = storageBaseFiles
             .associateWith { listOf<StorageBaseFile>() }
             .toMutableMap()
@@ -28,7 +28,7 @@ object StorageFilesMerger {
         mergeM3UPlaylists(allFiles, storageProvider)
         removeInvalidM3UPlaylists(allFiles, storageProvider)
 
-        return allFiles.map { StorageGroupedFiles(it.key, it.value) }
+        return allFiles.map { StorageFileGroup(it.key, it.value) }
     }
 
     /////////////////////////////////////////////////////////////////////////////////

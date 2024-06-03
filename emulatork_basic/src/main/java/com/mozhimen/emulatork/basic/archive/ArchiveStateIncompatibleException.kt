@@ -1,4 +1,4 @@
-package com.mozhimen.emulatork.common.save
+package com.mozhimen.emulatork.basic.archive
 
 /**
  * @ClassName IncompatibleStateException
@@ -7,4 +7,4 @@ package com.mozhimen.emulatork.common.save
  * @Date 2024/5/13
  * @Version 1.0
  */
-class SaveStateIncompatibleException : Exception()
+class         ArchiveStateIncompatibleException : Exception()

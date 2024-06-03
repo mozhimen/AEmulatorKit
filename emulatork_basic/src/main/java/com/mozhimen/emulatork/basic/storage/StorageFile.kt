@@ -20,7 +20,6 @@ data class StorageFile constructor(
     val path: String? = null,
     val eSystemType: ESystemType? = null
 ) {
-
     val extension: String
         get() = UtilKStrFile.extractExtension(name)
 

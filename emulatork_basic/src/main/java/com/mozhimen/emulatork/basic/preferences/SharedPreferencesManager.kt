@@ -14,7 +14,7 @@ import com.mozhimen.emulatork.basic.R
  * @Date 2024/5/11
  * @Version 1.0
  */
-object SharedPreferencesMgr {
+object SharedPreferencesManager {
 
     fun getSharedPreferences(context: Context): SharedPreferences {
         return context.getHarmonySharedPreferences(context.getString(R.string.pref_file_harmony_options))

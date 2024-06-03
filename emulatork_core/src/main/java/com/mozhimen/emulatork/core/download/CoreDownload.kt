@@ -15,6 +15,4 @@ import com.mozhimen.emulatork.core.source.CoreSourcePpsspp
  */
 interface CoreDownload {
     suspend fun downloadCores(context: Context, eCoreTypes: List<ECoreType>)
-
-
 }

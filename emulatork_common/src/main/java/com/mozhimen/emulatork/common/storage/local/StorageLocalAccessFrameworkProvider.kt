@@ -8,7 +8,7 @@ import com.mozhimen.abilityk.jetpack.documentfile.utils.isZipped
 import com.mozhimen.basick.utilk.java.io.inputStream2file_use_ofCopyTo
 import com.mozhimen.basick.utilk.java.util.extractEntryToFile_use
 import com.mozhimen.emulatork.common.R
-import com.mozhimen.emulatork.basic.preferences.SharedPreferencesMgr
+import com.mozhimen.emulatork.basic.preferences.SharedPreferencesManager
 import com.mozhimen.emulatork.basic.storage.StorageFile
 import com.mozhimen.emulatork.basic.storage.StorageDirProvider
 import com.mozhimen.emulatork.basic.storage.StorageBaseFile
@@ -80,7 +80,7 @@ class StorageLocalAccessFrameworkProvider(private val context: Context) : Storag
 
     private fun getExternalFolder(): String? {
         val prefString = context.getString(R.string.pref_key_extenral_folder)
-        val preferenceManager = SharedPreferencesMgr.getLegacySharedPreferences(context)
+        val preferenceManager = SharedPreferencesManager.getLegacySharedPreferences(context)
         return preferenceManager.getString(prefString, null)
     }
 

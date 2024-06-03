@@ -1,6 +1,6 @@
 package com.mozhimen.emulatork.common.game
 
-import com.mozhimen.emulatork.common.save.SaveState
+import com.mozhimen.emulatork.basic.archive.ArchiveState
 import com.mozhimen.emulatork.basic.storage.SStorageRomFileType
 import com.mozhimen.emulatork.core.property.CoreProperty
 import com.mozhimen.emulatork.db.game.entities.Game
@@ -17,7 +17,7 @@ data class GameBundle constructor(
     val game: Game,
     val coreLibrary: String,
     val gameFiles: SStorageRomFileType,
-    val quickSaveData: SaveState?,
+    val quickSaveData: ArchiveState?,
     val saveRAMData: ByteArray?,
     val coreProperties: Array<CoreProperty>,
     val systemDirectory: File,

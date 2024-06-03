@@ -13,6 +13,6 @@ import java.io.File
 sealed class SStorageRomFileType {
     data class Standard(val files: List<File>) : SStorageRomFileType()
     data class Virtual(val files: List<Entry>) : SStorageRomFileType() {
-        data class Entry(val filePath: String, val fd: ParcelFileDescriptor)
+        data class Entry(val filePath: String, val fileDescriptor: ParcelFileDescriptor)
     }
 }

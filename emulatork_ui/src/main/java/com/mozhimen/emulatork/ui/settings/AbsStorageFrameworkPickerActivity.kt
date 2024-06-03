@@ -8,7 +8,7 @@ import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import com.mozhimen.basick.utilk.android.app.showAlertDialog
 import com.mozhimen.basick.utilk.commons.IUtilK
-import com.mozhimen.emulatork.basic.preferences.SharedPreferencesMgr
+import com.mozhimen.emulatork.basic.preferences.SharedPreferencesManager
 import com.mozhimen.emulatork.basic.storage.StorageDirProvider
 import com.mozhimen.emulatork.ui.R
 import com.mozhimen.emulatork.ext.works.WorkScheduler
@@ -58,7 +58,7 @@ abstract class AbsStorageFrameworkPickerActivity : FragmentActivity(), IUtilK {
         super.onActivityResult(requestCode, resultCode, resultData)
 
         if (requestCode == REQUEST_CODE_PICK_FOLDER && resultCode == Activity.RESULT_OK) {
-            val sharedPreferences = SharedPreferencesMgr.getLegacySharedPreferences(this)
+            val sharedPreferences = SharedPreferencesManager.getLegacySharedPreferences(this)
             val preferenceKey = getString(com.mozhimen.emulatork.basic.R.string.pref_key_extenral_folder)
 
             val currentValue: String? = sharedPreferences.getString(preferenceKey, null)

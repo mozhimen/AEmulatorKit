@@ -8,7 +8,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.mozhimen.basick.utilk.androidx.fragment.runOnViewLifecycleState
-import com.mozhimen.emulatork.basic.preferences.SharedPreferencesMgr
+import com.mozhimen.emulatork.basic.preferences.SharedPreferencesManager
 import com.mozhimen.emulatork.ui.R
 import com.mozhimen.emulatork.input.unit.InputUnitManager
 import com.mozhimen.emulatork.ext.game.pad.GamePadPreferencesManager
@@ -38,7 +38,7 @@ class GamepadSettingsFragment : PreferenceFragmentCompat() {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         preferenceManager.preferenceDataStore =
-            SharedPreferencesMgr.getSharedPreferencesDataStore(requireContext())
+            SharedPreferencesManager.getSharedPreferencesDataStore(requireContext())
         setPreferencesFromResource(R.xml.empty_preference_screen, rootKey)
     }
 

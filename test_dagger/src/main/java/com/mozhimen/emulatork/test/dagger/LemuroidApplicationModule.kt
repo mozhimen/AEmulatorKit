@@ -12,7 +12,7 @@ import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
 import com.mozhimen.emulatork.basic.game.db.daos.GameSearchDao
 import com.mozhimen.emulatork.basic.game.db.helpers.Migrations
 import com.mozhimen.emulatork.basic.metadata.MetadataProvider
-import com.mozhimen.emulatork.basic.preferences.SharedPreferencesMgr
+import com.mozhimen.emulatork.basic.preferences.SharedPreferencesManager
 import com.mozhimen.emulatork.basic.save.SaveCoherencyEngine
 import com.mozhimen.emulatork.basic.save.SaveManager
 import com.mozhimen.emulatork.basic.save.SaveStateManager
@@ -332,7 +332,7 @@ abstract class LemuroidApplicationModule {
         @PerApp
         @JvmStatic
         fun sharedPreferences(context: Context) =
-            SharedPreferencesMgr.getSharedPreferences(context)
+            SharedPreferencesManager.getSharedPreferences(context)
 
         @Provides
         @PerApp

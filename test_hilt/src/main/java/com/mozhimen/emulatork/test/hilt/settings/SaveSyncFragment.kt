@@ -3,7 +3,7 @@ package com.mozhimen.emulatork.test.hilt.settings
 import android.os.Bundle
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import com.mozhimen.emulatork.basic.preferences.SharedPreferencesMgr
+import com.mozhimen.emulatork.basic.preferences.SharedPreferencesManager
 import com.mozhimen.emulatork.basic.save.sync.SaveSyncManager
 import com.mozhimen.emulatork.basic.storage.StorageDirProvider
 import com.mozhimen.emulatork.ext.works.WorkPendingOperationsMonitor
@@ -32,7 +32,7 @@ class SaveSyncFragment : PreferenceFragmentCompat() {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         preferenceManager.preferenceDataStore =
-            SharedPreferencesMgr.getSharedPreferencesDataStore(requireContext())
+            SharedPreferencesManager.getSharedPreferencesDataStore(requireContext())
 
         saveSyncPreferences = PreferencesSaveSync(saveSyncManager)
         setPreferencesFromResource(R.xml.empty_preference_screen, rootKey)

@@ -22,7 +22,7 @@ open class SettingManager(private val context: Context, sharedPreferences: Lazy<
 
     private val sharedPreferences by lazy { FlowSharedPreferences(sharedPreferences.value) }
 
-    private fun getString(resId: Int) = context.getString(resId)
+    /////////////////////////////////////////////////////////////////////////////////////
 
     suspend fun autoSave() = booleanPreference(R.string.pref_key_autosave, true)
 
@@ -30,10 +30,7 @@ open class SettingManager(private val context: Context, sharedPreferences: Lazy<
 
     suspend fun lowLatencyAudio() = booleanPreference(R.string.pref_key_low_latency_audio, false)
 
-    suspend fun screenFilter() = stringPreference(
-        R.string.pref_key_shader_filter,
-        context.resources.getStringArray(R.array.pref_key_shader_filter_values).first()
-    )
+    suspend fun screenFilter() = stringPreference(R.string.pref_key_shader_filter, context.resources.getStringArray(R.array.pref_key_shader_filter_values).first())
 
     suspend fun hdMode() = booleanPreference(R.string.pref_key_hd_mode, false)
 
@@ -51,52 +48,28 @@ open class SettingManager(private val context: Context, sharedPreferences: Lazy<
 
     suspend fun enableDeviceRumble() = booleanPreference(R.string.pref_key_enable_device_rumble, false)
 
-    suspend fun cacheSizeBytes() = stringPreference(
-        R.string.pref_key_max_cache_size,
-        CacheCleaner.getDefaultCacheLimit().toString()
-    )
+    suspend fun cacheSizeBytes() = stringPreference(R.string.pref_key_max_cache_size, CacheCleaner.getDefaultCacheLimit().toString())
 
     suspend fun allowDirectGameLoad() = booleanPreference(R.string.pref_key_allow_direct_game_load, true)
 
-    private suspend fun booleanPreference(
-        keyId: Int,
-        default: Boolean
-    ): Boolean = withContext(Dispatchers.IO) {
-        sharedPreferences.getBoolean(getString(keyId), default)
-            .asFlow()
-            .first()
-    }
+    private suspend fun booleanPreference(keyId: Int, default: Boolean): Boolean =
+        withContext(Dispatchers.IO) { sharedPreferences.getBoolean(getString(keyId), default).asFlow().first() }
 
-    private suspend fun stringPreference(
-        keyId: Int,
-        default: String
-    ): String = withContext(Dispatchers.IO) {
-        sharedPreferences.getString(getString(keyId), default)
-            .asFlow()
-            .first()
-    }
+    private suspend fun stringPreference(keyId: Int, default: String): String =
+        withContext(Dispatchers.IO) { sharedPreferences.getString(getString(keyId), default).asFlow().first() }
 
-    private suspend fun stringSetPreference(
-        keyId: Int,
-        default: Set<String>
-    ): Set<String> = withContext(Dispatchers.IO) {
-        sharedPreferences.getStringSet(getString(keyId), default)
-            .asFlow()
-            .first()
-    }
+    private suspend fun stringSetPreference(keyId: Int, default: Set<String>): Set<String> =
+        withContext(Dispatchers.IO) { sharedPreferences.getStringSet(getString(keyId), default).asFlow().first() }
 
-    private suspend fun floatPreference(
-        keyId: Int,
-        ticks: Int,
-        default: Float
-    ): Float = withContext(Dispatchers.IO) {
-        sharedPreferences.getInt(getString(keyId), floatToIndex(default, ticks))
-            .asFlow()
-            .map { indexToFloat(it, ticks) }
-            .first()
-    }
+    private suspend fun floatPreference(keyId: Int, ticks: Int, default: Float): Float =
+        withContext(Dispatchers.IO) { sharedPreferences.getInt(getString(keyId), floatToIndex(default, ticks)).asFlow().map { indexToFloat(it, ticks) }.first() }
 
-    private fun indexToFloat(index: Int, ticks: Int): Float = index.toFloat() / ticks.toFloat()
+    private fun getString(resId: Int): String =
+        context.getString(resId)
 
-    private fun floatToIndex(value: Float, ticks: Int): Int = (value * ticks).roundToInt()
+    private fun indexToFloat(index: Int, ticks: Int): Float =
+        index.toFloat() / ticks.toFloat()
+
+    private fun floatToIndex(value: Float, ticks: Int): Int =
+        (value * ticks).roundToInt()
 }

@@ -7,7 +7,7 @@ package com.mozhimen.emulatork.basic.storage
  * @Date 2024/5/11
  * @Version 1.0
  */
-data class StorageGroupedFiles(
+data class StorageFileGroup(
     val primaryFile: StorageBaseFile,
     val dataFiles: List<StorageBaseFile>
 ) {

@@ -1,7 +1,7 @@
 package com.mozhimen.emulatork.common.save.sync
 
 import android.app.Activity
-import com.mozhimen.emulatork.core.ECoreId
+import com.mozhimen.emulatork.core.ECoreType
 
 /**
  * @ClassName SaveSyncManager
@@ -17,7 +17,7 @@ interface SaveSyncManager {
     fun isConfigured(): Boolean
     fun getLastSyncInfo(): String
     fun getConfigInfo(): String
-    suspend fun sync(cores: Set<com.mozhimen.emulatork.core.ECoreId>)
+    suspend fun sync(eCoreTypes: Set<ECoreType>)
     fun computeSavesSpace(): String
-    fun computeStatesSpace(core: com.mozhimen.emulatork.core.ECoreId): String
+    fun computeStatesSpace(eCoreType: ECoreType): String
 }

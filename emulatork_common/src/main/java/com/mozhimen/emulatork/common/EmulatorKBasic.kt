@@ -9,7 +9,7 @@ import com.mozhimen.emulatork.basic.metadata.Metadata
 import com.mozhimen.emulatork.basic.metadata.MetadataProvider
 import com.mozhimen.emulatork.basic.game.system.GameSystems
 import com.mozhimen.emulatork.basic.storage.StorageBaseFile
-import com.mozhimen.emulatork.basic.storage.StorageGroupedFiles
+import com.mozhimen.emulatork.basic.storage.StorageFileGroup
 import com.mozhimen.emulatork.basic.storage.StorageRomFile
 import com.mozhimen.emulatork.basic.storage.StorageFile
 import com.mozhimen.emulatork.basic.storage.StorageFilesMerger
@@ -77,8 +77,8 @@ open class EmulatorKBasic(
     //////////////////////////////////////////////////////////////////////////////////////
 
     private sealed class ScanEntry {
-        data class GameFile(val file: StorageGroupedFiles, val game: Game) : ScanEntry()
-        data class File(val file: StorageGroupedFiles) : ScanEntry()
+        data class GameFile(val file: StorageFileGroup, val game: Game) : ScanEntry()
+        data class File(val file: StorageFileGroup) : ScanEntry()
     }
 
     @OptIn(FlowPreview::class)
@@ -107,7 +107,7 @@ open class EmulatorKBasic(
     }
 
     private suspend fun processBatch(
-        batch: List<StorageGroupedFiles>,
+        batch: List<StorageFileGroup>,
         provider: StorageDirProvider,
         startedAtMs: Long,
         gameMetadata: MetadataProvider
@@ -123,13 +123,13 @@ open class EmulatorKBasic(
         handleNewEntries(newEntries, startedAtMs, provider)
     }
 
-    private fun fetchEntriesFromDatabase(storageFile: StorageGroupedFiles): ScanEntry {
+    private fun fetchEntriesFromDatabase(storageFile: StorageFileGroup): ScanEntry {
         val game = retrogradedb.gameDao().selectByFileUri(storageFile.primaryFile.uri.toString())
         Timber.d("Retrieving scan entry game $game for uri: ${storageFile.primaryFile}")
         return buildScanEntry(storageFile, game)
     }
 
-    private fun buildScanEntry(storageFile: StorageGroupedFiles, game: Game?): ScanEntry {
+    private fun buildScanEntry(storageFile: StorageFileGroup, game: Game?): ScanEntry {
         Timber.w("buildScanEntry $game")
         return if (game != null) {
             ScanEntry.GameFile(storageFile, game)
@@ -229,7 +229,7 @@ open class EmulatorKBasic(
     }
 
     private suspend fun buildEntryFromMetadata(
-        groupedStorageFile: StorageGroupedFiles,
+        groupedStorageFile: StorageFileGroup,
         provider: StorageDirProvider,
         metadataProvider: MetadataProvider,
         startedAtMs: Long
@@ -275,12 +275,12 @@ open class EmulatorKBasic(
         biosManager.deleteBiosBefore(startedAtMs)
     }
 
-    private fun sortedFilesForScanning(groupedStorageFile: StorageGroupedFiles): List<StorageBaseFile> {
+    private fun sortedFilesForScanning(groupedStorageFile: StorageFileGroup): List<StorageBaseFile> {
         return groupedStorageFile.dataFiles.sortedBy { it.name } + listOf(groupedStorageFile.primaryFile)
     }
 
     private fun convertGameMetadataToGame(
-        groupedStorageFile: StorageGroupedFiles,
+        groupedStorageFile: StorageFileGroup,
         storageFile: StorageFile,
         metadata: Metadata?,
         lastIndexedAt: Long

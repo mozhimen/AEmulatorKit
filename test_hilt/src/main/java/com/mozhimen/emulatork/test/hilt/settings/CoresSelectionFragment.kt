@@ -2,7 +2,7 @@ package com.mozhimen.emulatork.test.hilt.settings
 
 import android.os.Bundle
 import androidx.preference.PreferenceFragmentCompat
-import com.mozhimen.emulatork.basic.preferences.SharedPreferencesMgr
+import com.mozhimen.emulatork.basic.preferences.SharedPreferencesManager
 import com.mozhimen.emulatork.ext.preferences.PreferencesCoreSelection
 import com.mozhimen.emulatork.test.hilt.works.WorkCoreUpdate
 import dagger.hilt.android.AndroidEntryPoint
@@ -23,7 +23,7 @@ class CoresSelectionFragment : PreferenceFragmentCompat() {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         preferenceManager.preferenceDataStore =
-            SharedPreferencesMgr.getSharedPreferencesDataStore(requireContext())
+            SharedPreferencesManager.getSharedPreferencesDataStore(requireContext())
         setPreferencesFromResource(com.mozhimen.emulatork.ui.R.xml.empty_preference_screen, rootKey)
         coresSelectionPreferences.addCoresSelectionPreferences(preferenceScreen, WorkCoreUpdate::class.java)
     }

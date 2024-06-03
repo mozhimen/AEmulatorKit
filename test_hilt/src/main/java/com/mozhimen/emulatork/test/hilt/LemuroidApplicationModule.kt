@@ -17,7 +17,7 @@ import com.mozhimen.emulatork.basic.metadata.MetadataProvider
 import com.mozhimen.emulatork.basic.game.review.GameReviewManager
 import com.mozhimen.emulatork.basic.game.rumble.GameRumbleManager
 import com.mozhimen.emulatork.basic.game.setting.GameSettingsManager
-import com.mozhimen.emulatork.basic.preferences.SharedPreferencesMgr
+import com.mozhimen.emulatork.basic.preferences.SharedPreferencesManager
 import com.mozhimen.emulatork.basic.save.SaveCoherencyEngine
 import com.mozhimen.emulatork.basic.save.SaveManager
 import com.mozhimen.emulatork.basic.save.SaveStateManager
@@ -280,7 +280,7 @@ class LemuroidApplicationModule2 {
     @Singleton
     @Provides
     fun sharedPreferences(@ApplicationContext context: Context) =
-        SharedPreferencesMgr.getSharedPreferences(context)
+        SharedPreferencesManager.getSharedPreferences(context)
 
     @Singleton
     @Provides

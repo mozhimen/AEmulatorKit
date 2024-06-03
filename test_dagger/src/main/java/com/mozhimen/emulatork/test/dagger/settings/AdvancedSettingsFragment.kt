@@ -5,7 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import com.mozhimen.emulatork.basic.preferences.SharedPreferencesMgr
+import com.mozhimen.emulatork.basic.preferences.SharedPreferencesManager
 import com.mozhimen.emulatork.ui.R
 import com.mozhimen.emulatork.ext.preferences.PreferencesAdvancedSettings
 import com.mozhimen.emulatork.ext.library.SettingsInteractor
@@ -38,7 +38,7 @@ class AdvancedSettingsFragment : PreferenceFragmentCompat() {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         preferenceManager.preferenceDataStore =
-            SharedPreferencesMgr.getSharedPreferencesDataStore(requireContext())
+            SharedPreferencesManager.getSharedPreferencesDataStore(requireContext())
         setPreferencesFromResource(R.xml.mobile_settings_advanced, rootKey)
         PreferencesAdvancedSettings.updateCachePreferences(preferenceScreen)
     }

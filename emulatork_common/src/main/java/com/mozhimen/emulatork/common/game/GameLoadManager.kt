@@ -129,10 +129,7 @@ class GameLoadManager(
     }
 
     private fun findLibrary(context: Context, coreID: com.mozhimen.emulatork.core.ECoreId): File? {
-        val files = sequenceOf(
-            File(context.applicationInfo.nativeLibraryDir),
-            context.filesDir
-        )
+        val files = sequenceOf(File(context.applicationInfo.nativeLibraryDir), context.filesDir)
 
         for (file in files){
             UtilKLogWrapper.w(TAG, "findLibrary files ${file.listFiles()?.joinToString { it.absolutePath+"\n" }}")

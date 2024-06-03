@@ -1,4 +1,4 @@
-package com.mozhimen.emulatork.common.save
+package com.mozhimen.emulatork.basic.archive
 
 import kotlinx.serialization.Serializable
 
@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
  * @Date 2024/5/13
  * @Version 1.0
  */
-class SaveState(val state: ByteArray, val metadata: SaveMetadata) {
+class ArchiveState(val state: ByteArray, val metadata: SaveMetadata) {
     @Serializable
     data class SaveMetadata(val diskIndex: Int = 0, val version: Int = 0)
 }
