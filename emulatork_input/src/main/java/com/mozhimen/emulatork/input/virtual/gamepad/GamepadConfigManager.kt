@@ -24,7 +24,7 @@ open class GamepadConfigManager(private val sharedPreferences: Lazy<SharedPrefer
         systemCoreConfig.controllerConfigs.entries
             .associate { (port, controllers) ->
                 val currentName = sharedPreferences.value.getString(
-                    getSharedPreferencesId(systemType.dbname, systemCoreConfig.coreID, port),
+                    getSharedPreferencesId(systemType.simpleName, systemCoreConfig.coreID, port),
                     null
                 )
 

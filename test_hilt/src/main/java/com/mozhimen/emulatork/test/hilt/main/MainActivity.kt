@@ -137,7 +137,7 @@ class MainActivity : AppCompatActivity(), GameBusyActivity,IUtilK {
 
     private fun displayLemuroidHelp() {
         val systemFolders = ESystemType.values()
-            .map { it.dbname }
+            .map { it.simpleName }
             .map { "<i>$it</i>" }
             .joinToString(", ")
 

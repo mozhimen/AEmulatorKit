@@ -1,8 +1,9 @@
 package com.mozhimen.emulatork.common.core
 
-import com.mozhimen.emulatork.basic.controller.touch.ControllerTouchConfig
+import com.mozhimen.emulatork.basic.system.SystemSetting
 import com.mozhimen.emulatork.core.ECoreType
-import com.mozhimen.emulatork.core.variable.CoreVariable
+import com.mozhimen.emulatork.core.property.CoreProperty
+import com.mozhimen.emulatork.input.virtual.gamepad.GamepadConfig
 import java.io.Serializable
 
 /**
@@ -13,19 +14,17 @@ import java.io.Serializable
  * @Version 1.0
  */
 data class CoreBundle constructor(
-    val coreType: ECoreType,
-    val controllerConfigs: HashMap<Int, ArrayList<ControllerTouchConfig>>,
-    val exposedSystemSettings: List<GameSystemExposedSetting> = listOf(),
-    val exposedAdvancedSettings: List<GameSystemExposedSetting> = listOf(),
-    val defaultSettings: List<CoreVariable> = listOf(),
-    val statesSupported: Boolean = true,
-    val rumbleSupported: Boolean = false,
+    val eCoreType: ECoreType,
+    val gamepadConfigMap: HashMap<Int, ArrayList<GamepadConfig>>,
+    val systemSettings_exposed: List<SystemSetting> = listOf(),
+    val systemSettings_exposedAdvanced: List<SystemSetting> = listOf(),
+    val coreProperties: List<CoreProperty> = listOf(),
+    val isSupportStates: Boolean = true,
+    val isSupportRumble: Boolean = false,
     val requiredBIOSFiles: List<String> = listOf(),
     val regionalBIOSFiles: Map<String, String> = mapOf(),
     val statesVersion: Int = 0,
     val supportsLibretroVFS: Boolean = false,
     val skipDuplicateFrames: Boolean = true,
     val supportedOnlyArchitectures: Set<String>? = null
-) : Serializable {
-
-}
+) : Serializable

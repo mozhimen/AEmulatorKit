@@ -11,14 +11,14 @@ import com.mozhimen.emulatork.basic.system.ESystemType
  * @Date 2024/5/9
  * @Version 1.0
  */
-data class StorageFile(
+data class StorageFile constructor(
     val name: String,
     val size: Long,
     val crc: String? = null,
     val serial: String? = null,
     val uri: Uri,
     val path: String? = null,
-    val systemID: ESystemType? = null
+    val eSystemType: ESystemType? = null
 ) {
 
     val extension: String

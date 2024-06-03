@@ -7,7 +7,7 @@ import android.os.Build
 import com.mozhimen.basick.utilk.java.io.deleteFile
 import com.mozhimen.basick.utilk.java.io.inputStream2file_use_ofCopyTo
 import com.mozhimen.emulatork.basic.preferences.SharedPreferencesMgr
-import com.mozhimen.emulatork.basic.storage.StorageProvider
+import com.mozhimen.emulatork.basic.storage.StorageDirProvider
 import com.mozhimen.emulatork.core.ECoreType
 import com.mozhimen.emulatork.core.utils.getCoreSource
 import com.mozhimen.netk.retrofit2.commons.DownloadApi
@@ -28,7 +28,7 @@ import java.io.File
  * @Version 1.0
  */
 class CoreDownloaderImpl(
-    private val storageProvider: StorageProvider, retrofit: Retrofit
+    private val storageProvider: StorageDirProvider, retrofit: Retrofit
 ) : CoreDownload {
 
     // This is the last tagged versions of cores.

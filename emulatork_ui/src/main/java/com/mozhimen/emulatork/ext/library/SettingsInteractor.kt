@@ -3,7 +3,7 @@ package com.mozhimen.emulatork.ext.library
 import android.content.Context
 import com.mozhimen.basick.utilk.commons.IUtilK
 import com.mozhimen.emulatork.basic.preferences.SharedPreferencesMgr
-import com.mozhimen.emulatork.basic.storage.StorageProvider
+import com.mozhimen.emulatork.basic.storage.StorageDirProvider
 import com.mozhimen.emulatork.ext.works.WorkScheduler
 import com.mozhimen.emulatork.ui.settings.AbsStorageFrameworkPickerActivity
 import com.mozhimen.emulatork.ui.works.AbsWorkLibraryIndex
@@ -19,7 +19,7 @@ import com.mozhimen.emulatork.ui.works.AbsWorkStorageCacheCleaner
 
 class SettingsInteractor constructor(
     private val context: Context,
-    private val storageProvider: StorageProvider
+    private val storageProvider: StorageDirProvider
 ) : IUtilK {
     fun changeLocalStorageFolder(storageFrameworkPickerActivityClazz: Class<out AbsStorageFrameworkPickerActivity>) {
         AbsStorageFrameworkPickerActivity.pickFolder(context, storageFrameworkPickerActivityClazz)

@@ -5,14 +5,15 @@ import android.net.Uri
 import androidx.core.net.toUri
 import com.mozhimen.basick.utilk.java.io.isFileZipped
 import com.mozhimen.basick.utilk.java.util.extractEntryToFile_use
-import com.mozhimen.emulatork.basic.R
-import com.mozhimen.emulatork.basic.game.db.entities.DataFile
-import com.mozhimen.emulatork.basic.game.db.entities.Game
+import com.mozhimen.emulatork.common.R
 import com.mozhimen.emulatork.basic.preferences.SharedPreferencesMgr
-import com.mozhimen.emulatork.basic.storage.StorageBaseFile
-import com.mozhimen.emulatork.basic.storage.StorageProvider
-import com.mozhimen.emulatork.basic.storage.StorageRomFile
+import com.mozhimen.emulatork.basic.storage.StorageDirProvider
 import com.mozhimen.emulatork.basic.storage.StorageFile
+import com.mozhimen.emulatork.basic.storage.SStorageRomFileType
+import com.mozhimen.emulatork.basic.storage.StorageBaseFile
+import com.mozhimen.emulatork.common.storage.StorageProvider
+import com.mozhimen.emulatork.db.game.entities.DataFile
+import com.mozhimen.emulatork.db.game.entities.Game
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.io.File
@@ -28,7 +29,7 @@ import java.util.zip.ZipInputStream
  */
 class StorageLocalProvider(
     private val context: Context,
-    private val storageProvider: StorageProvider
+    private val storageProvider: StorageDirProvider
 ) : StorageProvider {
 
     override val id: String = "local"
@@ -85,7 +86,7 @@ class StorageLocalProvider(
             return originalFile
         }
 
-        val cacheFile = StorageLocalUtil.getCacheFileForGame(LOCAL_STORAGE_CACHE_SUBFOLDER, context, game)
+        val cacheFile = StorageLocalUtil.getCacheFileForGame(StorageDirProvider.LOCAL_STORAGE_CACHE_SUBFOLDER, context, game)
         if (cacheFile.exists()) {
             return cacheFile
         }
@@ -102,16 +103,12 @@ class StorageLocalProvider(
         game: Game,
         dataFiles: List<DataFile>,
         allowVirtualFiles: Boolean
-    ): StorageRomFile {
-        return StorageRomFile.Standard(listOf(getGameRom(game)) + dataFiles.map { getDataFile(it) })
+    ): SStorageRomFileType {
+        return SStorageRomFileType.Standard(listOf(getGameRom(game)) + dataFiles.map { getDataFile(it) })
     }
 
     override fun getInputStream(uri: Uri): InputStream {
         return File(uri.path).inputStream()
-    }
-
-    companion object {
-        const val LOCAL_STORAGE_CACHE_SUBFOLDER = "local-storage-games"
     }
 }
 

@@ -52,7 +52,7 @@ android {
 
 dependencies {
     implementation project(':emulatork_ui_hilt')
-    implementation project(':emulatork_libretro_db')
+    implementation project(':emulatork_db')
     implementation project(':emulatork_core')
 
     implementation project(':ARxKit:rxk_epoxy4')

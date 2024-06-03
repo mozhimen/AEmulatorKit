@@ -5,7 +5,7 @@ import com.mozhimen.basick.utilk.kotlin.UtilKResult
 import com.mozhimen.basick.utilk.kotlin.bytes2file_ofGZip
 import com.mozhimen.emulatork.core.ECoreId
 import com.mozhimen.emulatork.basic.game.db.entities.Game
-import com.mozhimen.emulatork.basic.storage.StorageProvider
+import com.mozhimen.emulatork.basic.storage.StorageDirProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
@@ -21,7 +21,7 @@ import java.io.File
 // TODO Since states are core related we should not put them in the same folder. This break previous versions states
 // so I decided to manage a transition phase reading also the old directory. We should safely remove it in a few weeks.
 
-class SaveStateManager(private val storageProvider: StorageProvider) {
+class SaveStateManager(private val storageProvider: StorageDirProvider) {
 
     suspend fun getSlotSave(
         game: Game,

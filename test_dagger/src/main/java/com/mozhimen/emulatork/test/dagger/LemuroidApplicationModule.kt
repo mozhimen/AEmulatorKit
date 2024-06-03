@@ -18,7 +18,7 @@ import com.mozhimen.emulatork.basic.save.SaveManager
 import com.mozhimen.emulatork.basic.save.SaveStateManager
 import com.mozhimen.emulatork.basic.save.SaveStatePreviewManager
 import com.mozhimen.emulatork.basic.save.sync.SaveSyncManager
-import com.mozhimen.emulatork.basic.storage.StorageProvider
+import com.mozhimen.emulatork.basic.storage.StorageDirProvider
 import com.mozhimen.emulatork.basic.storage.StorageProviderRegistry
 import com.mozhimen.emulatork.basic.storage.local.StorageLocalProvider
 import com.mozhimen.emulatork.basic.storage.local.StorageLocalAccessFrameworkProvider
@@ -31,8 +31,8 @@ import com.mozhimen.emulatork.ext.covers.CoverLoader
 import com.mozhimen.emulatork.core.download.CoreDownloaderImpl
 import com.mozhimen.emulatork.basic.game.review.GameReviewManager
 import com.mozhimen.emulatork.basic.save.sync.SaveSyncManagerImpl
-import com.mozhimen.emulatork.libretro.db.MetadataProviderLibretroDB
-import com.mozhimen.emulatork.libretro.db.database.LibretroDBManager
+import com.mozhimen.emulatork.common.metadata.MetadataProviderLibretroDB
+import com.mozhimen.emulatork.db.libretro.database.LibretroDBManager
 import com.mozhimen.emulatork.basic.controller.ControllerConfigsManager
 import dagger.Binds
 import dagger.Lazy
@@ -57,7 +57,7 @@ import com.mozhimen.emulatork.ui.dagger.settings.StorageFrameworkPickerActivity
 import com.mozhimen.emulatork.input.unit.InputUnitManager
 import com.mozhimen.emulatork.ext.preferences.PreferencesBios
 import com.mozhimen.emulatork.basic.game.setting.GameSettingsManager
-import com.mozhimen.emulatork.core.variable.CoreVariableManager
+import com.mozhimen.emulatork.common.core.CorePropertyManager
 import com.mozhimen.emulatork.basic.core.CoreSelection
 
 /**
@@ -127,7 +127,7 @@ abstract class LemuroidApplicationModule {
         @PerApp
         @IntoSet
         @JvmStatic
-        fun localSAFStorageProvider(context: Context): StorageProvider =
+        fun localSAFStorageProvider(context: Context): StorageDirProvider =
             StorageLocalAccessFrameworkProvider(context)
 
         @Provides
@@ -136,8 +136,8 @@ abstract class LemuroidApplicationModule {
         @JvmStatic
         fun localGameStorageProvider(
             context: Context,
-            storageProvider: StorageProvider
-        ): StorageProvider =
+            storageProvider: StorageDirProvider
+        ): StorageDirProvider =
             StorageLocalProvider(context, storageProvider)
 
         @Provides
@@ -145,7 +145,7 @@ abstract class LemuroidApplicationModule {
         @JvmStatic
         fun gameStorageProviderRegistry(
             context: Context,
-            providers: Set<@JvmSuppressWildcards StorageProvider>
+            providers: Set<@JvmSuppressWildcards StorageDirProvider>
         ) =
             StorageProviderRegistry(context, providers)
 
@@ -198,29 +198,29 @@ abstract class LemuroidApplicationModule {
         @Provides
         @PerApp
         @JvmStatic
-        fun directoriesManager(context: Context) = StorageProvider(context)
+        fun directoriesManager(context: Context) = StorageDirProvider(context)
 
         @Provides
         @PerApp
         @JvmStatic
-        fun statesManager(storageProvider: StorageProvider) = SaveStateManager(storageProvider)
+        fun statesManager(storageProvider: StorageDirProvider) = SaveStateManager(storageProvider)
 
         @Provides
         @PerApp
         @JvmStatic
-        fun savesManager(storageProvider: StorageProvider) = SaveManager(storageProvider)
+        fun savesManager(storageProvider: StorageDirProvider) = SaveManager(storageProvider)
 
         @Provides
         @PerApp
         @JvmStatic
-        fun statesPreviewManager(storageProvider: StorageProvider) =
+        fun statesPreviewManager(storageProvider: StorageDirProvider) =
             SaveStatePreviewManager(storageProvider)
 
         @Provides
         @PerApp
         @JvmStatic
         fun coreManager(
-            storageProvider: StorageProvider,
+            storageProvider: StorageDirProvider,
             retrofit: Retrofit
         ): CoreDownload = CoreDownloaderImpl(storageProvider, retrofit)
 
@@ -228,7 +228,7 @@ abstract class LemuroidApplicationModule {
         @PerApp
         @JvmStatic
         fun coreVariablesManager(sharedPreferences: Lazy<SharedPreferences>) =
-            CoreVariableManager(lazy { sharedPreferences.get() })
+            CorePropertyManager(lazy { sharedPreferences.get() })
 
         @Provides
         @PerApp
@@ -237,16 +237,16 @@ abstract class LemuroidApplicationModule {
             lemuroidLibrary: EmulatorKBasic,
             saveStateManager: SaveStateManager,
             saveManager: SaveManager,
-            coreVariableManager: CoreVariableManager,
+            corePropertyManager: CorePropertyManager,
             retrogradeDatabase: RetrogradeDatabase,
             saveCoherencyEngine: SaveCoherencyEngine,
-            storageProvider: StorageProvider,
+            storageProvider: StorageDirProvider,
             biosManager: BiosManager
-        ) = com.mozhimen.emulatork.common.game.GameLoader(
+        ) = com.mozhimen.emulatork.common.game.GameLoadManager(
             lemuroidLibrary,
             saveStateManager,
             saveManager,
-            coreVariableManager,
+            corePropertyManager,
             retrogradeDatabase,
             saveCoherencyEngine,
             storageProvider,
@@ -262,7 +262,7 @@ abstract class LemuroidApplicationModule {
         @Provides
         @PerApp
         @JvmStatic
-        fun biosManager(storageProvider: StorageProvider) = BiosManager(storageProvider)
+        fun biosManager(storageProvider: StorageDirProvider) = BiosManager(storageProvider)
 
         @Provides
         @PerApp
@@ -291,7 +291,7 @@ abstract class LemuroidApplicationModule {
         @JvmStatic
         fun saveSyncManagerImpl(
             context: Context,
-            storageProvider: StorageProvider
+            storageProvider: StorageDirProvider
         ) = SaveSyncManagerImpl(context, storageProvider)
 
         @Provides

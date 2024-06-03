@@ -5,7 +5,6 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.mozhimen.emulatork.core.CoreVariablesManager
-import com.mozhimen.emulatork.common.game.GameLoader
 import com.mozhimen.emulatork.basic.save.SaveManager
 import com.mozhimen.emulatork.basic.save.SaveStateManager
 import com.mozhimen.emulatork.basic.save.SaveStatePreviewManager
@@ -51,7 +50,7 @@ class GameActivity : AbsGameActivity(), HasFragmentInjector, HasSupportFragmentI
     lateinit var inputUnitManager: InputUnitManager
 
     @Inject
-    lateinit var gameLoader: com.mozhimen.emulatork.common.game.GameLoader
+    lateinit var gameLoadManager: com.mozhimen.emulatork.common.game.GameLoadManager
 
     @Inject
     lateinit var controllerConfigsManager: ControllerConfigsManager
@@ -114,8 +113,8 @@ class GameActivity : AbsGameActivity(), HasFragmentInjector, HasSupportFragmentI
         return inputUnitManager
     }
 
-    override fun gameLoader(): com.mozhimen.emulatork.common.game.GameLoader {
-        return gameLoader
+    override fun gameLoader(): com.mozhimen.emulatork.common.game.GameLoadManager {
+        return gameLoadManager
     }
 
     override fun controllerConfigsManager(): ControllerConfigsManager {

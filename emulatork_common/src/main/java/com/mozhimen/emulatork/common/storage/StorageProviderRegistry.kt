@@ -3,7 +3,7 @@ package com.mozhimen.emulatork.common.storage
 import android.content.Context
 import android.content.SharedPreferences
 import android.net.Uri
-import com.mozhimen.emulatork.basic.game.db.entities.Game
+import com.mozhimen.emulatork.db.game.entities.Game
 
 /**
  * @ClassName StorageProviderRegistry
@@ -29,7 +29,9 @@ class StorageProviderRegistry(context: Context, val providers: Set<StorageProvid
     val enabledProviders: Iterable<StorageProvider>
         get() = providers.filter { prefs.getBoolean(it.id, it.enabledByDefault) }
 
-    fun getProvider(game: Game): StorageProvider {
+    ///////////////////////////////////////////////////////////////////////
+
+    fun getStorageProvider(game: Game): StorageProvider {
         val uri = Uri.parse(game.fileUri)
         return providersByScheme[uri.scheme]!!
     }

@@ -9,7 +9,7 @@ import androidx.fragment.app.FragmentActivity
 import com.mozhimen.basick.utilk.android.app.showAlertDialog
 import com.mozhimen.basick.utilk.commons.IUtilK
 import com.mozhimen.emulatork.basic.preferences.SharedPreferencesMgr
-import com.mozhimen.emulatork.basic.storage.StorageProvider
+import com.mozhimen.emulatork.basic.storage.StorageDirProvider
 import com.mozhimen.emulatork.ui.R
 import com.mozhimen.emulatork.ext.works.WorkScheduler
 import com.mozhimen.emulatork.ui.works.AbsWorkLibraryIndex
@@ -26,7 +26,7 @@ abstract class AbsStorageFrameworkPickerActivity : FragmentActivity(), IUtilK {
     //    @Inject
     //    lateinit var directoriesManager: DirectoriesManager
 
-    abstract fun directoriesManager(): StorageProvider
+    abstract fun directoriesManager(): StorageDirProvider
 
     abstract fun workLibraryIndexClazz(): Class<out AbsWorkLibraryIndex>
 

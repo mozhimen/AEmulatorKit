@@ -2,6 +2,8 @@ package com.mozhimen.emulatork.common.storage
 
 import android.net.Uri
 import com.mozhimen.basick.utilk.java.io.inputStream2strs_use_ofBufferedReader_forEachLine
+import com.mozhimen.emulatork.basic.storage.StorageBaseFile
+import com.mozhimen.emulatork.basic.storage.StorageGroupedFiles
 
 /**
  * @ClassName StorageFilesMerger
@@ -15,9 +17,9 @@ object StorageFilesMerger {
     /** Merge files which belong to the same game. This includes bin/cue files and m3u playlists.*/
     fun mergeDataFiles(
         storageProvider: StorageProvider,
-        files: List<StorageBaseFile>
+        storageBaseFiles: List<StorageBaseFile>
     ): List<StorageGroupedFiles> {
-        val allFiles = files
+        val allFiles = storageBaseFiles
             .associateWith { listOf<StorageBaseFile>() }
             .toMutableMap()
 

@@ -1,9 +1,11 @@
 package com.mozhimen.emulatork.common.storage
 
 import android.net.Uri
-import com.mozhimen.emulatork.basic.game.db.entities.DataFile
-import com.mozhimen.emulatork.basic.game.db.entities.Game
+import com.mozhimen.emulatork.basic.storage.SStorageRomFileType
+import com.mozhimen.emulatork.basic.storage.StorageBaseFile
 import com.mozhimen.emulatork.basic.storage.StorageFile
+import com.mozhimen.emulatork.db.game.entities.DataFile
+import com.mozhimen.emulatork.db.game.entities.Game
 import kotlinx.coroutines.flow.Flow
 import java.io.InputStream
 
@@ -32,9 +34,5 @@ interface StorageProvider {
 
     fun getStorageFile(storageBaseFile: StorageBaseFile): StorageFile?
 
-    fun getGameRomFiles(
-        game: Game,
-        dataFiles: List<DataFile>,
-        allowVirtualFiles: Boolean
-    ): StorageRomFile
+    fun getGameRomFiles(game: Game, dataFiles: List<DataFile>, allowVirtualFiles: Boolean): SStorageRomFileType
 }

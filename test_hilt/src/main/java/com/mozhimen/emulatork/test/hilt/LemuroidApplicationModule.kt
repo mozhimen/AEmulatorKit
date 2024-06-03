@@ -9,7 +9,7 @@ import com.mozhimen.emulatork.basic.controller.ControllerConfigsManager
 import com.mozhimen.emulatork.basic.core.CoreSelection
 import com.mozhimen.emulatork.core.download.CoreDownload
 import com.mozhimen.emulatork.core.download.CoreDownloaderImpl
-import com.mozhimen.emulatork.core.variable.CoreVariableManager
+import com.mozhimen.emulatork.common.core.CorePropertyManager
 import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
 import com.mozhimen.emulatork.basic.game.db.daos.GameSearchDao
 import com.mozhimen.emulatork.basic.game.db.helpers.Migrations
@@ -24,7 +24,7 @@ import com.mozhimen.emulatork.basic.save.SaveStateManager
 import com.mozhimen.emulatork.basic.save.SaveStatePreviewManager
 import com.mozhimen.emulatork.basic.save.sync.SaveSyncManager
 import com.mozhimen.emulatork.basic.save.sync.SaveSyncManagerImpl
-import com.mozhimen.emulatork.basic.storage.StorageProvider
+import com.mozhimen.emulatork.basic.storage.StorageDirProvider
 import com.mozhimen.emulatork.basic.storage.StorageProviderRegistry
 import com.mozhimen.emulatork.basic.storage.local.StorageLocalAccessFrameworkProvider
 import com.mozhimen.emulatork.basic.storage.local.StorageLocalProvider
@@ -38,8 +38,8 @@ import com.mozhimen.emulatork.ext.library.SettingsInteractor
 import com.mozhimen.emulatork.ext.preferences.PreferencesBios
 import com.mozhimen.emulatork.ext.preferences.PreferencesCoreSelection
 import com.mozhimen.emulatork.input.unit.InputUnitManager
-import com.mozhimen.emulatork.libretro.db.database.LibretroDBManager
-import com.mozhimen.emulatork.libretro.db.MetadataProviderLibretroDB
+import com.mozhimen.emulatork.db.libretro.database.LibretroDBManager
+import com.mozhimen.emulatork.common.metadata.MetadataProviderLibretroDB
 import com.mozhimen.emulatork.ui.hilt.game.GameActivity
 import com.mozhimen.emulatork.ui.hilt.game.pad.GamePadBindingActivity
 import dagger.Binds
@@ -109,7 +109,7 @@ class LemuroidApplicationModule2 {
     @Provides
     @IntoSet
     @Singleton
-    fun localSAFStorageProvider(@ApplicationContext context: Context): StorageProvider =
+    fun localSAFStorageProvider(@ApplicationContext context: Context): StorageDirProvider =
         StorageLocalAccessFrameworkProvider(context)
 
     @Provides
@@ -117,15 +117,15 @@ class LemuroidApplicationModule2 {
     @Singleton
     fun localGameStorageProvider(
         @ApplicationContext context: Context,
-        storageProvider: StorageProvider
-    ): StorageProvider =
+        storageProvider: StorageDirProvider
+    ): StorageDirProvider =
         StorageLocalProvider(context, storageProvider)
 
     @Provides
     @Singleton
     fun gameStorageProviderRegistry(
         @ApplicationContext context: Context,
-        providers: Set<@JvmSuppressWildcards StorageProvider>
+        providers: Set<@JvmSuppressWildcards StorageDirProvider>
     ) =
         StorageProviderRegistry(context, providers)
 
@@ -174,32 +174,32 @@ class LemuroidApplicationModule2 {
 
     @Provides
     @Singleton
-    fun directoriesManager(@ApplicationContext context: Context) = StorageProvider(context)
+    fun directoriesManager(@ApplicationContext context: Context) = StorageDirProvider(context)
 
     @Provides
     @Singleton
-    fun statesManager(storageProvider: StorageProvider) = SaveStateManager(storageProvider)
+    fun statesManager(storageProvider: StorageDirProvider) = SaveStateManager(storageProvider)
 
     @Provides
     @Singleton
-    fun savesManager(storageProvider: StorageProvider) = SaveManager(storageProvider)
+    fun savesManager(storageProvider: StorageDirProvider) = SaveManager(storageProvider)
 
     @Provides
     @Singleton
-    fun statesPreviewManager(storageProvider: StorageProvider) =
+    fun statesPreviewManager(storageProvider: StorageDirProvider) =
         SaveStatePreviewManager(storageProvider)
 
     @Provides
     @Singleton
     fun coreManager(
-        storageProvider: StorageProvider,
+        storageProvider: StorageDirProvider,
         retrofit: Retrofit
     ): CoreDownload = CoreDownloaderImpl(storageProvider, retrofit)
 
     @Singleton
     @Provides
     fun coreVariablesManager(sharedPreferences: Lazy<SharedPreferences>) =
-        CoreVariableManager(lazy { sharedPreferences.get() })
+        CorePropertyManager(lazy { sharedPreferences.get() })
 
     @Singleton
     @Provides
@@ -207,16 +207,16 @@ class LemuroidApplicationModule2 {
         lemuroidLibrary: EmulatorKBasic,
         saveStateManager: SaveStateManager,
         saveManager: SaveManager,
-        coreVariableManager: CoreVariableManager,
+        corePropertyManager: CorePropertyManager,
         retrogradeDatabase: RetrogradeDatabase,
         saveCoherencyEngine: SaveCoherencyEngine,
-        storageProvider: StorageProvider,
+        storageProvider: StorageDirProvider,
         biosManager: BiosManager
-    ) = com.mozhimen.emulatork.common.game.GameLoader(
+    ) = com.mozhimen.emulatork.common.game.GameLoadManager(
         lemuroidLibrary,
         saveStateManager,
         saveManager,
-        coreVariableManager,
+        corePropertyManager,
         retrogradeDatabase,
         saveCoherencyEngine,
         storageProvider,
@@ -230,7 +230,7 @@ class LemuroidApplicationModule2 {
 
     @Singleton
     @Provides
-    fun biosManager(storageProvider: StorageProvider) = BiosManager(storageProvider)
+    fun biosManager(storageProvider: StorageDirProvider) = BiosManager(storageProvider)
 
     @Singleton
     @Provides
@@ -254,7 +254,7 @@ class LemuroidApplicationModule2 {
     @Provides
     fun saveSyncManagerImpl(
         @ApplicationContext context: Context,
-        storageProvider: StorageProvider
+        storageProvider: StorageDirProvider
     ) = SaveSyncManagerImpl(context, storageProvider)
 
     @Singleton
@@ -322,6 +322,6 @@ class LemuroidApplicationModule3 {
 
     @Provides
     @ActivityScoped
-    fun settingsInteractor(@ActivityContext context: Context, storageProvider: StorageProvider): SettingsInteractor =
+    fun settingsInteractor(@ActivityContext context: Context, storageProvider: StorageDirProvider): SettingsInteractor =
         SettingsInteractor(context, storageProvider)
 }

@@ -7,7 +7,7 @@ package com.mozhimen.emulatork.basic.system
  * @Date 2024/5/11
  * @Version 1.0
  */
-enum class ESystemType(val dbname: String) {
+enum class ESystemType(val simpleName: String) {
     NES("nes"),
     SNES("snes"),
     GENESIS("md"),

@@ -31,7 +31,7 @@ android {
 
 dependencies {
     api project(':emulatork_basic')
-    api project(':emulatork_libretro_db')
+    api project(':emulatork_db')
     api project(':emulatork_input')
     api project(':emulatork_core')
 

@@ -1,7 +1,7 @@
 package com.mozhimen.emulatork.core.source
 
 import android.content.SharedPreferences
-import com.mozhimen.emulatork.basic.storage.StorageProvider
+import com.mozhimen.emulatork.basic.storage.StorageDirProvider
 import com.mozhimen.netk.retrofit2.commons.DownloadApi
 
 /**
@@ -12,6 +12,6 @@ import com.mozhimen.netk.retrofit2.commons.DownloadApi
  * @Version 1.0
  */
 interface CoreSource {
-    suspend fun retrieveCoreSourceIfNeeded(downloadApi: DownloadApi, storageProvider: StorageProvider, sharedPreferences: SharedPreferences)
-    suspend fun clearCoreSource(storageProvider: StorageProvider)
+    suspend fun retrieveCoreSourceIfNeeded(downloadApi: DownloadApi, storageProvider: StorageDirProvider, sharedPreferences: SharedPreferences)
+    suspend fun clearCoreSource(storageProvider: StorageDirProvider)
 }

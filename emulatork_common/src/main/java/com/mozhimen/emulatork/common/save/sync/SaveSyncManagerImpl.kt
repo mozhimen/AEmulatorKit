@@ -3,7 +3,7 @@ package com.mozhimen.emulatork.common.save.sync
 import android.app.Activity
 import android.content.Context
 import com.mozhimen.emulatork.core.ECoreId
-import com.mozhimen.emulatork.basic.storage.StorageProvider
+import com.mozhimen.emulatork.basic.storage.StorageDirProvider
 
 /**
  * @ClassName SaveSyncManagerImpl
@@ -14,7 +14,7 @@ import com.mozhimen.emulatork.basic.storage.StorageProvider
  */
 class SaveSyncManagerImpl(
     private val appContext: Context,
-    private val storageProvider: StorageProvider
+    private val storageProvider: StorageDirProvider
 ) : SaveSyncManager {
     override fun getProvider(): String = ""
 

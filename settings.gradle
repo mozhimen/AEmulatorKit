@@ -30,7 +30,7 @@ include ':emulatork_ui_dagger'
 include ':emulatork_ui_hilt'
 include ':emulatork_ui'
 include ':emulatork_input'
-include ':emulatork_libretro_db'
+include ':emulatork_db'
 include ':emulatork_core'
 //SwiftKit
 include ':SwiftKit'

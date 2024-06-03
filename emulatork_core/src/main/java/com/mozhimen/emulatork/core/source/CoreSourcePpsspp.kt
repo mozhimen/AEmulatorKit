@@ -2,7 +2,7 @@ package com.mozhimen.emulatork.core.source
 
 import android.content.SharedPreferences
 import android.net.Uri
-import com.mozhimen.emulatork.basic.storage.StorageProvider
+import com.mozhimen.emulatork.basic.storage.StorageDirProvider
 import com.mozhimen.netk.retrofit2.commons.DownloadApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -35,11 +35,11 @@ class CoreSourcePpsspp : CoreSource {
 
     /////////////////////////////////////////////////////////////////////////////////////////////
 
-    override suspend fun clearCoreSource(storageProvider: StorageProvider) {
+    override suspend fun clearCoreSource(storageProvider: StorageDirProvider) {
         getAssetsDirectory(storageProvider).deleteRecursively()
     }
 
-    override suspend fun retrieveCoreSourceIfNeeded(downloadApi: DownloadApi, storageProvider: StorageProvider, sharedPreferences: SharedPreferences) {
+    override suspend fun retrieveCoreSourceIfNeeded(downloadApi: DownloadApi, storageProvider: StorageDirProvider, sharedPreferences: SharedPreferences) {
         if (!updatedRequested(storageProvider, sharedPreferences))
             return
         try {
@@ -52,7 +52,7 @@ class CoreSourcePpsspp : CoreSource {
 
     /////////////////////////////////////////////////////////////////////////////////////////////
 
-    private suspend fun handleSuccess(storageProvider: StorageProvider, response: Response<ZipInputStream>, sharedPreferences: SharedPreferences) {
+    private suspend fun handleSuccess(storageProvider: StorageDirProvider, response: Response<ZipInputStream>, sharedPreferences: SharedPreferences) {
         val coreAssetsDirectory = getAssetsDirectory(storageProvider)
         coreAssetsDirectory.deleteRecursively()
         coreAssetsDirectory.mkdirs()
@@ -78,7 +78,7 @@ class CoreSourcePpsspp : CoreSource {
             .commit()
     }
 
-    private suspend fun updatedRequested(storageProvider: StorageProvider, sharedPreferences: SharedPreferences): Boolean =
+    private suspend fun updatedRequested(storageProvider: StorageDirProvider, sharedPreferences: SharedPreferences): Boolean =
         withContext(Dispatchers.IO) {
             val directoryExists = getAssetsDirectory(storageProvider).exists()
 
@@ -88,7 +88,7 @@ class CoreSourcePpsspp : CoreSource {
             !directoryExists || !hasCurrentVersion
         }
 
-    private suspend fun getAssetsDirectory(storageProvider: StorageProvider): File {
+    private suspend fun getAssetsDirectory(storageProvider: StorageDirProvider): File {
         return withContext(Dispatchers.IO) {
             File(storageProvider.getInternalFileSystem(), PPSSPP_ASSETS_FOLDER_NAME)
         }

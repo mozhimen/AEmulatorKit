@@ -6,6 +6,7 @@ import com.mozhimen.basick.utilk.kotlin.megaBytes
 import com.mozhimen.basick.utilk.kotlin.startsWithAny
 import com.mozhimen.emulatork.basic.system.ESystemType
 import com.mozhimen.basick.utilk.kotlin.indexOf
+import com.mozhimen.emulatork.basic.system.SystemScanSerial
 import timber.log.Timber
 import java.io.InputStream
 import java.nio.charset.Charset
@@ -20,7 +21,7 @@ import kotlin.math.roundToInt
  * @Version 1.0
  */
 object StorageScannerSerial {
-    data class DiskInfo(val serial: String?, val systemID: ESystemType?)
+    data class DiskInfo constructor(val serial: String?, val eSystemType: ESystemType?)
 
     //////////////////////////////////////////////////////////////////////////
 
@@ -32,7 +33,7 @@ object StorageScannerSerial {
 
     @ExperimentalUnsignedTypes
     private val MAGIC_NUMBERS = listOf(
-        MagicNumber(
+        SystemScanSerial(
             0x0010,
             ubyteArrayOf(
                 0x53U,
@@ -52,7 +53,7 @@ object StorageScannerSerial {
             ).toByteArray(),
             ESystemType.SEGACD
         ),
-        MagicNumber(
+        SystemScanSerial(
             0x8008,
             ubyteArrayOf(
                 0x50U,
@@ -69,7 +70,7 @@ object StorageScannerSerial {
             ).toByteArray(),
             ESystemType.PSX
         ),
-        MagicNumber(
+        SystemScanSerial(
             0x9320,
             ubyteArrayOf(
                 0x50U,
@@ -86,7 +87,7 @@ object StorageScannerSerial {
             ).toByteArray(),
             ESystemType.PSX
         ),
-        MagicNumber(
+        SystemScanSerial(
             0x8008,
             ubyteArrayOf(0x50U, 0x53U, 0x50U, 0x20U, 0x47U, 0x41U, 0x4dU, 0x45U).toByteArray(),
             ESystemType.PSP
@@ -174,7 +175,7 @@ object StorageScannerSerial {
             .firstOrNull {
                 header.copyOfRange(it.offset, it.offset + it.numbers.size).contentEquals(it.numbers)
             }
-            ?.systemID
+            ?.eSystemType
 
         Timber.d("SystemID detected via magic numbers: $detectedSystem")
 

@@ -2,7 +2,7 @@ package com.mozhimen.emulatork.common.save
 
 import com.mozhimen.basick.utilk.kotlin.UtilKResult
 import com.mozhimen.emulatork.basic.game.db.entities.Game
-import com.mozhimen.emulatork.basic.storage.StorageProvider
+import com.mozhimen.emulatork.basic.storage.StorageDirProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -14,7 +14,7 @@ import java.io.File
  * @Date 2024/5/13
  * @Version 1.0
  */
-class SaveManager(private val storageProvider: StorageProvider) {
+class SaveManager(private val storageProvider: StorageDirProvider) {
     companion object {
         private const val FILE_ACCESS_RETRIES = 3
     }

@@ -5,7 +5,7 @@ import android.graphics.BitmapFactory
 import android.media.ThumbnailUtils
 import com.mozhimen.emulatork.core.ECoreId
 import com.mozhimen.emulatork.basic.game.db.entities.Game
-import com.mozhimen.emulatork.basic.storage.StorageProvider
+import com.mozhimen.emulatork.basic.storage.StorageDirProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -18,7 +18,7 @@ import java.io.FileOutputStream
  * @Date 2024/5/13
  * @Version 1.0
  */
-class SaveStatePreviewManager(private val storageProvider: StorageProvider) {
+class SaveStatePreviewManager(private val storageProvider: StorageDirProvider) {
     companion object {
         val PREVIEW_SIZE_DP = 96f
     }

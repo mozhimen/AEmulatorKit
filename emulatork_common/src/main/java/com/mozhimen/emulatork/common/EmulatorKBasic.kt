@@ -3,8 +3,6 @@ package com.mozhimen.emulatork.common
 import android.util.Log
 import com.mozhimen.basick.utilk.commons.IUtilK
 import com.mozhimen.basick.utilk.kotlinx.coroutines.batch_ofSizeTime
-import com.mozhimen.emulatork.basic.bios.BiosManager
-import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
 import com.mozhimen.emulatork.basic.game.db.entities.DataFile
 import com.mozhimen.emulatork.basic.game.db.entities.Game
 import com.mozhimen.emulatork.basic.metadata.Metadata
@@ -15,8 +13,10 @@ import com.mozhimen.emulatork.basic.storage.StorageGroupedFiles
 import com.mozhimen.emulatork.basic.storage.StorageRomFile
 import com.mozhimen.emulatork.basic.storage.StorageFile
 import com.mozhimen.emulatork.basic.storage.StorageFilesMerger
-import com.mozhimen.emulatork.basic.storage.StorageProvider
-import com.mozhimen.emulatork.basic.storage.StorageProviderRegistry
+import com.mozhimen.emulatork.basic.storage.StorageDirProvider
+import com.mozhimen.emulatork.common.bios.BiosManager
+import com.mozhimen.emulatork.common.storage.StorageProviderRegistry
+import com.mozhimen.emulatork.db.game.database.RetrogradeDatabase
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
@@ -41,6 +41,7 @@ open class EmulatorKBasic(
     private val metadataProvider: Lazy<MetadataProvider>,
     private val biosManager: BiosManager
 ) : IUtilK {
+
     companion object {
         // We batch database updates to avoid unnecessary UI updates.
         const val MAX_BUFFER_SIZE = 200
@@ -55,7 +56,7 @@ open class EmulatorKBasic(
         allowVirtualFiles: Boolean
     ): StorageRomFile {
         val provider = storageProviderRegistry.value
-        return provider.getProvider(game).getGameRomFiles(game, dataFiles, allowVirtualFiles)
+        return provider.getStorageProvider(game).getGameRomFiles(game, dataFiles, allowVirtualFiles)
     }
 
     suspend fun indexLibrary() {
@@ -93,7 +94,7 @@ open class EmulatorKBasic(
 
     @OptIn(FlowPreview::class)
     private fun indexSingleProvider(
-        provider: StorageProvider,
+        provider: StorageDirProvider,
         startedAtMs: Long,
         gameMetadata: MetadataProvider
     ): Flow<Unit> {
@@ -107,7 +108,7 @@ open class EmulatorKBasic(
 
     private suspend fun processBatch(
         batch: List<StorageGroupedFiles>,
-        provider: StorageProvider,
+        provider: StorageDirProvider,
         startedAtMs: Long,
         gameMetadata: MetadataProvider
     ) = flow<Unit> {
@@ -180,7 +181,7 @@ open class EmulatorKBasic(
     private fun handleNewEntries(
         entries: List<ScanEntry>,
         startedAtMs: Long,
-        provider: StorageProvider
+        provider: StorageDirProvider
     ) {
         val gameFiles = entries
             .filterIsInstance<ScanEntry.GameFile>()
@@ -213,7 +214,7 @@ open class EmulatorKBasic(
     }
 
     private fun handleUnknownFiles(
-        provider: StorageProvider,
+        provider: StorageDirProvider,
         files: List<StorageBaseFile>,
         startedAtMs: Long
     ) {
@@ -229,7 +230,7 @@ open class EmulatorKBasic(
 
     private suspend fun buildEntryFromMetadata(
         groupedStorageFile: StorageGroupedFiles,
-        provider: StorageProvider,
+        provider: StorageDirProvider,
         metadataProvider: MetadataProvider,
         startedAtMs: Long
     ): ScanEntry {
@@ -247,7 +248,7 @@ open class EmulatorKBasic(
     }
 
     private fun safeStorageFile(
-        provider: StorageProvider,
+        provider: StorageDirProvider,
         storageBaseFile: StorageBaseFile
     ): StorageFile? {
         return runCatching {

@@ -24,7 +24,7 @@ import com.mozhimen.emulatork.common.dagger.android.DaggerAppCompatActivity
 import com.mozhimen.emulatork.basic.system.ESystemType
 import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
 import com.mozhimen.emulatork.basic.save.sync.SaveSyncManager
-import com.mozhimen.emulatork.basic.storage.StorageProvider
+import com.mozhimen.emulatork.basic.storage.StorageDirProvider
 import com.mozhimen.emulatork.basic.game.review.GameReviewManager
 import com.mozhimen.emulatork.ui.R
 import com.mozhimen.emulatork.test.dagger.favorites.FavoritesFragment
@@ -160,7 +160,7 @@ class MainActivity : DaggerAppCompatActivity(), GameBusyActivity ,IUtilK{
 
     private fun displayLemuroidHelp() {
         val systemFolders = ESystemType.values()
-            .map { it.dbname }
+            .map { it.simpleName }
             .map { "<i>$it</i>" }
             .joinToString(", ")
 
@@ -225,7 +225,7 @@ class MainActivity : DaggerAppCompatActivity(), GameBusyActivity ,IUtilK{
             @Provides
             @PerActivity
             @JvmStatic
-            fun settingsInteractor(activity: MainActivity, storageProvider: StorageProvider) =
+            fun settingsInteractor(activity: MainActivity, storageProvider: StorageDirProvider) =
                 SettingsInteractor(activity, storageProvider)
 
             @Provides
