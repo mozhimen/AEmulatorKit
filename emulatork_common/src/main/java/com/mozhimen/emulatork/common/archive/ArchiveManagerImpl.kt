@@ -1,8 +1,8 @@
-package com.mozhimen.emulatork.common.save.sync
+package com.mozhimen.emulatork.common.archive
 
 import android.app.Activity
 import android.content.Context
-import com.mozhimen.emulatork.core.ECoreId
+import com.mozhimen.emulatork.core.ECoreType
 import com.mozhimen.emulatork.basic.storage.StorageDirProvider
 
 /**
@@ -12,10 +12,10 @@ import com.mozhimen.emulatork.basic.storage.StorageDirProvider
  * @Date 2024/5/13
  * @Version 1.0
  */
-class SaveSyncManagerImpl(
+class ArchiveManagerImpl(
     private val appContext: Context,
     private val storageProvider: StorageDirProvider
-) : SaveSyncManager {
+) : ArchiveManager {
     override fun getProvider(): String = ""
 
     override fun getSettingsActivity(): Class<out Activity>? = null
@@ -28,9 +28,9 @@ class SaveSyncManagerImpl(
 
     override fun getConfigInfo(): String = ""
 
-    override suspend fun sync(cores: Set<com.mozhimen.emulatork.core.ECoreId>) {}
+    override suspend fun sync(eCoreTypes: Set<ECoreType>) {}
 
     override fun computeSavesSpace() = ""
 
-    override fun computeStatesSpace(coreID: com.mozhimen.emulatork.core.ECoreId) = ""
+    override fun computeStatesSpace(eCoreType: ECoreType) = ""
 }

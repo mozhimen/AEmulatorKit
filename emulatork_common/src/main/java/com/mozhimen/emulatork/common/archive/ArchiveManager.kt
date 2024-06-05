@@ -1,4 +1,4 @@
-package com.mozhimen.emulatork.common.save.sync
+package com.mozhimen.emulatork.common.archive
 
 import android.app.Activity
 import com.mozhimen.emulatork.core.ECoreType
@@ -10,7 +10,7 @@ import com.mozhimen.emulatork.core.ECoreType
  * @Date 2024/5/11
  * @Version 1.0
  */
-interface SaveSyncManager {
+interface ArchiveManager {
     fun getProvider(): String
     fun getSettingsActivity(): Class<out Activity>?
     fun isSupported(): Boolean

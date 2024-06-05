@@ -1,7 +1,9 @@
-package com.mozhimen.emulatork.common.save
+package com.mozhimen.emulatork.common.archive
 
-import com.mozhimen.emulatork.core.ECoreId
-import com.mozhimen.emulatork.basic.game.db.entities.Game
+import com.mozhimen.emulatork.common.save.SaveManager
+import com.mozhimen.emulatork.common.save.SaveStateManager
+import com.mozhimen.emulatork.core.ECoreType
+import com.mozhimen.emulatork.db.game.entities.Game
 
 /**
  * @ClassName SavesCoherencyEngine
@@ -26,16 +28,16 @@ import com.mozhimen.emulatork.basic.game.db.entities.Game
     如果我们检测到一个较新的SRAM文件，我们基本上会避免加载状态。
     如果不同的内核共享相同的SRAM文件，这也很方便。
 */
-class SaveCoherencyEngine(val saveManager: SaveManager, val saveStateManager: SaveStateManager) {
+class ArchiveCoherencyEngine(val saveManager: SaveManager, val saveStateManager: SaveStateManager) {
     companion object {
         private const val TOLERANCE = 30L * 1000L
     }
 
     //////////////////////////////////////////////////////////////////////////
 
-    suspend fun shouldDiscardAutoSaveState(game: Game, coreID: com.mozhimen.emulatork.core.ECoreId): Boolean {
+    suspend fun shouldDiscardAutoSaveState(game: Game, eCoreType: ECoreType): Boolean {
         val autoSRAM = saveManager.getSaveRAMInfo(game)
-        val autoSave = saveStateManager.getAutoSaveInfo(game, coreID)
+        val autoSave = saveStateManager.getAutoSaveInfo(game, eCoreType)
         return autoSRAM.exists && autoSave.exists && autoSRAM.date > autoSave.date + TOLERANCE
     }
 }

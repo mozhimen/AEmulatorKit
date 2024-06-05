@@ -1,4 +1,4 @@
-package com.mozhimen.emulatork.common.startup
+package com.mozhimen.emulatork.basic.startup
 
 import android.content.Context
 import android.os.StrictMode

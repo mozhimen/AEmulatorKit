@@ -52,6 +52,8 @@ open class SettingManager(private val context: Context, sharedPreferences: Lazy<
 
     suspend fun allowDirectGameLoad() = booleanPreference(R.string.pref_key_allow_direct_game_load, true)
 
+    /////////////////////////////////////////////////////////////////////////////////////
+
     private suspend fun booleanPreference(keyId: Int, default: Boolean): Boolean =
         withContext(Dispatchers.IO) { sharedPreferences.getBoolean(getString(keyId), default).asFlow().first() }
 

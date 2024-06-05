@@ -1,4 +1,4 @@
-package com.mozhimen.emulatork.basic.storage
+package com.mozhimen.emulatork.basic.rom
 
 import android.os.ParcelFileDescriptor
 import java.io.File
@@ -10,9 +10,9 @@ import java.io.File
  * @Date 2024/5/11
  * @Version 1.0
  */
-sealed class SStorageRomFileType {
-    data class Standard(val files: List<File>) : SStorageRomFileType()
-    data class Virtual(val files: List<Entry>) : SStorageRomFileType() {
+sealed class SRomFileType {
+    data class Standard(val files: List<File>) : SRomFileType()
+    data class Virtual(val files: List<Entry>) : SRomFileType() {
         data class Entry(val filePath: String, val fileDescriptor: ParcelFileDescriptor)
     }
 }

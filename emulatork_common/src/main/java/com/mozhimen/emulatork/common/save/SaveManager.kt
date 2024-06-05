@@ -56,10 +56,11 @@ class SaveManager(private val storageProvider: StorageDirProvider) {
 
     ///////////////////////////////////////////////////////////////////
 
-    private suspend fun getSaveFile(fileName: String): File = withContext(Dispatchers.IO) {
-        val savesDirectory = storageProvider.getExternalFileSaves()
-        File(savesDirectory, fileName)
-    }
+    private suspend fun getSaveFile(fileName: String): File =
+        withContext(Dispatchers.IO) {
+            val savesDirectory = storageProvider.getExternalFileSaves()
+            File(savesDirectory, fileName)
+        }
 
     /** This name should make it compatible with RetroArch so that users can freely sync saves across the two application. */
     private fun getSaveRAMFileName(game: Game) = "${game.fileName.substringBeforeLast(".")}.srm"

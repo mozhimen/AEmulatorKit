@@ -1,7 +1,7 @@
 package com.mozhimen.emulatork.common.storage
 
 import android.net.Uri
-import com.mozhimen.emulatork.basic.storage.SStorageRomFileType
+import com.mozhimen.emulatork.basic.rom.SRomFileType
 import com.mozhimen.emulatork.basic.storage.StorageBaseFile
 import com.mozhimen.emulatork.basic.storage.StorageFile
 import com.mozhimen.emulatork.db.game.entities.DataFile
@@ -34,5 +34,5 @@ interface StorageProvider {
 
     fun getStorageFile(storageBaseFile: StorageBaseFile): StorageFile?
 
-    fun getGameRomFiles(game: Game, dataFiles: List<DataFile>, allowVirtualFiles: Boolean): SStorageRomFileType
+    fun getGameRomFiles(game: Game, dataFiles: List<DataFile>, allowVirtualFiles: Boolean): SRomFileType
 }

@@ -6,13 +6,13 @@ import com.mozhimen.basick.utilk.android.util.UtilKLogWrapper
 import com.mozhimen.basick.utilk.commons.IUtilK
 import com.mozhimen.emulatork.basic.bios.BiosManager
 import com.mozhimen.emulatork.core.ECoreId
-import com.mozhimen.emulatork.basic.EmulatorKBasic
 import com.mozhimen.emulatork.basic.game.system.GameSystemCoreConfig
+import com.mozhimen.emulatork.basic.load.LoadException
 import com.mozhimen.emulatork.basic.save.SaveCoherencyEngine
 import com.mozhimen.emulatork.basic.save.SaveManager
 import com.mozhimen.emulatork.basic.save.SaveStateManager
 import com.mozhimen.emulatork.basic.storage.StorageDirProvider
-import com.mozhimen.emulatork.basic.game.system.GameSystems
+import com.mozhimen.emulatork.basic.load.SLoadError
 import com.mozhimen.emulatork.common.EmulatorKBasic
 import com.mozhimen.emulatork.common.core.CoreBundle
 import com.mozhimen.emulatork.common.core.CorePropertyManager
@@ -55,20 +55,20 @@ class GameLoadManager(
             val system = SystemProvider.findSysByName(game.systemName)
 
             if (!isArchitectureSupported(coreBundle)) {
-                throw GameLoadException(SGameLoadError.UnsupportedArchitecture)
+                throw LoadException(SLoadError.UnsupportedArchitecture)
             }
 
             val coreLibrary = runCatching {
                 findLibrary(appContext, coreBundle.eCoreType)!!.absolutePath
             }.getOrElse {
-                throw GameLoadException(SGameLoadError.LoadCore)
+                throw LoadException(SLoadError.LoadCore)
             }
 
             emit(SGameLoadState.LoadingGame)
 
             val missingBiosFiles = biosManager.getMissingBiosFiles(coreBundle, game)
             if (missingBiosFiles.isNotEmpty()) {
-                throw GameLoadException(SGameLoadError.MissingBiosFiles(missingBiosFiles))
+                throw LoadException(SLoadError.MissingBiosFiles(missingBiosFiles))
             }
 
             val gameFiles = runCatching {
@@ -79,7 +79,7 @@ class GameLoadManager(
 
             val saveRAMData = runCatching {
                 legacySaveManager.getSaveRAM(game)
-            }.getOrElse { throw GameLoadException(SGameLoadError.Saves) }
+            }.getOrElse { throw LoadException(SLoadError.Saves) }
 
             val quickSaveData = runCatching {
                 val shouldDiscardSave =
@@ -90,7 +90,7 @@ class GameLoadManager(
                 } else {
                     null
                 }
-            }.getOrElse { throw GameLoadException(SGameLoadError.Saves) }
+            }.getOrElse { throw LoadException(SLoadError.Saves) }
 
             val coreVariables = legacyCorePropertyManager.getOptionsForCore(system.id, coreBundle)
                 .toTypedArray()
@@ -112,12 +112,12 @@ class GameLoadManager(
                     ).also { UtilKLogWrapper.w(TAG, "GameData $it") }
                 )
             )
-        } catch (e: GameLoadException) {
+        } catch (e: LoadException) {
             Timber.e(e, "Error while preparing game")
             throw e
         } catch (e: Exception) {
             Timber.e(e, "Error while preparing game")
-            throw GameLoadException(SGameLoadError.Generic)
+            throw LoadException(SLoadError.Generic)
         }
     }
 

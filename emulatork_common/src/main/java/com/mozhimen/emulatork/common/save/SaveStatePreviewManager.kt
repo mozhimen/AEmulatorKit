@@ -52,8 +52,6 @@ class SaveStatePreviewManager(
         return File(statesDirectories, fileName)
     }
 
-    private fun getSlotScreenshotName(
-        game: Game,
-        index: Int
-    ) = "${game.fileName}.slot${index + 1}.jpg"
+    private fun getSlotScreenshotName(game: Game, index: Int): String =
+        "${game.fileName}.slot${index + 1}.jpg"
 }

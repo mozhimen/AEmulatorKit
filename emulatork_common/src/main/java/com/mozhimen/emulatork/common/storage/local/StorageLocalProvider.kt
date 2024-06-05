@@ -9,7 +9,7 @@ import com.mozhimen.emulatork.common.R
 import com.mozhimen.emulatork.basic.preferences.SharedPreferencesManager
 import com.mozhimen.emulatork.basic.storage.StorageDirProvider
 import com.mozhimen.emulatork.basic.storage.StorageFile
-import com.mozhimen.emulatork.basic.storage.SStorageRomFileType
+import com.mozhimen.emulatork.basic.rom.SRomFileType
 import com.mozhimen.emulatork.basic.storage.StorageBaseFile
 import com.mozhimen.emulatork.common.storage.StorageProvider
 import com.mozhimen.emulatork.db.game.entities.DataFile
@@ -103,8 +103,8 @@ class StorageLocalProvider(
         game: Game,
         dataFiles: List<DataFile>,
         allowVirtualFiles: Boolean
-    ): SStorageRomFileType {
-        return SStorageRomFileType.Standard(listOf(getGameRom(game)) + dataFiles.map { getDataFile(it) })
+    ): SRomFileType {
+        return SRomFileType.Standard(listOf(getGameRom(game)) + dataFiles.map { getDataFile(it) })
     }
 
     override fun getInputStream(uri: Uri): InputStream {
