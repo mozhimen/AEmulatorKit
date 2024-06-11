@@ -13,7 +13,7 @@ import com.mozhimen.abilityk.jetpack.preference.SafePreferenceDataStore
 import com.mozhimen.emulatork.basic.save.SaveStateManager
 import com.mozhimen.emulatork.basic.save.SaveStatePreviewManager
 import com.mozhimen.emulatork.basic.game.menu.GameMenuContract
-import com.mozhimen.emulatork.ext.game.menu.GameMenuMgr
+import com.mozhimen.emulatork.ext.input.MenuMgr
 import java.security.InvalidParameterException
 
 /**
@@ -62,7 +62,7 @@ abstract class AbsGameMenuSaveFragment : PreferenceFragmentCompat() {
         val slotsInfo = statesManager().getSavedSlotsInfo(game, systemCoreConfig.coreID)
 
         slotsInfo.forEachIndexed { index, saveInfo ->
-            val bitmap = GameMenuMgr.getSaveStateBitmap(
+            val bitmap = MenuMgr.getSaveStateBitmap(
                 requireContext(),
                 statesPreviewManager(),
                 saveInfo,
@@ -71,7 +71,7 @@ abstract class AbsGameMenuSaveFragment : PreferenceFragmentCompat() {
                 index
             )
 
-            GameMenuMgr.addSavePreference(
+            MenuMgr.addSavePreference(
                 preferenceScreen,
                 index,
                 saveInfo,
@@ -81,7 +81,7 @@ abstract class AbsGameMenuSaveFragment : PreferenceFragmentCompat() {
     }
 
     override fun onPreferenceTreeClick(preference: Preference?): Boolean {
-        return GameMenuMgr.onPreferenceTreeClicked(activity, preference)
+        return MenuMgr.onPreferenceTreeClicked(activity, preference)
     }
 
 

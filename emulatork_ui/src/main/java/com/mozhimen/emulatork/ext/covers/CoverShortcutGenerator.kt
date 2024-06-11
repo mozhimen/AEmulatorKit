@@ -10,8 +10,8 @@ import android.graphics.drawable.Icon
 import android.os.Build
 import com.mozhimen.basick.utilk.android.graphics.applyBitmapAnyCropSquare
 import com.mozhimen.basick.utilk.android.graphics.drawable2bitmap
-import com.mozhimen.emulatork.basic.game.db.entities.Game
-import com.mozhimen.emulatork.basic.deeplink.DeepLink
+import com.mozhimen.emulatork.common.utils.CommonUtil
+import com.mozhimen.emulatork.db.game.entities.Game
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.Response
@@ -45,7 +45,7 @@ class CoverShortcutGenerator(
         return shortcutManager.isRequestPinShortcutSupported
     }
 
-    suspend fun pinShortcutForGame(game: Game) {
+    suspend fun pinShortcutForGame(game: Game, hostName: String) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
             return
 
@@ -55,7 +55,7 @@ class CoverShortcutGenerator(
         val shortcutInfo = ShortcutInfo.Builder(appContext, "game_${game.id}")
             .setShortLabel(game.title)
             .setLongLabel(game.title)
-            .setIntent(DeepLink.launchIntentForGame(appContext, game))
+            .setIntent(CommonUtil.launchIntentForGame(appContext, hostName, game))
             .setIcon(Icon.createWithBitmap(bitmap))
             .build()
 

@@ -31,12 +31,11 @@ android {
 }
 
 dependencies {
-    api project(':emulatork_basic')
+    api project(':emulatork_common')
 
     api project(':ANavigateKit:navigatek_navigation')
     api project(":AImageKit:imagek_coil1")
     api project(":AXmlKit:drawablek")
-    api project(":APagingKit:pagingk_paging3_basic")
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

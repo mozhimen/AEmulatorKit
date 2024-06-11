@@ -1,4 +1,4 @@
-package com.mozhimen.emulatork.ext.core
+package com.mozhimen.emulatork.ext.system
 
 import android.content.Context
 import androidx.preference.ListPreference
@@ -7,12 +7,12 @@ import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceGroup
 import androidx.preference.PreferenceScreen
 import androidx.preference.SwitchPreference
-import com.mozhimen.emulatork.basic.controller.touch.ControllerTouchConfig
-import com.mozhimen.emulatork.core.CoreVariablesManager
-import com.mozhimen.emulatork.core.ECoreId
-import com.mozhimen.emulatork.basic.controller.ControllerConfigsManager
 import com.mozhimen.emulatork.ui.R
-import com.mozhimen.emulatork.basic.core.options.CoreOptionSetting
+import com.mozhimen.emulatork.common.core.CorePropertyManager
+import com.mozhimen.emulatork.common.input.GamepadConfigManager
+import com.mozhimen.emulatork.common.system.SystemOption
+import com.mozhimen.emulatork.core.type.ECoreType
+import com.mozhimen.emulatork.input.virtual.gamepad.GamepadConfig
 
 /**
  * @ClassName CoreOptionsPreferenceHelper
@@ -21,17 +21,17 @@ import com.mozhimen.emulatork.basic.core.options.CoreOptionSetting
  * @Date 2024/5/13
  * @Version 1.0
  */
-object CoreOptionsPreferenceManager {
+object SystemOptionPreferenceManager {
 
     private val BOOLEAN_SET = setOf("enabled", "disabled")
 
     fun addPreferences(
         preferenceScreen: PreferenceScreen,
         systemID: String,
-        baseOptions: List<CoreOptionSetting>,
-        advancedOptions: List<CoreOptionSetting>
+        systemOptions: List<SystemOption>,
+        advancedOptions: List<SystemOption>
     ) {
-        if (baseOptions.isEmpty() && advancedOptions.isEmpty()) {
+        if (systemOptions.isEmpty() && advancedOptions.isEmpty()) {
             return
         }
 
@@ -40,19 +40,19 @@ object CoreOptionsPreferenceManager {
         val title = context.getString(R.string.core_settings_category_preferences)
         val preferencesCategory = createCategory(preferenceScreen.context, preferenceScreen, title)
 
-        addPreferences(context, preferencesCategory, baseOptions, systemID)
+        addPreferences(context, preferencesCategory, systemOptions, systemID)
         addPreferences(context, preferencesCategory, advancedOptions, systemID)
     }
 
     fun addControllers(
         preferenceScreen: PreferenceScreen,
         systemID: String,
-        coreID: com.mozhimen.emulatork.core.ECoreId,
+        eCoreType: ECoreType,
         connectedGamePads: Int,
-        controllers: Map<Int, List<ControllerTouchConfig>>
+        gamepadConfigMap: Map<Int, List<GamepadConfig>>
     ) {
         val visibleControllers = (0 until connectedGamePads)
-            .map { it to controllers[it] }
+            .map { it to gamepadConfigMap[it] }
             .filter { (_, controllers) -> controllers != null && controllers.size >= 2 }
 
         if (visibleControllers.isEmpty())
@@ -64,7 +64,7 @@ object CoreOptionsPreferenceManager {
 
         visibleControllers
             .forEach { (port, controllers) ->
-                val preference = buildControllerPreference(context, systemID, coreID, port, controllers!!)
+                val preference = buildControllerPreference(context, systemID, eCoreType, port, controllers!!)
                 category.addPreference(preference)
             }
     }
@@ -72,38 +72,38 @@ object CoreOptionsPreferenceManager {
     private fun addPreferences(
         context: Context,
         preferenceGroup: PreferenceGroup,
-        options: List<CoreOptionSetting>,
+        systemOptions: List<SystemOption>,
         systemID: String
     ) {
-        options
+        systemOptions
             .map { convertToPreference(context, it, systemID) }
             .forEach { preferenceGroup.addPreference(it) }
     }
 
     private fun convertToPreference(
         context: Context,
-        it: CoreOptionSetting,
+        systemOption: SystemOption,
         systemID: String
     ): Preference {
-        return if (it.getEntriesValues().toSet() == BOOLEAN_SET) {
-            buildSwitchPreference(context, it, systemID)
+        return if (systemOption.getEntriesValues().toSet() == BOOLEAN_SET) {
+            buildSwitchPreference(context, systemOption, systemID)
         } else {
-            buildListPreference(context, it, systemID)
+            buildListPreference(context, systemOption, systemID)
         }
     }
 
     private fun buildListPreference(
         context: Context,
-        it: CoreOptionSetting,
+        systemOption: SystemOption,
         systemID: String
     ): ListPreference {
         val preference = ListPreference(context)
-        preference.key = com.mozhimen.emulatork.core.CoreVariablesManager.computeSharedPreferenceKey(it.getKey(), systemID)
-        preference.title = it.getDisplayName(context)
-        preference.entries = it.getEntries(context).toTypedArray()
-        preference.entryValues = it.getEntriesValues().toTypedArray()
-        preference.setDefaultValue(it.getCurrentValue())
-        preference.setValueIndex(it.getCurrentIndex())
+        preference.key = CorePropertyManager.computeSharedPreferenceKey(systemOption.getKey(), systemID)
+        preference.title = systemOption.getDisplayName(context)
+        preference.entries = systemOption.getEntries(context).toTypedArray()
+        preference.entryValues = systemOption.getEntriesValues().toTypedArray()
+        preference.setDefaultValue(systemOption.getCurrentValue())
+        preference.setValueIndex(systemOption.getCurrentIndex())
         preference.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
         preference.isIconSpaceReserved = false
         return preference
@@ -111,14 +111,14 @@ object CoreOptionsPreferenceManager {
 
     private fun buildSwitchPreference(
         context: Context,
-        it: CoreOptionSetting,
+        systemOption: SystemOption,
         systemID: String
     ): SwitchPreference {
         val preference = SwitchPreference(context)
-        preference.key = com.mozhimen.emulatork.core.CoreVariablesManager.computeSharedPreferenceKey(it.getKey(), systemID)
-        preference.title = it.getDisplayName(context)
-        preference.setDefaultValue(it.getCurrentValue() == "enabled")
-        preference.isChecked = it.getCurrentValue() == "enabled"
+        preference.key = CorePropertyManager.computeSharedPreferenceKey(systemOption.getKey(), systemID)
+        preference.title = systemOption.getDisplayName(context)
+        preference.setDefaultValue(systemOption.getCurrentValue() == "enabled")
+        preference.isChecked = systemOption.getCurrentValue() == "enabled"
         preference.isIconSpaceReserved = false
         return preference
     }
@@ -126,18 +126,18 @@ object CoreOptionsPreferenceManager {
     private fun buildControllerPreference(
         context: Context,
         systemID: String,
-        coreID: com.mozhimen.emulatork.core.ECoreId,
+        eCoreType: ECoreType,
         port: Int,
-        controllerConfigs: List<ControllerTouchConfig>
+        gamepadConfigs: List<GamepadConfig>
     ): Preference {
         val preference = ListPreference(context)
-        preference.key = ControllerConfigsManager.getSharedPreferencesId(systemID, coreID, port)
+        preference.key = GamepadConfigManager.getSharedPreferencesId(systemID, eCoreType, port)
         preference.title = context.getString(R.string.core_settings_controller, (port + 1).toString())
-        preference.entries = controllerConfigs.map { context.getString(it.displayName) }.toTypedArray()
-        preference.entryValues = controllerConfigs.map { it.name }.toTypedArray()
+        preference.entries = gamepadConfigs.map { context.getString(it.displayName) }.toTypedArray()
+        preference.entryValues = gamepadConfigs.map { it.name }.toTypedArray()
         preference.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
         preference.isIconSpaceReserved = false
-        preference.setDefaultValue(controllerConfigs.map { it.name }.first())
+        preference.setDefaultValue(gamepadConfigs.map { it.name }.first())
         return preference
     }
 

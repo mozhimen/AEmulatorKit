@@ -2,9 +2,9 @@ package com.mozhimen.emulatork.ext.game
 
 import android.content.Context
 import com.mozhimen.basick.utilk.android.widget.showToast
-import com.mozhimen.emulatork.basic.game.GameBusyActivity
-import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
-import com.mozhimen.emulatork.basic.game.db.entities.Game
+import com.mozhimen.emulatork.common.android.BusyProvider
+import com.mozhimen.emulatork.db.game.database.RetrogradeDatabase
+import com.mozhimen.emulatork.db.game.entities.Game
 import com.mozhimen.emulatork.ui.R
 import com.mozhimen.emulatork.ui.game.AbsGameActivity
 import com.mozhimen.emulatork.ext.covers.CoverShortcutGenerator
@@ -27,7 +27,7 @@ open class GameInteractor constructor(
     private val gameLauncher: GameLauncher
 ) {
     fun onGamePlay(game: Game) {
-        if (activity !is GameBusyActivity) return
+        if (activity !is BusyProvider) return
         if (activity.isBusy()) {
             R.string.game_interactory_busy.showToast()
             return
@@ -36,7 +36,7 @@ open class GameInteractor constructor(
     }
 
     fun onGameRestart(game: Game) {
-        if (activity !is GameBusyActivity) return
+        if (activity !is BusyProvider) return
         if (activity.isBusy()) {
             R.string.game_interactory_busy.showToast()
             return
@@ -50,9 +50,9 @@ open class GameInteractor constructor(
         }
     }
 
-    fun onCreateShortcut(game: Game) {
+    fun onCreateShortcut(game: Game, hostName: String) {
         GlobalScope.launch {
-            coverShortcutGenerator.pinShortcutForGame(game)
+            coverShortcutGenerator.pinShortcutForGame(game,hostName)
         }
     }
 

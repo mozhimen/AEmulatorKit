@@ -11,7 +11,7 @@ import com.mozhimen.basick.utilk.androidx.fragment.runOnViewLifecycleState
 import com.mozhimen.emulatork.basic.preferences.SharedPreferencesManager
 import com.mozhimen.emulatork.ui.R
 import com.mozhimen.emulatork.input.unit.InputUnitManager
-import com.mozhimen.emulatork.ext.game.pad.GamePadPreferencesManager
+import com.mozhimen.emulatork.ext.input.GamePadPreferencesManager
 import com.mozhimen.basick.elemk.mos.NTuple2
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.combine

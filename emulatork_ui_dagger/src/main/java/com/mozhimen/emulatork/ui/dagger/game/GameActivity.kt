@@ -89,35 +89,35 @@ class GameActivity : AbsGameActivity(), HasFragmentInjector, HasSupportFragmentI
         return GameService::class.java
     }
 
-    override fun settingsManager(): GameSettingsManager {
+    override fun settingManager(): GameSettingsManager {
         return gameSettingsManager
     }
 
-    override fun statesManager(): SaveStateManager {
+    override fun saveStateManager(): SaveStateManager {
         return saveStateManager
     }
 
-    override fun statesPreviewManager(): SaveStatePreviewManager {
+    override fun saveStatePreviewManager(): SaveStatePreviewManager {
         return saveStatePreviewManager
     }
 
-    override fun legacySavesManager(): SaveManager {
+    override fun saveManager(): SaveManager {
         return legacySaveManager
     }
 
-    override fun coreVariablesManager(): com.mozhimen.emulatork.core.CoreVariablesManager {
+    override fun corePropertyManager(): com.mozhimen.emulatork.core.CoreVariablesManager {
         return coreVariablesManager
     }
 
-    override fun inputDeviceManager(): InputUnitManager {
+    override fun inputUnitManager(): InputUnitManager {
         return inputUnitManager
     }
 
-    override fun gameLoader(): com.mozhimen.emulatork.common.game.GameLoadManager {
+    override fun gameLoadManager(): com.mozhimen.emulatork.common.game.GameLoadManager {
         return gameLoadManager
     }
 
-    override fun controllerConfigsManager(): ControllerConfigsManager {
+    override fun gamepadConfigManager(): ControllerConfigsManager {
         return controllerConfigsManager
     }
 

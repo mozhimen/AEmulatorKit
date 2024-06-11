@@ -6,7 +6,7 @@ import coil.ImageLoader
 import coil.load
 import coil.util.CoilUtils
 import com.mozhimen.basick.utilk.kotlin.UtilKIntColor
-import com.mozhimen.emulatork.basic.game.db.entities.Game
+import com.mozhimen.emulatork.db.game.entities.Game
 import com.mozhimen.xmlk.drawablek.DrawableKText
 import okhttp3.OkHttpClient
 

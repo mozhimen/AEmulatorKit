@@ -2,11 +2,11 @@ package com.mozhimen.emulatork.db.game.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.mozhimen.emulatork.db.game.daos.DataFileDao
+import com.mozhimen.emulatork.db.game.daos.GameDataFileDao
 import com.mozhimen.emulatork.db.game.daos.GameDao
 import com.mozhimen.emulatork.db.game.daos.GameSearchDao
 import com.mozhimen.emulatork.db.game.entities.Game
-import com.mozhimen.emulatork.db.game.entities.DataFile
+import com.mozhimen.emulatork.db.game.entities.GameDataFile
 /**
  * @ClassName RetrogradeDatabase
  * @Description TODO
@@ -15,7 +15,7 @@ import com.mozhimen.emulatork.db.game.entities.DataFile
  * @Version 1.0
  */
 @Database(
-    entities = [Game::class, DataFile::class],
+    entities = [Game::class, GameDataFile::class],
     version = 9,
     exportSchema = false
 )
@@ -27,7 +27,7 @@ abstract class RetrogradeDatabase : RoomDatabase() {
 
     abstract fun gameDao(): GameDao
 
-    abstract fun dataFileDao(): DataFileDao
+    abstract fun dataFileDao(): GameDataFileDao
 
     fun gameSearchDao() = GameSearchDao(gameSearchDaoInternal())
 

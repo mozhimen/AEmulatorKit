@@ -6,7 +6,7 @@ import com.mozhimen.emulatork.basic.game.system.GameSystemCoreConfig
 import com.mozhimen.emulatork.ui.R
 import com.mozhimen.abilityk.jetpack.preference.SafePreferenceDataStore
 import com.mozhimen.emulatork.basic.game.menu.GameMenuContract
-import com.mozhimen.emulatork.ext.game.menu.GameMenuMgr
+import com.mozhimen.emulatork.ext.input.MenuMgr
 
 /**
  * @ClassName GameMenuFragment
@@ -25,7 +25,7 @@ abstract class AbsGameMenuFragment : PreferenceFragmentCompat() {
             false
         ) ?: false
 
-        GameMenuMgr.setupAudioOption(preferenceScreen, audioEnabled)
+        MenuMgr.setupAudioOption(preferenceScreen, audioEnabled)
 
         val fastForwardSupported = activity?.intent?.getBooleanExtra(
             GameMenuContract.EXTRA_FAST_FORWARD_SUPPORTED,
@@ -37,7 +37,7 @@ abstract class AbsGameMenuFragment : PreferenceFragmentCompat() {
             false
         ) ?: false
 
-        GameMenuMgr.setupFastForwardOption(
+        MenuMgr.setupFastForwardOption(
             preferenceScreen,
             fastForwardEnabled,
             fastForwardSupported
@@ -47,14 +47,14 @@ abstract class AbsGameMenuFragment : PreferenceFragmentCompat() {
             GameMenuContract.EXTRA_SYSTEM_CORE_CONFIG
         ) as GameSystemCoreConfig
 
-        GameMenuMgr.setupSaveOption(preferenceScreen, systemCoreConfig)
+        MenuMgr.setupSaveOption(preferenceScreen, systemCoreConfig)
 
         val numDisks = activity?.intent?.getIntExtra(GameMenuContract.EXTRA_DISKS, 0) ?: 0
         val currentDisk = activity?.intent?.getIntExtra(GameMenuContract.EXTRA_CURRENT_DISK, 0) ?: 0
         if (numDisks > 1) {
-            GameMenuMgr.setupChangeDiskOption(activity, preferenceScreen, currentDisk, numDisks)
+            MenuMgr.setupChangeDiskOption(activity, preferenceScreen, currentDisk, numDisks)
         }
 
-        GameMenuMgr.setupSettingsOption(preferenceScreen, systemCoreConfig)
+        MenuMgr.setupSettingsOption(preferenceScreen, systemCoreConfig)
     }
 }

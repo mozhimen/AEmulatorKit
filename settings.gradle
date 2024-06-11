@@ -24,6 +24,7 @@ include ':test_dagger'
 include ':test_simple'
 include ':test_hilt'
 include ':emulatork_basic'
+include ':emulatork_common'
 include ':emulatork_common_hilt'
 include ':emulatork_common_dagger'
 include ':emulatork_ui_dagger'
@@ -32,6 +33,26 @@ include ':emulatork_ui'
 include ':emulatork_input'
 include ':emulatork_db'
 include ':emulatork_core'
+//ALibKit_Squareup
+include ':ALibKit_Squareup'
+project(':ALibKit_Squareup').projectDir = new File("D:\\WorkSpace\\GitHub\\ALibKit_Squareup")
+include ':ALibKit_Squareup:okhttp3'
+include ':ALibKit_Squareup:okhttp3_log'
+include ':ALibKit_Squareup:retrofit2'
+include ':ALibKit_Squareup:moshi'
+//ALibKit_Jetpack
+include ':ALibKit_Jetpack'
+project(':ALibKit_Jetpack').projectDir = new File("D:\\WorkSpace\\GitHub\\ALibKit_Jetpack")
+include ':ALibKit_Jetpack:preference'
+include ':ALibKit_Jetpack:collection'
+include ':ALibKit_Jetpack:documentfile'
+include ':ALibKit_Jetpack:startup'
+include ':ALibKit_Jetpack:room'
+include ':ALibKit_Jetpack:paging3'
+//ALibKit_Jetbrains
+include ':ALibKit_Jetbrains'
+project(':ALibKit_Jetbrains').projectDir = new File("D:\\WorkSpace\\GitHub\\ALibKit_Jetbrains")
+include ':ALibKit_Jetbrains:kotlinx_serialization'
 //SwiftKit
 include ':SwiftKit'
 project(':SwiftKit').projectDir = new File("D:\\WorkSpace\\GitHub\\SwiftKit")
@@ -48,16 +69,8 @@ include ':ANavigateKit:navigatek_navigation'
 //APagingKit
 include ':APagingKit'
 project(':APagingKit').projectDir = new File("D:\\WorkSpace\\GitHub\\APagingKit")
-include ':APagingKit:pagingk_paging3_basic'
 include ':APagingKit:pagingk_paging3_data'
 include ':APagingKit:pagingk_epoxy4'
-//AAbilityKit_Jetpack
-include ':AAbilityKit_Jetpack'
-project(':AAbilityKit_Jetpack').projectDir = new File("D:\\WorkSpace\\GitHub\\AAbilityKit_Jetpack")
-include ':AAbilityKit_Jetpack:preference'
-include ':AAbilityKit_Jetpack:collection'
-include ':AAbilityKit_Jetpack:documentfile'
-include ':AAbilityKit_Jetpack:startup'
 //AInjectKit
 include ':AInjectKit'
 project(':AInjectKit').projectDir = new File("D:\\WorkSpace\\GitHub\\AInjectKit")
@@ -98,6 +111,10 @@ include ':ARxKit:rxk_epoxy4'
 include ':AEmulatorKit_LibretroDroid'
 project(':AEmulatorKit_LibretroDroid').projectDir = new File("D:\\WorkSpace\\GitHub\\AEmulatorKit_LibretroDroid")
 include ':AEmulatorKit_LibretroDroid:libretrodroid'
+//ASerialKit
+include ':ASerialKit'
+project(':ASerialKit').projectDir = new File("D:\\WorkSpace\\GitHub\\ASerialKit")
+include ':ASerialKit:serialk_moshi'
+include ':ASerialKit:serialk_serialization'
 
 
-include ':emulatork_common'

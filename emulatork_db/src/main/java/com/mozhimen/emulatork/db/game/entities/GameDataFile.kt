@@ -30,7 +30,7 @@ import java.io.Serializable
         Index("lastIndexedAt")
     ]
 )
-data class DataFile(
+data class GameDataFile(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val gameId: Int,

@@ -12,7 +12,7 @@ import com.mozhimen.emulatork.basic.storage.StorageFileGroup
  * @Date 2024/5/11
  * @Version 1.0
  */
-object StorageFilesMerger {
+object StorageFileMerger {
 
     /** Merge files which belong to the same game. This includes bin/cue files and m3u playlists.*/
     fun mergeDataFiles(

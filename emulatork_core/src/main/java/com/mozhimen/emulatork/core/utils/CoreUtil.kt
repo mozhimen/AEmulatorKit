@@ -1,6 +1,6 @@
 package com.mozhimen.emulatork.core.utils
 
-import com.mozhimen.emulatork.core.ECoreType
+import com.mozhimen.emulatork.core.type.ECoreType
 import com.mozhimen.emulatork.core.option.CoreOption
 import com.mozhimen.emulatork.core.property.CoreProperty
 import com.mozhimen.emulatork.core.source.CoreSource

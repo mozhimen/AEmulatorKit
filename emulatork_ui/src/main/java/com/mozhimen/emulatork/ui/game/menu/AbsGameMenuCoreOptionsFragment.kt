@@ -12,7 +12,7 @@ import com.mozhimen.emulatork.ui.R
 import java.security.InvalidParameterException
 import com.mozhimen.emulatork.basic.game.db.entities.Game
 import com.mozhimen.emulatork.basic.game.system.GameSystemCoreConfig
-import com.mozhimen.emulatork.ext.core.CoreOptionsPreferenceManager
+import com.mozhimen.emulatork.ext.system.SystemOptionPreferenceManager
 import com.mozhimen.emulatork.basic.game.menu.GameMenuContract
 
 /**
@@ -68,14 +68,14 @@ abstract class AbsGameMenuCoreOptionsFragment : PreferenceFragmentCompat() {
         val coreConfig = extras?.getSerializable(GameMenuContract.EXTRA_SYSTEM_CORE_CONFIG) as GameSystemCoreConfig?
             ?: throw InvalidParameterException("Missing EXTRA_SYSTEM_CORE_CONFIG")
 
-        CoreOptionsPreferenceManager.addPreferences(
+        SystemOptionPreferenceManager.addPreferences(
             preferenceScreen,
             game.systemId,
             coreOptions.toList(),
             advancedCoreOptions.toList()
         )
 
-        CoreOptionsPreferenceManager.addControllers(
+        SystemOptionPreferenceManager.addControllers(
             preferenceScreen,
             game.systemId,
             coreConfig.coreID,

@@ -1,7 +1,7 @@
 package com.mozhimen.emulatork.common.archive
 
 import android.app.Activity
-import com.mozhimen.emulatork.core.ECoreType
+import com.mozhimen.emulatork.core.type.ECoreType
 
 /**
  * @ClassName SaveSyncManager

@@ -8,7 +8,7 @@ import com.mozhimen.basick.utilk.java.io.deleteFile
 import com.mozhimen.basick.utilk.java.io.inputStream2file_use_ofCopyTo
 import com.mozhimen.emulatork.basic.preferences.SharedPreferencesManager
 import com.mozhimen.emulatork.basic.storage.StorageDirProvider
-import com.mozhimen.emulatork.core.ECoreType
+import com.mozhimen.emulatork.core.type.ECoreType
 import com.mozhimen.emulatork.core.utils.getCoreSource
 import com.mozhimen.netk.retrofit2.commons.DownloadApi
 import kotlinx.coroutines.Dispatchers

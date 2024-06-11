@@ -1,12 +1,10 @@
-package com.mozhimen.emulatork.common.storage.scanner
+package com.mozhimen.emulatork.basic.system
 
 import com.mozhimen.basick.utilk.kotlin.UtilKStrFile
 import com.mozhimen.basick.utilk.kotlin.kiloBytes
 import com.mozhimen.basick.utilk.kotlin.megaBytes
 import com.mozhimen.basick.utilk.kotlin.startsWithAny
-import com.mozhimen.emulatork.basic.system.ESystemType
 import com.mozhimen.basick.utilk.kotlin.indexOf
-import com.mozhimen.emulatork.basic.system.SystemScanSerial
 import timber.log.Timber
 import java.io.InputStream
 import java.nio.charset.Charset
@@ -20,10 +18,7 @@ import kotlin.math.roundToInt
  * @Date 2024/5/11
  * @Version 1.0
  */
-object StorageScannerSerial {
-    data class DiskInfo constructor(val serial: String?, val eSystemType: ESystemType?)
-
-    //////////////////////////////////////////////////////////////////////////
+object SystemSerialExtractor {
 
     private const val PS_SERIAL_MAX_SIZE = 12
 
@@ -33,61 +28,22 @@ object StorageScannerSerial {
 
     @ExperimentalUnsignedTypes
     private val MAGIC_NUMBERS = listOf(
-        SystemScanSerial(
+        SystemSerialBundle(
             0x0010,
-            ubyteArrayOf(
-                0x53U,
-                0x45U,
-                0x47U,
-                0x41U,
-                0x44U,
-                0x49U,
-                0x53U,
-                0x43U,
-                0x53U,
-                0x59U,
-                0x53U,
-                0x54U,
-                0x45U,
-                0x4dU
-            ).toByteArray(),
+            ubyteArrayOf(0x53U, 0x45U, 0x47U, 0x41U, 0x44U, 0x49U, 0x53U, 0x43U, 0x53U, 0x59U, 0x53U, 0x54U, 0x45U, 0x4dU).toByteArray(),
             ESystemType.SEGACD
         ),
-        SystemScanSerial(
+        SystemSerialBundle(
             0x8008,
-            ubyteArrayOf(
-                0x50U,
-                0x4cU,
-                0x41U,
-                0x59U,
-                0x53U,
-                0x54U,
-                0x41U,
-                0x54U,
-                0x49U,
-                0x4fU,
-                0x4eU
-            ).toByteArray(),
+            ubyteArrayOf(0x50U, 0x4cU, 0x41U, 0x59U, 0x53U, 0x54U, 0x41U, 0x54U, 0x49U, 0x4fU, 0x4eU).toByteArray(),
             ESystemType.PSX
         ),
-        SystemScanSerial(
+        SystemSerialBundle(
             0x9320,
-            ubyteArrayOf(
-                0x50U,
-                0x4cU,
-                0x41U,
-                0x59U,
-                0x53U,
-                0x54U,
-                0x41U,
-                0x54U,
-                0x49U,
-                0x4fU,
-                0x4eU
-            ).toByteArray(),
+            ubyteArrayOf(0x50U, 0x4cU, 0x41U, 0x59U, 0x53U, 0x54U, 0x41U, 0x54U, 0x49U, 0x4fU, 0x4eU).toByteArray(),
             ESystemType.PSX
         ),
-        SystemScanSerial(
+        SystemSerialBundle(
             0x8008,
             ubyteArrayOf(0x50U, 0x53U, 0x50U, 0x20U, 0x47U, 0x41U, 0x4dU, 0x45U).toByteArray(),
             ESystemType.PSP
@@ -153,21 +109,21 @@ object StorageScannerSerial {
 
     //////////////////////////////////////////////////////////////////////////
 
-    fun extractInfo(fileName: String, inputStream: InputStream): DiskInfo {
+    fun extractInfo(fileName: String, inputStream: InputStream): SystemSerial {
         Timber.d("Extracting disk info for $fileName")
         inputStream.buffered(READ_BUFFER_SIZE).use {
             return when (UtilKStrFile.extractExtension(fileName)) {
                 "pbp" -> extractInfoForPBP(it)
                 "iso", "bin" -> standardExtractInfo(it)
                 "3ds" -> extractInfoFor3DS(it)
-                else -> DiskInfo(null, null)
+                else -> SystemSerial(null, null)
             }
         }
     }
 
     //////////////////////////////////////////////////////////////////////////
 
-    private fun standardExtractInfo(openedStream: InputStream): DiskInfo {
+    private fun standardExtractInfo(openedStream: InputStream): SystemSerial {
         openedStream.mark(READ_BUFFER_SIZE)
         val header = readByteArray(openedStream, ByteArray(READ_BUFFER_SIZE))
 
@@ -184,21 +140,21 @@ object StorageScannerSerial {
         return when (detectedSystem) {
             ESystemType.SEGACD ->
                 runCatching { extractInfoForSegaCD(openedStream) }
-                    .getOrDefault(DiskInfo(null, ESystemType.SEGACD))
+                    .getOrDefault(SystemSerial(null, ESystemType.SEGACD))
 
             ESystemType.PSX ->
                 runCatching { extractInfoForPSX(openedStream) }
-                    .getOrDefault(DiskInfo(null, ESystemType.PSX))
+                    .getOrDefault(SystemSerial(null, ESystemType.PSX))
 
             ESystemType.PSP ->
                 runCatching { extractInfoForPSP(openedStream) }
-                    .getOrDefault(DiskInfo(null, ESystemType.PSP))
+                    .getOrDefault(SystemSerial(null, ESystemType.PSP))
 
-            else -> DiskInfo(null, null)
+            else -> SystemSerial(null, null)
         }
     }
 
-    private fun extractInfoFor3DS(openedStream: InputStream): DiskInfo {
+    private fun extractInfoFor3DS(openedStream: InputStream): SystemSerial {
         Timber.d("Parsing 3DS game")
         openedStream.mark(0x2000)
         openedStream.skip(0x1150)
@@ -208,10 +164,10 @@ object StorageScannerSerial {
         openedStream.reset()
 
         Timber.d("Found 3DS serial: $rawSerial")
-        return DiskInfo(rawSerial, ESystemType.NINTENDO_3DS)
+        return SystemSerial(rawSerial, ESystemType.NINTENDO_3DS)
     }
 
-    private fun extractInfoForSegaCD(openedStream: InputStream): DiskInfo {
+    private fun extractInfoForSegaCD(openedStream: InputStream): SystemSerial {
         Timber.d("Parsing SegaCD game")
         openedStream.mark(20000)
         openedStream.skip(0x193)
@@ -247,37 +203,37 @@ object StorageScannerSerial {
             .joinToString("-") { it.trim() }
 
         Timber.i("SegaCD final serial: $finalSerial")
-        return DiskInfo(finalSerial, ESystemType.SEGACD)
+        return SystemSerial(finalSerial, ESystemType.SEGACD)
     }
 
-    private fun extractInfoForPSX(openedStream: InputStream): DiskInfo {
+    private fun extractInfoForPSX(openedStream: InputStream): SystemSerial {
         val headerSize = 64.kiloBytes()
         if (openedStream.available() < headerSize) {
-            return DiskInfo(null, null)
+            return SystemSerial(null, null)
         }
 
         return textSearch(PSX_BASE_SERIALS, openedStream, PS_SERIAL_MAX_SIZE, headerSize)
             .mapNotNull { serial -> parsePSXSerial(serial) }
-            .mapNotNull { serial -> DiskInfo(serial, ESystemType.PSX) }
-            .firstOrNull() ?: DiskInfo(null, ESystemType.PSX)
+            .mapNotNull { serial -> SystemSerial(serial, ESystemType.PSX) }
+            .firstOrNull() ?: SystemSerial(null, ESystemType.PSX)
     }
 
-    private fun extractInfoForPSP(openedStream: InputStream): DiskInfo {
+    private fun extractInfoForPSP(openedStream: InputStream): SystemSerial {
         val headerSize = 64.kiloBytes()
         if (openedStream.available() < headerSize) {
-            return DiskInfo(null, null)
+            return SystemSerial(null, null)
         }
 
         return textSearch(PSP_BASE_SERIALS, openedStream, PS_SERIAL_MAX_SIZE, headerSize)
             .mapNotNull { serial -> parsePSXSerial(serial) }
-            .mapNotNull { serial -> DiskInfo(serial, ESystemType.PSP) }
-            .firstOrNull() ?: DiskInfo(null, ESystemType.PSP)
+            .mapNotNull { serial -> SystemSerial(serial, ESystemType.PSP) }
+            .firstOrNull() ?: SystemSerial(null, ESystemType.PSP)
     }
 
-    private fun extractInfoForPBP(openedStream: InputStream): DiskInfo {
+    private fun extractInfoForPBP(openedStream: InputStream): SystemSerial {
         val headerSize = 2.megaBytes()
         if (openedStream.available() < headerSize) {
-            return DiskInfo(null, null)
+            return SystemSerial(null, null)
         }
 
         val queries = (PSP_BASE_SERIALS + PSX_BASE_SERIALS)
@@ -286,12 +242,12 @@ object StorageScannerSerial {
             .mapNotNull { serial -> parsePSXSerial(serial) }
             .mapNotNull { serial ->
                 when {
-                    serial.startsWithAny(PSX_BASE_SERIALS) -> DiskInfo(serial, ESystemType.PSX)
-                    serial.startsWithAny(PSP_BASE_SERIALS) -> DiskInfo(serial, ESystemType.PSP)
-                    else -> DiskInfo(serial, null)
+                    serial.startsWithAny(PSX_BASE_SERIALS) -> SystemSerial(serial, ESystemType.PSX)
+                    serial.startsWithAny(PSP_BASE_SERIALS) -> SystemSerial(serial, ESystemType.PSP)
+                    else -> SystemSerial(serial, null)
                 }
             }
-            .firstOrNull() ?: DiskInfo(null, null)
+            .firstOrNull() ?: SystemSerial(null, null)
     }
 
     private fun parsePSXSerial(serial: String): String? {
@@ -302,7 +258,15 @@ object StorageScannerSerial {
             .firstOrNull()
     }
 
-    private fun textSearch(queries: List<String>, openedStream: InputStream, resultSize: Int, streamSize: Int, windowSize: Int = 8.kiloBytes(), skipSize: Int = windowSize - resultSize, charset: Charset = Charsets.US_ASCII): Sequence<String> {
+    private fun textSearch(
+        queries: List<String>,
+        openedStream: InputStream,
+        resultSize: Int,
+        streamSize: Int,
+        windowSize: Int = 8.kiloBytes(),
+        skipSize: Int = windowSize - resultSize,
+        charset: Charset = Charsets.US_ASCII
+    ): Sequence<String> {
         val byteQueries = queries.map { it.toByteArray(charset) }
         return movingWidnowSequence(openedStream, windowSize, (skipSize).toLong())
             .take(ceil(streamSize.toDouble() / skipSize.toDouble()).roundToInt())

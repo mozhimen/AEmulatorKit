@@ -5,7 +5,7 @@ import android.graphics.BitmapFactory
 import android.media.ThumbnailUtils
 import com.mozhimen.emulatork.db.game.entities.Game
 import com.mozhimen.emulatork.basic.storage.StorageDirProvider
-import com.mozhimen.emulatork.core.ECoreType
+import com.mozhimen.emulatork.core.type.ECoreType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File

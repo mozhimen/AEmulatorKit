@@ -18,6 +18,8 @@ class StorageProviderRegistry(context: Context, val providers: Set<StorageProvid
         const val PREF_NAME = "storage_providers"
     }
 
+    ///////////////////////////////////////////////////////////////////////
+
     private val providersByScheme = mapOf(
         *providers.map { provider ->
             provider.uriSchemes.map { scheme -> scheme to provider }

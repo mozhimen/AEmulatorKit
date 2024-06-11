@@ -1,4 +1,4 @@
-package com.mozhimen.emulatork.common.input.rumble
+package com.mozhimen.emulatork.common.input
 
 import android.content.Context
 import android.os.Build

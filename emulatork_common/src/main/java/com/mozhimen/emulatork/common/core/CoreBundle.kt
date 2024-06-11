@@ -1,7 +1,7 @@
 package com.mozhimen.emulatork.common.core
 
 import com.mozhimen.emulatork.basic.system.SystemSetting
-import com.mozhimen.emulatork.core.ECoreType
+import com.mozhimen.emulatork.core.type.ECoreType
 import com.mozhimen.emulatork.core.property.CoreProperty
 import com.mozhimen.emulatork.input.virtual.gamepad.GamepadConfig
 import java.io.Serializable

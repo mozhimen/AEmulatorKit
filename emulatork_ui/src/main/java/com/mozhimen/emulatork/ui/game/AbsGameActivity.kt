@@ -22,22 +22,19 @@ import com.mozhimen.basick.elemk.mos.NTuple2
 import com.mozhimen.basick.elemk.mos.NTuple3
 import com.mozhimen.basick.utilk.kotlin.math.UtilKMathInterpolation
 import com.mozhimen.basick.utilk.kotlinx.coroutines.batch_ofTime
-import com.mozhimen.emulatork.basic.controller.touch.ControllerTouchConfig
-import com.mozhimen.emulatork.basic.controller.touch.ControllerTouchCustomizer
-import com.mozhimen.emulatork.basic.controller.touch.ControllerTouchSettingsManager
-import com.mozhimen.emulatork.basic.game.system.GameSystemCoreConfig
-import com.mozhimen.emulatork.basic.game.db.entities.Game
-import com.mozhimen.emulatork.ext.game.BaseGameActivity
-import com.mozhimen.emulatork.ext.input.InputVirtualLongPressHandler
-import com.mozhimen.emulatork.input.sensor.InputSensorTilt
+import com.mozhimen.emulatork.ext.game.AbsGameActivity
+import com.mozhimen.emulatork.ext.input.VirtualLongPressHandler
 import com.mozhimen.emulatork.ui.R
 import com.mozhimen.emulatork.input.virtual.gyro.Gyro
 import com.mozhimen.emulatork.input.virtual.gyro.GyroStick
 import com.mozhimen.emulatork.input.virtual.gyro.GyroCross
 import com.mozhimen.emulatork.input.virtual.gyro.GyroTwoButtons
-import com.mozhimen.emulatork.input.InputOverlayThemes
 import com.mozhimen.emulatork.input.config.InputConfigRadialGamePadProvider
-import com.mozhimen.emulatork.basic.game.menu.GameMenuContract
+import com.mozhimen.emulatork.common.core.CoreBundle
+import com.mozhimen.emulatork.db.game.entities.Game
+import com.mozhimen.emulatork.input.virtual.gamepad.GamepadConfig
+import com.mozhimen.emulatork.input.virtual.gamepad.GamepadSetting
+import com.mozhimen.emulatork.input.virtual.sensor.SensorTilt
 import com.swordfish.libretrodroid.GLRetroView
 import com.swordfish.radialgamepad.library.RadialGamePad
 import com.swordfish.radialgamepad.library.config.RadialGamePadTheme
@@ -65,6 +62,7 @@ import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.math.roundToInt
+import com.mozhimen.emulatork.input.theme.InputTheme
 
 /**
  * @ClassName GameActivity
@@ -73,7 +71,7 @@ import kotlin.math.roundToInt
  * @Date 2024/5/9
  * @Version 1.0
  */
-abstract class AbsGameActivity : BaseGameActivity() {
+abstract class AbsGameActivity : AbsGameActivity() {
     //    @Inject
 //    lateinit var sharedPreferences: Lazy<SharedPreferences>
     abstract fun sharedPreferences(): Lazy<SharedPreferences>
@@ -86,7 +84,7 @@ abstract class AbsGameActivity : BaseGameActivity() {
 
     private var serviceController: AbsGameService.GameServiceController? = null
 
-    private lateinit var inputSensorTilt: InputSensorTilt
+    private lateinit var sensorTilt: SensorTilt
     private var currentGyro: Gyro? = null
 
     private var leftPad: RadialGamePad? = null
@@ -94,7 +92,7 @@ abstract class AbsGameActivity : BaseGameActivity() {
 
     private val touchControllerJobs = mutableSetOf<Job>()
 
-    private val touchControllerSettingsState = MutableStateFlow<ControllerTouchSettingsManager.Settings?>(null)
+    private val flowGamepadSetting = MutableStateFlow<GamepadSetting?>(null)
     private val insetsState = MutableStateFlow<Rect?>(null)
     private val orientationState = MutableStateFlow(Configuration.ORIENTATION_PORTRAIT)
 
@@ -103,7 +101,7 @@ abstract class AbsGameActivity : BaseGameActivity() {
 
         orientationState.value = getCurrentOrientation()
 
-        inputSensorTilt = InputSensorTilt(applicationContext)
+        sensorTilt = SensorTilt(applicationContext)
 
         horizontalDivider = findViewById(R.id.horizontaldividier)
         leftVerticalDivider = findViewById(R.id.leftverticaldivider)
@@ -143,14 +141,14 @@ abstract class AbsGameActivity : BaseGameActivity() {
     }
 
     private suspend fun initializeTiltEventsFlow() {
-        inputSensorTilt
+        sensorTilt
             .getTiltEvents()
             .collectSafe { sendTiltEvent(it) }
     }
 
     private suspend fun initializeTiltSensitivityFlow() {
-        val sensitivity = settingsManager().tiltSensitivity()
-        inputSensorTilt.setSensitivity(sensitivity)
+        val sensitivity = settingManager().tiltSensitivity()
+        sensorTilt.setSensitivity(sensitivity)
     }
 
     private fun initializeInsetsState() {
@@ -174,7 +172,7 @@ abstract class AbsGameActivity : BaseGameActivity() {
 
         val layoutFeatures = combine(
             isTouchControllerVisible(),
-            touchControllerSettingsState.filterNotNull(),
+            flowGamepadSetting.filterNotNull(),
             insetsState.filterNotNull(),
             ::NTuple3
         )
@@ -190,16 +188,16 @@ abstract class AbsGameActivity : BaseGameActivity() {
         .filterNotNull()
         .distinctUntilChanged()
 
-    private suspend fun setupController(controllerConfig: ControllerTouchConfig, orientation: Int) {
-        val hapticFeedbackMode = settingsManager().hapticFeedbackMode()
+    private suspend fun setupController(gamepadConfig: GamepadConfig, orientation: Int) {
+        val hapticFeedbackMode = settingManager().hapticFeedbackMode()
         withContext(Dispatchers.Main) {
-            setupTouchViews(controllerConfig, hapticFeedbackMode, orientation)
+            setupTouchViews(gamepadConfig, hapticFeedbackMode, orientation)
         }
-        loadTouchControllerSettings(controllerConfig, orientation)
+        loadTouchControllerSettings(gamepadConfig, orientation)
     }
 
     private fun isTouchControllerVisible(): Flow<Boolean> {
-        return inputDeviceManager()
+        return inputUnitManager()
             .getEnabledInputsObservable()
             .map { it.isEmpty() }
     }
@@ -212,7 +210,7 @@ abstract class AbsGameActivity : BaseGameActivity() {
     }
 
     private fun setupTouchViews(
-        controllerConfig: ControllerTouchConfig,
+        gamepadConfig: GamepadConfig,
         hapticFeedbackType: String,
         orientation: Int
     ) {
@@ -224,7 +222,7 @@ abstract class AbsGameActivity : BaseGameActivity() {
         leftGamePadContainer.removeAllViews()
         rightGamePadContainer.removeAllViews()
 
-        val touchControllerConfig = controllerConfig.getTouchControllerConfig()
+        val inputAreaConfig = gamepadConfig.getInputAreaConfig()
 
         val hapticConfig = when (hapticFeedbackType) {
             "none" -> HapticConfig.OFF
@@ -233,10 +231,10 @@ abstract class AbsGameActivity : BaseGameActivity() {
             else -> HapticConfig.OFF
         }
 
-        val theme = InputOverlayThemes.getGamePadTheme(leftGamePadContainer)
+        val theme = InputTheme.getGamePadTheme(leftGamePadContainer)
 
         val leftConfig = InputConfigRadialGamePadProvider.getRadialGamePadConfig(
-            touchControllerConfig.leftConfig,
+            inputAreaConfig.leftConfig,
             hapticConfig,
             theme
         )
@@ -244,7 +242,7 @@ abstract class AbsGameActivity : BaseGameActivity() {
         leftGamePadContainer.addView(leftPad)
 
         val rightConfig = InputConfigRadialGamePadProvider.getRadialGamePadConfig(
-            touchControllerConfig.rightConfig,
+            inputAreaConfig.rightConfig,
             hapticConfig,
             theme
         )
@@ -310,7 +308,7 @@ abstract class AbsGameActivity : BaseGameActivity() {
     }
 
     private fun setupTouchMenuActions(touchControllerEvents: Flow<Event>) {
-        InputVirtualLongPressHandler.initializeTheme(this)
+        VirtualLongPressHandler.initializeTheme(this)
 
         val allMenuButtonEvents = touchControllerEvents
             .filterIsInstance<Event.Button>()
@@ -325,7 +323,7 @@ abstract class AbsGameActivity : BaseGameActivity() {
             allMenuButtonEvents
                 .filter { it.action == KeyEvent.ACTION_DOWN }
                 .map {
-                    InputVirtualLongPressHandler.displayLoading(
+                    VirtualLongPressHandler.displayLoading(
                         this@AbsGameActivity,
                         R.drawable.ic_menu,
                         cancelMenuButtonEvents
@@ -463,12 +461,12 @@ abstract class AbsGameActivity : BaseGameActivity() {
 
     override fun onPause() {
         super.onPause()
-        inputSensorTilt.isAllowedToRun = false
+        sensorTilt.isAllowedToRun = false
     }
 
     override fun onResume() {
         super.onResume()
-        inputSensorTilt.isAllowedToRun = true
+        sensorTilt.isAllowedToRun = true
     }
 
     private fun sendTiltEvent(sensorValues: FloatArray) {
@@ -481,7 +479,7 @@ abstract class AbsGameActivity : BaseGameActivity() {
 
     private fun stopTrackingId(trackedEvent: Gyro) {
         currentGyro = null
-        inputSensorTilt.shouldRun = false
+        sensorTilt.shouldRun = false
         trackedEvent.stopTracking(sequenceOf(leftPad, rightPad).filterNotNull())
     }
 
@@ -489,7 +487,7 @@ abstract class AbsGameActivity : BaseGameActivity() {
         if (currentGyro != trackedEvent) {
             currentGyro?.let { stopTrackingId(it) }
             currentGyro = trackedEvent
-            inputSensorTilt.shouldRun = true
+            sensorTilt.shouldRun = true
             simulateTouchControllerHaptic()
         }
     }
@@ -512,7 +510,7 @@ abstract class AbsGameActivity : BaseGameActivity() {
         orientation: Int
     ) {
         val settingsManager = getTouchControllerSettingsManager(controllerConfig, orientation)
-        touchControllerSettingsState.value = settingsManager.retrieveSettings()
+        flowGamepadSetting.value = settingsManager.retrieveSettings()
     }
 
     private fun getTouchControllerSettingsManager(
@@ -545,7 +543,7 @@ abstract class AbsGameActivity : BaseGameActivity() {
         val touchControllerConfig = getTouchControllerType()
             .first()
 
-        val padSettings = touchControllerSettingsState.filterNotNull()
+        val padSettings = flowGamepadSetting.filterNotNull()
             .first()
 
         val initialSettings = ControllerTouchCustomizer.Settings(
@@ -580,7 +578,7 @@ abstract class AbsGameActivity : BaseGameActivity() {
                     else -> current
                 }
             }
-            .onEach { touchControllerSettingsState.value = it }
+            .onEach { flowGamepadSetting.value = it }
             .last()
 
         storeTouchControllerSettings(touchControllerConfig, orientationState.value, finalSettings)
@@ -924,7 +922,7 @@ abstract class AbsGameActivity : BaseGameActivity() {
         fun launchGame(
             activity: Activity,
             gameActivityClazz: Class<*>,
-            systemCoreConfig: GameSystemCoreConfig,
+            coreBundle: CoreBundle,
             game: Game,
             loadSave: Boolean,
             useLeanback: Boolean
@@ -939,7 +937,7 @@ abstract class AbsGameActivity : BaseGameActivity() {
                     putExtra(EXTRA_GAME, game)
                     putExtra(EXTRA_LOAD_SAVE, loadSave)
                     putExtra(EXTRA_LEANBACK, useLeanback)
-                    putExtra(EXTRA_SYSTEM_CORE_CONFIG, systemCoreConfig)
+                    putExtra(EXTRA_SYSTEM_CORE_CONFIG, coreBundle)
                 },
                 REQUEST_PLAY_GAME
             )

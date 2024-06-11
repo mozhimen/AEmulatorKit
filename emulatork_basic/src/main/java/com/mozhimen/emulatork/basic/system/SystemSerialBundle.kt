@@ -7,4 +7,4 @@ package com.mozhimen.emulatork.basic.system
  * @Date 2024/5/11
  * @Version 1.0
  */
-class SystemScanSerial constructor(val offset: Int, val numbers: ByteArray, val eSystemType: ESystemType)
+class SystemSerialBundle constructor(val offset: Int, val numbers: ByteArray, val eSystemType: ESystemType)

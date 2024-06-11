@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
  * @Date 2024/5/13
  * @Version 1.0
  */
-class ArchiveState(val state: ByteArray, val metadata: SaveMetadata) {
+class ArchiveState(val state: ByteArray, val metadata: ArchiveMetadata) {
     @Serializable
-    data class SaveMetadata(val diskIndex: Int = 0, val version: Int = 0)
+    data class ArchiveMetadata(val diskIndex: Int = 0, val version: Int = 0)
 }

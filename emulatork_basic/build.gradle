@@ -38,9 +38,11 @@ dependencies {
     //other lib
     api project(":SwiftKit:basick")
 
-    api project(':AAbilityKit_Jetpack:collection')
-    api project(':AAbilityKit_Jetpack:documentfile')
-    api project(':AAbilityKit_Jetpack:preference')
+    api project(':ALibKit_Jetpack:collection')
+    api project(':ALibKit_Jetpack:documentfile')
+    api project(':ALibKit_Jetpack:preference')
+    api project(':ALibKit_Jetpack:room')
+    kapt 'androidx.room:room-compiler:2.5.2'
 
     api project(':ATaskKit:taskk_work')
 
@@ -55,7 +57,9 @@ dependencies {
 
     api project(":AEmulatorKit_LibretroDroid:libretrodroid")
 
-    kapt 'androidx.room:room-compiler:2.5.2'
+    api project(':ASerialKit:serialk_serialization')
+
+    /////////////////////////////////////////////////////////
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

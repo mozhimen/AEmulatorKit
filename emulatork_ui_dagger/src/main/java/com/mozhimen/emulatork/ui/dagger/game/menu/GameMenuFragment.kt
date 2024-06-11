@@ -5,7 +5,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.preference.Preference
 import com.mozhimen.emulatork.ui.dagger.R
 import com.mozhimen.emulatork.ui.game.menu.AbsGameMenuFragment
-import com.mozhimen.emulatork.ext.game.menu.GameMenuMgr
+import com.mozhimen.emulatork.ext.input.MenuMgr
 import dagger.android.support.AndroidSupportInjection
 /**
  * @ClassName GameMenuFragment
@@ -21,7 +21,7 @@ import dagger.android.support.AndroidSupportInjection
     }
 
     override fun onPreferenceTreeClick(preference: Preference?): Boolean {
-        if (GameMenuMgr.onPreferenceTreeClicked(activity, preference))
+        if (MenuMgr.onPreferenceTreeClicked(activity, preference))
             return true
 
         when (preference?.key) {

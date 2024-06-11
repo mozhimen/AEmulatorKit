@@ -1,11 +1,9 @@
-package com.mozhimen.emulatork.common.storage.local
+package com.mozhimen.emulatork.basic.storage
 
 import android.content.Context
 import com.mozhimen.basick.utilk.java.io.getStrCrc32_use
 import com.mozhimen.basick.utilk.kotlin.long2strCrc32
-import com.mozhimen.emulatork.basic.storage.StorageBaseFile
-import com.mozhimen.emulatork.basic.storage.StorageFile
-import com.mozhimen.emulatork.basic.storage.scanner.StorageScannerSerial
+import com.mozhimen.emulatork.basic.system.SystemSerialExtractor
 import timber.log.Timber
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
@@ -35,11 +33,13 @@ object DocumentFileParser {
         }
     }
 
+    ////////////////////////////////////////////////////////////////////////////////
+
     /* Finds a zip entry which we assume is a game. Lemuroid only supports single archive games,
-   so we are looking for an entry which occupies a large percentage of the archive space.
-   This is very fast heuristic to compute and avoids reading the whole stream in most
-   scenarios.*/
-    fun findGameEntry(openedInputStream: ZipInputStream, fileSize: Long = -1): ZipEntry? {
+so we are looking for an entry which occupies a large percentage of the archive space.
+This is very fast heuristic to compute and avoids reading the whole stream in most
+scenarios.*/
+    private fun findGameEntry(openedInputStream: ZipInputStream, fileSize: Long = -1): ZipEntry? {
         for (i in 0..MAX_CHECKED_ENTRIES) {
             val entry = openedInputStream.nextEntry ?: break
             if (!isGameEntry(entry, fileSize)) continue
@@ -47,8 +47,6 @@ object DocumentFileParser {
         }
         return null
     }
-
-    ////////////////////////////////////////////////////////////////////////////////
 
     private fun parseZipFile(context: Context, storageBaseFile: StorageBaseFile): StorageFile {
         val inputStream = context.contentResolver.openInputStream(storageBaseFile.uri)
@@ -67,22 +65,22 @@ object DocumentFileParser {
     private fun parseCompressedGame(storageBaseFile: StorageBaseFile, entry: ZipEntry, zipInputStream: ZipInputStream): StorageFile {
         Timber.d("Processing zipped entry: ${entry.name}")
 
-        val diskInfo = StorageScannerSerial.extractInfo(entry.name, zipInputStream)
+        val systemSerial = SystemSerialExtractor.extractInfo(entry.name, zipInputStream)
 
         return StorageFile(
             entry.name,
             entry.size,
             entry.crc.long2strCrc32(),
-            diskInfo.serial,
+            systemSerial.serial,
             storageBaseFile.uri,
             storageBaseFile.uri.path,
-            diskInfo.systemID
+            systemSerial.eSystemType
         )
     }
 
     private fun parseStandardFile(context: Context, storageBaseFile: StorageBaseFile): StorageFile {
         val diskInfo = context.contentResolver.openInputStream(storageBaseFile.uri)
-            ?.let { inputStream -> StorageScannerSerial.extractInfo(storageBaseFile.name, inputStream) }
+            ?.let { inputStream -> SystemSerialExtractor.extractInfo(storageBaseFile.name, inputStream) }
 
         val crc32 = if (storageBaseFile.size < MAX_SIZE_CRC32 && diskInfo?.serial == null) {
             context.contentResolver.openInputStream(storageBaseFile.uri)?.getStrCrc32_use()
@@ -99,7 +97,7 @@ object DocumentFileParser {
             diskInfo?.serial,
             storageBaseFile.uri,
             storageBaseFile.uri.path,
-            diskInfo?.systemID
+            diskInfo?.eSystemType
         )
     }
 

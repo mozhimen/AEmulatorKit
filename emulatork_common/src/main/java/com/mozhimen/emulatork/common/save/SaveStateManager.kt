@@ -6,7 +6,7 @@ import com.mozhimen.basick.utilk.kotlin.bytes2file_ofGZip
 import com.mozhimen.emulatork.basic.archive.ArchiveState
 import com.mozhimen.emulatork.basic.archive.ArchiveInfo
 import com.mozhimen.emulatork.basic.storage.StorageDirProvider
-import com.mozhimen.emulatork.core.ECoreType
+import com.mozhimen.emulatork.core.type.ECoreType
 import com.mozhimen.emulatork.db.game.entities.Game
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -86,11 +86,11 @@ class SaveStateManager(private val storageProvider: StorageDirProvider) {
                 val byteArray = saveFile.file2bytes_use_ofUnzip()!!
                 val stateMetadata = runCatching {
                     Json.Default.decodeFromString(
-                        ArchiveState.SaveMetadata.serializer(),
+                        ArchiveState.ArchiveMetadata.serializer(),
                         metadataFile.readText()
                     )
                 }
-                ArchiveState(byteArray, stateMetadata.getOrNull() ?: ArchiveState.SaveMetadata())
+                ArchiveState(byteArray, stateMetadata.getOrNull() ?: ArchiveState.ArchiveMetadata())
             } else {
                 null
             }
@@ -111,10 +111,10 @@ class SaveStateManager(private val storageProvider: StorageDirProvider) {
     private fun writeMetadataToDisk(
         fileName: String,
         coreName: String,
-        metadata: ArchiveState.SaveMetadata
+        metadata: ArchiveState.ArchiveMetadata
     ) {
         val metadataFile = getMetadataStateFile(fileName, coreName)
-        metadataFile.writeText(Json.encodeToString(ArchiveState.SaveMetadata.serializer(), metadata))
+        metadataFile.writeText(Json.encodeToString(ArchiveState.ArchiveMetadata.serializer(), metadata))
     }
 
     private fun writeStateToDisk(

@@ -1,4 +1,4 @@
-package com.mozhimen.emulatork.common.storage.local
+package com.mozhimen.emulatork.common.storage
 
 import android.content.Context
 import android.net.Uri
@@ -10,9 +10,9 @@ import com.mozhimen.emulatork.basic.preferences.SharedPreferencesManager
 import com.mozhimen.emulatork.basic.storage.StorageDirProvider
 import com.mozhimen.emulatork.basic.storage.StorageFile
 import com.mozhimen.emulatork.basic.rom.SRomFileType
+import com.mozhimen.emulatork.basic.storage.DocumentFileParser
 import com.mozhimen.emulatork.basic.storage.StorageBaseFile
-import com.mozhimen.emulatork.common.storage.StorageProvider
-import com.mozhimen.emulatork.db.game.entities.DataFile
+import com.mozhimen.emulatork.db.game.entities.GameDataFile
 import com.mozhimen.emulatork.db.game.entities.Game
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -27,7 +27,7 @@ import java.util.zip.ZipInputStream
  * @Date 2024/5/10
  * @Version 1.0
  */
-class StorageLocalProvider(
+class StorageProviderLocal(
     private val context: Context,
     private val storageProvider: StorageDirProvider
 ) : StorageProvider {
@@ -42,7 +42,7 @@ class StorageLocalProvider(
 
     override val enabledByDefault = true
 
-    override fun listBaseStorageFiles(): Flow<List<StorageBaseFile>> =
+    override fun listStorageBaseFiles(): Flow<List<StorageBaseFile>> =
         walkDirectory(getExternalFolder() ?: storageProvider.getExternalFileRoms())
 
     override fun getStorageFile(storageBaseFile: StorageBaseFile): StorageFile? {
@@ -74,8 +74,8 @@ class StorageLocalProvider(
 
     // There is no need to handle anything. Data file have to be in the same directory for detection we expect them
     // to still be there.
-    private fun getDataFile(dataFile: DataFile): File {
-        val dataFilePath = Uri.parse(dataFile.fileUri).path
+    private fun getDataFile(gameDataFile: GameDataFile): File {
+        val dataFilePath = Uri.parse(gameDataFile.fileUri).path
         return File(dataFilePath)
     }
 
@@ -86,7 +86,7 @@ class StorageLocalProvider(
             return originalFile
         }
 
-        val cacheFile = StorageLocalUtil.getCacheFileForGame(StorageDirProvider.LOCAL_STORAGE_CACHE_SUBFOLDER, context, game)
+        val cacheFile = StorageUtil.getCacheFileForGame(StorageDirProvider.LOCAL_STORAGE_CACHE_SUBFOLDER, context, game)
         if (cacheFile.exists()) {
             return cacheFile
         }
@@ -101,10 +101,10 @@ class StorageLocalProvider(
 
     override fun getGameRomFiles(
         game: Game,
-        dataFiles: List<DataFile>,
+        gameDataFiles: List<GameDataFile>,
         allowVirtualFiles: Boolean
     ): SRomFileType {
-        return SRomFileType.Standard(listOf(getGameRom(game)) + dataFiles.map { getDataFile(it) })
+        return SRomFileType.Standard(listOf(getGameRom(game)) + gameDataFiles.map { getDataFile(it) })
     }
 
     override fun getInputStream(uri: Uri): InputStream {

@@ -1,4 +1,4 @@
-package com.mozhimen.emulatork.ext.game.pad
+package com.mozhimen.emulatork.ext.input
 
 import android.content.Context
 import android.content.Intent

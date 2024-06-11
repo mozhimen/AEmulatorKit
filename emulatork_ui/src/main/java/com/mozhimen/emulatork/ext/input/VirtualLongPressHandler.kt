@@ -30,7 +30,7 @@ import kotlinx.coroutines.withContext
  * @Date 2024/5/13
  * @Version 1.0
  */
-object InputVirtualLongPressHandler {
+object VirtualLongPressHandler {
 
     private val APPEAR_ANIMATION = (ViewConfiguration.getLongPressTimeout() * 0.1f).toLong()
     private val DISAPPEAR_ANIMATION = (ViewConfiguration.getLongPressTimeout() * 2f).toLong()

@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.KeyEvent
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.FragmentActivity
-import com.mozhimen.emulatork.ext.game.pad.GamePadBindingUpdater
+import com.mozhimen.emulatork.ext.input.GamePadBindingUpdater
 import com.mozhimen.emulatork.input.unit.InputUnitManager
 
 /**

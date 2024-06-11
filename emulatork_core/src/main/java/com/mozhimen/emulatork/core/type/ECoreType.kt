@@ -1,4 +1,4 @@
-package com.mozhimen.emulatork.core
+package com.mozhimen.emulatork.core.type
 
 import com.mozhimen.emulatork.core.source.CoreSource
 import com.mozhimen.emulatork.core.source.CoreSourceNo

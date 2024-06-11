@@ -4,19 +4,18 @@ import android.content.Context
 import android.os.Build
 import com.mozhimen.basick.utilk.android.util.UtilKLogWrapper
 import com.mozhimen.basick.utilk.commons.IUtilK
-import com.mozhimen.emulatork.basic.bios.BiosManager
-import com.mozhimen.emulatork.core.ECoreId
-import com.mozhimen.emulatork.basic.game.system.GameSystemCoreConfig
 import com.mozhimen.emulatork.basic.load.LoadException
-import com.mozhimen.emulatork.basic.save.SaveCoherencyEngine
-import com.mozhimen.emulatork.basic.save.SaveManager
-import com.mozhimen.emulatork.basic.save.SaveStateManager
 import com.mozhimen.emulatork.basic.storage.StorageDirProvider
 import com.mozhimen.emulatork.basic.load.SLoadError
-import com.mozhimen.emulatork.common.EmulatorKBasic
+import com.mozhimen.emulatork.common.EmulatorKCommon
+import com.mozhimen.emulatork.common.archive.ArchiveCoherencyEngine
+import com.mozhimen.emulatork.common.bios.BiosManager
 import com.mozhimen.emulatork.common.core.CoreBundle
 import com.mozhimen.emulatork.common.core.CorePropertyManager
+import com.mozhimen.emulatork.common.save.SaveManager
+import com.mozhimen.emulatork.common.save.SaveStateManager
 import com.mozhimen.emulatork.common.system.SystemProvider
+import com.mozhimen.emulatork.core.type.ECoreType
 import com.mozhimen.emulatork.db.game.database.RetrogradeDatabase
 import com.mozhimen.emulatork.db.game.entities.Game
 import kotlinx.coroutines.flow.Flow
@@ -32,12 +31,12 @@ import java.io.File
  * @Version 1.0
  */
 class GameLoadManager(
-    private val lemuroidLibrary: EmulatorKBasic,
+    private val emulatorKCommon: EmulatorKCommon,
     private val legacySaveStateManager: SaveStateManager,
     private val legacySaveManager: SaveManager,
     private val legacyCorePropertyManager: CorePropertyManager,
     private val retrogradeDatabase: RetrogradeDatabase,
-    private val saveCoherencyEngine: SaveCoherencyEngine,
+    private val archiveCoherencyEngine: ArchiveCoherencyEngine,
     private val storageProvider: StorageDirProvider,
     private val biosManager: BiosManager
 ) : IUtilK {
@@ -52,7 +51,7 @@ class GameLoadManager(
         try {
             emit(SGameLoadState.LoadingCore)
 
-            val system = SystemProvider.findSysByName(game.systemName)
+            val systemBundle = SystemProvider.findSysByName(game.systemName)
 
             if (!isArchitectureSupported(coreBundle)) {
                 throw LoadException(SLoadError.UnsupportedArchitecture)
@@ -74,7 +73,7 @@ class GameLoadManager(
             val gameFiles = runCatching {
                 val useVFS = coreBundle.supportsLibretroVFS && directLoad
                 val dataFiles = retrogradeDatabase.dataFileDao().selectDataFilesForGame(game.id)
-                lemuroidLibrary.getGameFiles(game, dataFiles, useVFS)
+                emulatorKCommon.getGameFiles(game, dataFiles, useVFS)
             }.getOrElse { throw it }
 
             val saveRAMData = runCatching {
@@ -83,16 +82,16 @@ class GameLoadManager(
 
             val quickSaveData = runCatching {
                 val shouldDiscardSave =
-                    !saveCoherencyEngine.shouldDiscardAutoSaveState(game, coreBundle.coreID)
+                    !archiveCoherencyEngine.shouldDiscardAutoSaveState(game, coreBundle.eCoreType)
 
-                if (coreBundle.statesSupported && loadSave && shouldDiscardSave) {
-                    legacySaveStateManager.getAutoSave(game, coreBundle.coreID)
+                if (coreBundle.isSupportStates && loadSave && shouldDiscardSave) {
+                    legacySaveStateManager.getAutoSave(game, coreBundle.eCoreType)
                 } else {
                     null
                 }
             }.getOrElse { throw LoadException(SLoadError.Saves) }
 
-            val coreVariables = legacyCorePropertyManager.getOptionsForCore(system.id, coreBundle)
+            val coreVariables = legacyCorePropertyManager.getOptionsForCore(systemBundle.eSystemType, coreBundle)
                 .toTypedArray()
 
             val systemDirectory = storageProvider.getInternalFileSystem()
@@ -123,19 +122,19 @@ class GameLoadManager(
 
     ///////////////////////////////////////////////////////////////////////////////
 
-    private fun isArchitectureSupported(systemCoreConfig: GameSystemCoreConfig): Boolean {
-        val supportedOnlyArchitectures = systemCoreConfig.supportedOnlyArchitectures ?: return true
+    private fun isArchitectureSupported(coreBundle: CoreBundle): Boolean {
+        val supportedOnlyArchitectures = coreBundle.supportedOnlyArchitectures ?: return true
         return Build.SUPPORTED_ABIS.toSet().intersect(supportedOnlyArchitectures).isNotEmpty()
     }
 
-    private fun findLibrary(context: Context, coreID: com.mozhimen.emulatork.core.ECoreId): File? {
-        val files = sequenceOf(File(context.applicationInfo.nativeLibraryDir), context.filesDir)
+    private fun findLibrary(context: Context, eCoreType: ECoreType): File? {
+        val soFiles = sequenceOf(File(context.applicationInfo.nativeLibraryDir), context.filesDir)
 
-        for (file in files){
+        for (file in soFiles){
             UtilKLogWrapper.w(TAG, "findLibrary files ${file.listFiles()?.joinToString { it.absolutePath+"\n" }}")
         }
-        return files
+        return soFiles
             .flatMap { it.walkBottomUp() }
-            .firstOrNull { it.name == coreID.libretroFileName }
+            .firstOrNull { it.name == eCoreType.coreSoFileName }
     }
 }

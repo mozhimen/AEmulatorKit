@@ -1,10 +1,7 @@
 package com.mozhimen.emulatork.core.download
 
 import android.content.Context
-import com.mozhimen.emulatork.core.ECoreType
-import com.mozhimen.emulatork.core.source.CoreSource
-import com.mozhimen.emulatork.core.source.CoreSourceNo
-import com.mozhimen.emulatork.core.source.CoreSourcePpsspp
+import com.mozhimen.emulatork.core.type.ECoreType
 
 /**
  * @ClassName CoreUpdater

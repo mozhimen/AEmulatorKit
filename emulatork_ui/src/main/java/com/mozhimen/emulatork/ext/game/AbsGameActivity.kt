@@ -24,23 +24,6 @@ import com.mozhimen.basick.elemk.kotlinx.coroutines.VarPropertyMutableState
 import com.mozhimen.basick.utilk.android.opengl.takeScreenshotOnMain
 import com.mozhimen.basick.utilk.android.util.dp2pxI
 import com.mozhimen.basick.utilk.kotlin.collections.zipOnKeys
-import com.mozhimen.emulatork.basic.controller.touch.ControllerTouchConfig
-import com.mozhimen.emulatork.core.CoreVariable
-import com.mozhimen.emulatork.common.game.GameLoader
-import com.mozhimen.emulatork.basic.game.GameLoaderError
-import com.mozhimen.emulatork.basic.game.GameLoaderException
-import com.mozhimen.emulatork.basic.game.system.GameSystemExposedSetting
-import com.mozhimen.emulatork.common.system.SystemBundle
-import com.mozhimen.emulatork.basic.game.system.GameSystemCoreConfig
-import com.mozhimen.emulatork.basic.game.db.entities.Game
-import com.mozhimen.emulatork.basic.save.SaveStateIncompatibleException
-import com.mozhimen.emulatork.basic.save.SaveState
-import com.mozhimen.emulatork.basic.save.SaveManager
-import com.mozhimen.emulatork.basic.save.SaveStateManager
-import com.mozhimen.emulatork.basic.save.SaveStatePreviewManager
-import com.mozhimen.emulatork.basic.storage.StorageRomFile
-import com.mozhimen.emulatork.basic.BuildConfig
-import com.mozhimen.emulatork.input.type.getInputClass
 import com.mozhimen.basick.elemk.mos.NTuple2
 import com.mozhimen.basick.elemk.mos.NTuple4
 import com.mozhimen.basick.utilk.android.content.get_of_config_longAnimTime
@@ -49,19 +32,25 @@ import com.mozhimen.basick.utilk.android.os.getStrDump
 import com.mozhimen.basick.utilk.android.widget.showToast
 import com.mozhimen.basick.utilk.kotlin.collections.filterNotNullValues
 import com.mozhimen.basick.utilk.kotlin.array2indexedMap
-import com.mozhimen.emulatork.core.CoreVariablesManager
+import com.mozhimen.emulatork.basic.archive.ArchiveState
+import com.mozhimen.emulatork.basic.archive.ArchiveStateIncompatibleException
+import com.mozhimen.emulatork.basic.load.LoadException
+import com.mozhimen.emulatork.basic.load.SLoadError
 import com.mozhimen.emulatork.ui.R
-import com.mozhimen.emulatork.basic.game.shader.GameShaderChooser
-import com.mozhimen.emulatork.basic.core.options.CoreOption
-import com.mozhimen.emulatork.basic.core.options.CoreOptionSetting
 import com.mozhimen.emulatork.input.unit.InputUnitManager
 import com.mozhimen.emulatork.input.key.InputKey
-import com.mozhimen.emulatork.common.android.ImmersiveFragmentActivity
-import com.mozhimen.emulatork.basic.game.system.GameSystems
-import com.mozhimen.emulatork.basic.game.rumble.GameRumbleManager
-import com.mozhimen.emulatork.basic.controller.ControllerConfigsManager
-import com.mozhimen.emulatork.basic.game.menu.GameMenuContract
-import com.mozhimen.emulatork.basic.game.setting.GameSettingsManager
+import com.mozhimen.emulatork.basic.setting.SettingManager
+import com.mozhimen.emulatork.common.core.CoreBundle
+import com.mozhimen.emulatork.common.core.CorePropertyManager
+import com.mozhimen.emulatork.common.game.GameLoadManager
+import com.mozhimen.emulatork.common.game.SGameLoadState
+import com.mozhimen.emulatork.common.input.GamepadConfigManager
+import com.mozhimen.emulatork.common.input.RumbleManager
+import com.mozhimen.emulatork.common.save.SaveManager
+import com.mozhimen.emulatork.common.save.SaveStateManager
+import com.mozhimen.emulatork.common.save.SaveStatePreviewManager
+import com.mozhimen.emulatork.db.game.entities.Game
+import com.mozhimen.emulatork.input.virtual.gamepad.GamepadConfig
 import com.swordfish.libretrodroid.Controller
 import com.swordfish.libretrodroid.GLRetroView
 import com.swordfish.libretrodroid.GLRetroViewData
@@ -95,7 +84,11 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 import kotlin.math.abs
 import kotlin.system.exitProcess
-
+import com.mozhimen.emulatork.common.system.SystemProvider
+import com.mozhimen.emulatork.core.property.CoreProperty
+import com.mozhimen.emulatork.input.utils.getInputUnit
+import com.mozhimen.emulatork.input.virtual.menu.MenuContract
+import com.mozhimen.emulatork.input.utils.getInputKeyMap
 /**
  * @ClassName BaseGameActivity
  * @Description TODO
@@ -104,7 +97,7 @@ import kotlin.system.exitProcess
  * @Version 1.0
  */
 @OptIn(FlowPreview::class, DelicateCoroutinesApi::class)
-abstract class BaseGameActivity : com.mozhimen.emulatork.common.android.ImmersiveFragmentActivity(), IUtilK {
+abstract class AbsGameActivity : com.mozhimen.emulatork.common.android.ImmersiveFragmentActivity(), IUtilK {
 
     companion object {
         const val DIALOG_REQUEST = 100
@@ -138,12 +131,12 @@ abstract class BaseGameActivity : com.mozhimen.emulatork.common.android.Immersiv
     private val motionEventsFlow: MutableSharedFlow<MotionEvent> = MutableSharedFlow()
     private val loadingState = MutableStateFlow(false)
     private val loadingMessageStateFlow = MutableStateFlow("")
-    private val controllerConfigsState = MutableStateFlow<Map<Int, ControllerTouchConfig>>(mapOf())
+    private val flowGamepadMap = MutableStateFlow<Map<Int, GamepadConfig>>(mapOf())
 
     //////////////////////////////////////////////////////////////////////////////////
 
     protected lateinit var game: Game
-    protected lateinit var systemCoreConfig: GameSystemCoreConfig
+    protected lateinit var coreBundle: CoreBundle
     protected lateinit var mainContainerLayout: ConstraintLayout
     protected lateinit var leftGamePadContainer: FrameLayout
     protected lateinit var rightGamePadContainer: FrameLayout
@@ -154,39 +147,39 @@ abstract class BaseGameActivity : com.mozhimen.emulatork.common.android.Immersiv
 
     //    @Inject
 //    lateinit var settingsManager: SettingsManager
-    abstract fun settingsManager(): GameSettingsManager
+    abstract fun settingManager(): SettingManager
 
     //    @Inject
 //    lateinit var statesManager: StatesManager
-    abstract fun statesManager(): SaveStateManager
+    abstract fun saveStateManager(): SaveStateManager
 
     //    @Inject
 //    lateinit var statesPreviewManager: StatesPreviewManager
-    abstract fun statesPreviewManager(): SaveStatePreviewManager
+    abstract fun saveStatePreviewManager(): SaveStatePreviewManager
 
     //    @Inject
 //    lateinit var legacySavesManager: SavesManager
-    abstract fun legacySavesManager(): SaveManager
+    abstract fun saveManager(): SaveManager
 
     //    @Inject
 //    lateinit var coreVariablesManager: CoreVariablesManager
-    abstract fun coreVariablesManager(): com.mozhimen.emulatork.core.CoreVariablesManager
+    abstract fun corePropertyManager(): CorePropertyManager
 
     //    @Inject
 //    lateinit var inputDeviceManager: InputDeviceManager
-    abstract fun inputDeviceManager(): InputUnitManager
+    abstract fun inputUnitManager(): InputUnitManager
 
     //    @Inject
 //    lateinit var gameLoader: GameLoader
-    abstract fun gameLoader(): com.mozhimen.emulatork.common.game.GameLoader
+    abstract fun gameLoadManager(): GameLoadManager
 
     //    @Inject
 //    lateinit var controllerConfigsManager: ControllerConfigsManager
-    abstract fun controllerConfigsManager(): ControllerConfigsManager
+    abstract fun gamepadConfigManager(): GamepadConfigManager
 
     //    @Inject
 //    lateinit var rumbleManager: RumbleManager
-    abstract fun rumbleManager(): GameRumbleManager
+    abstract fun rumbleManager(): RumbleManager
 
     protected abstract fun gameMenuActivityClazz(): Class<out Activity>
 
@@ -206,8 +199,8 @@ abstract class BaseGameActivity : com.mozhimen.emulatork.common.android.Immersiv
         rightGamePadContainer = findViewById(R.id.rightgamepad)
 
         game = intent.getSerializableExtra(EXTRA_GAME) as Game
-        systemCoreConfig = intent.getSerializableExtra(EXTRA_SYSTEM_CORE_CONFIG) as GameSystemCoreConfig
-        system = GameSystems.findById(game.systemId)
+        coreBundle = intent.getSerializableExtra(EXTRA_SYSTEM_CORE_CONFIG) as CoreBundle
+        system = SystemProvider.findSysByName(game.systemName)
 
         lifecycleScope.launch {
             loadGame()
@@ -226,7 +219,7 @@ abstract class BaseGameActivity : com.mozhimen.emulatork.common.android.Immersiv
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        if (event != null && InputKey(keyCode) in event.device.getInputClass().getInputKeys()) {
+        if (event != null && InputKey(keyCode) in event.device.getInputUnit().getInputKeyMap()) {
             lifecycleScope.launch {
                 keyEventsFlow.emit(event)
             }
@@ -236,7 +229,7 @@ abstract class BaseGameActivity : com.mozhimen.emulatork.common.android.Immersiv
     }
 
     override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
-        if (event != null && InputKey(keyCode) in event.device.getInputClass().getInputKeys()) {
+        if (event != null && InputKey(keyCode) in event.device.getInputUnit().getInputKeyMap()) {
             lifecycleScope.launch {
                 keyEventsFlow.emit(event)
             }
@@ -257,42 +250,42 @@ abstract class BaseGameActivity : com.mozhimen.emulatork.common.android.Immersiv
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == DIALOG_REQUEST) {
             Timber.i("Game menu dialog response: ${data?.extras.getStrDump()}")
-            if (data?.getBooleanExtra(GameMenuContract.RESULT_RESET, false) == true) {
+            if (data?.getBooleanExtra(MenuContract.RESULT_RESET, false) == true) {
                 GlobalScope.launch {
                     reset()
                 }
             }
-            if (data?.hasExtra(GameMenuContract.RESULT_SAVE) == true) {
+            if (data?.hasExtra(MenuContract.RESULT_SAVE) == true) {
                 GlobalScope.launch {
-                    saveSlot(data.getIntExtra(GameMenuContract.RESULT_SAVE, 0))
+                    saveSlot(data.getIntExtra(MenuContract.RESULT_SAVE, 0))
                 }
             }
-            if (data?.hasExtra(GameMenuContract.RESULT_LOAD) == true) {
+            if (data?.hasExtra(MenuContract.RESULT_LOAD) == true) {
                 GlobalScope.launch {
-                    loadSlot(data.getIntExtra(GameMenuContract.RESULT_LOAD, 0))
+                    loadSlot(data.getIntExtra(MenuContract.RESULT_LOAD, 0))
                 }
             }
-            if (data?.getBooleanExtra(GameMenuContract.RESULT_QUIT, false) == true) {
+            if (data?.getBooleanExtra(MenuContract.RESULT_QUIT, false) == true) {
                 GlobalScope.launch {
                     autoSaveAndFinish()
                 }
             }
-            if (data?.hasExtra(GameMenuContract.RESULT_CHANGE_DISK) == true) {
-                val index = data.getIntExtra(GameMenuContract.RESULT_CHANGE_DISK, 0)
+            if (data?.hasExtra(MenuContract.RESULT_CHANGE_DISK) == true) {
+                val index = data.getIntExtra(MenuContract.RESULT_CHANGE_DISK, 0)
                 retroGameView?.changeDisk(index)
             }
-            if (data?.hasExtra(GameMenuContract.RESULT_ENABLE_AUDIO) == true) {
+            if (data?.hasExtra(MenuContract.RESULT_ENABLE_AUDIO) == true) {
                 retroGameView?.apply {
                     this.audioEnabled = data.getBooleanExtra(
-                        GameMenuContract.RESULT_ENABLE_AUDIO,
+                        MenuContract.RESULT_ENABLE_AUDIO,
                         true
                     )
                 }
             }
-            if (data?.hasExtra(GameMenuContract.RESULT_ENABLE_FAST_FORWARD) == true) {
+            if (data?.hasExtra(MenuContract.RESULT_ENABLE_FAST_FORWARD) == true) {
                 retroGameView?.apply {
                     val fastForwardEnabled = data.getBooleanExtra(
-                        GameMenuContract.RESULT_ENABLE_FAST_FORWARD,
+                        MenuContract.RESULT_ENABLE_FAST_FORWARD,
                         false
                     )
                     this.frameSpeed = if (fastForwardEnabled) 2 else 1
@@ -303,8 +296,8 @@ abstract class BaseGameActivity : com.mozhimen.emulatork.common.android.Immersiv
 
     //////////////////////////////////////////////////////////////////////////////////
 
-    fun getControllerType(): Flow<Map<Int, ControllerTouchConfig>> {
-        return controllerConfigsState
+    fun getControllerType(): Flow<Map<Int, GamepadConfig>> {
+        return flowGamepadMap
     }
 
     protected fun displayOptionsDialog() {
@@ -312,22 +305,22 @@ abstract class BaseGameActivity : com.mozhimen.emulatork.common.android.Immersiv
 
         val coreOptions = getCoreOptions()
 
-        val options = systemCoreConfig.exposedSystemSettings
+        val options = coreBundle.systemSettings_exposed
             .mapNotNull { transformExposedSetting(it, coreOptions) }
 
-        val advancedOptions = systemCoreConfig.exposedAdvancedSettings
+        val advancedOptions = coreBundle.systemSettings_exposedAdvanced
             .mapNotNull { transformExposedSetting(it, coreOptions) }
 
         val intent = Intent(this, gameMenuActivityClazz()).apply {
-            this.putExtra(GameMenuContract.EXTRA_CORE_OPTIONS, options.toTypedArray())
-            this.putExtra(GameMenuContract.EXTRA_ADVANCED_CORE_OPTIONS, advancedOptions.toTypedArray())
-            this.putExtra(GameMenuContract.EXTRA_CURRENT_DISK, retroGameView?.getCurrentDisk() ?: 0)
-            this.putExtra(GameMenuContract.EXTRA_DISKS, retroGameView?.getAvailableDisks() ?: 0)
-            this.putExtra(GameMenuContract.EXTRA_GAME, game)
-            this.putExtra(GameMenuContract.EXTRA_SYSTEM_CORE_CONFIG, systemCoreConfig)
-            this.putExtra(GameMenuContract.EXTRA_AUDIO_ENABLED, retroGameView?.audioEnabled)
-            this.putExtra(GameMenuContract.EXTRA_FAST_FORWARD_SUPPORTED, system.fastForwardSupport)
-            this.putExtra(GameMenuContract.EXTRA_FAST_FORWARD, (retroGameView?.frameSpeed ?: 1) > 1)
+            this.putExtra(MenuContract.EXTRA_CORE_OPTIONS, options.toTypedArray())
+            this.putExtra(MenuContract.EXTRA_ADVANCED_CORE_OPTIONS, advancedOptions.toTypedArray())
+            this.putExtra(MenuContract.EXTRA_CURRENT_DISK, retroGameView?.getCurrentDisk() ?: 0)
+            this.putExtra(MenuContract.EXTRA_DISKS, retroGameView?.getAvailableDisks() ?: 0)
+            this.putExtra(MenuContract.EXTRA_GAME, game)
+            this.putExtra(MenuContract.EXTRA_SYSTEM_CORE_CONFIG, coreBundle)
+            this.putExtra(MenuContract.EXTRA_AUDIO_ENABLED, retroGameView?.audioEnabled)
+            this.putExtra(MenuContract.EXTRA_FAST_FORWARD_SUPPORTED, system.fastForwardSupport)
+            this.putExtra(MenuContract.EXTRA_FAST_FORWARD, (retroGameView?.frameSpeed ?: 1) > 1)
         }
         startActivityForResult(intent, DIALOG_REQUEST)
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
@@ -390,8 +383,8 @@ abstract class BaseGameActivity : com.mozhimen.emulatork.common.android.Immersiv
     private suspend fun initializeControllersConfigFlow() {
         try {
             waitRetroGameViewInitialized()
-            val controllers = controllerConfigsManager().getControllerConfigs(system.id, systemCoreConfig)
-            controllerConfigsState.value = controllers
+            val controllers = gamepadConfigManager().getGamepadConfigs(system.eSystemType, coreBundle)
+            flowGamepadMap.value = controllers
         } catch (e: Exception) {
             Timber.e(e)
         }
@@ -406,7 +399,7 @@ abstract class BaseGameActivity : com.mozhimen.emulatork.common.android.Immersiv
     private suspend fun initializeCoreVariablesFlow() {
         try {
             waitRetroGameViewInitialized()
-            val options = coreVariablesManager().getOptionsForCore(system.id, systemCoreConfig)
+            val options = corePropertyManager().getOptionsForCore(system.eSystemType, coreBundle)
             updateCoreVariables(options)
         } catch (e: Exception) {
             Timber.e(e)
@@ -432,7 +425,7 @@ abstract class BaseGameActivity : com.mozhimen.emulatork.common.android.Immersiv
 
     private suspend fun initializeControllerConfigsFlow() {
         waitGLEvent<GLRetroView.GLRetroEvents.FrameRendered>()
-        controllerConfigsState.collectSafe {
+        flowGamepadMap.collectSafe {
             updateControllers(it)
         }
     }
@@ -451,7 +444,7 @@ abstract class BaseGameActivity : com.mozhimen.emulatork.common.android.Immersiv
     private suspend fun initializeRumbleFlow() {
         val retroGameView = retroGameViewFlow()
         val rumbleEvents = retroGameView.getRumbleEvents()
-        rumbleManager().collectAndProcessRumbleEvents(systemCoreConfig, rumbleEvents)
+        rumbleManager().collectAndProcessRumbleEvents(coreBundle, rumbleEvents)
     }
 
     private fun setUpExceptionsHandler() {
@@ -462,14 +455,14 @@ abstract class BaseGameActivity : com.mozhimen.emulatork.common.android.Immersiv
     }
 
     /* On some cores unserialize fails with no reason. So we need to try multiple times. */
-    private suspend fun restoreAutoSaveAsync(saveState: SaveState) {
+    private suspend fun restoreAutoSaveAsync(archiveState: ArchiveState) {
         // PPSSPP and Mupen64 initialize some state while rendering the first frame, so we have to wait before restoring
         // the autosave. Do not change thread here. Stick to the GL one to avoid issues with PPSSPP.
         if (!isAutoSaveEnabled()) return
 
         try {
             waitGLEvent<GLRetroView.GLRetroEvents.FrameRendered>()
-            restoreQuickSave(saveState)
+            restoreQuickSave(archiveState)
         } catch (e: Throwable) {
             Timber.e(e, "Error while loading auto-save")
         }
@@ -480,7 +473,7 @@ abstract class BaseGameActivity : com.mozhimen.emulatork.common.android.Immersiv
         val previewSize = sizeInDp.dp2pxI()
         val preview = retroGameView?.takeScreenshotOnMain(previewSize, 3)
         if (preview != null) {
-            statesPreviewManager().setPreviewForSlot(game, preview, systemCoreConfig.coreID, index)
+            saveStatePreviewManager().setPreviewForSlot(game, preview, coreBundle.coreID, index)
         }
     }
 
@@ -519,7 +512,7 @@ abstract class BaseGameActivity : com.mozhimen.emulatork.common.android.Immersiv
             )
             preferLowLatencyAudio = lowLatencyAudio
             rumbleEventsEnabled = enableRumble
-            skipDuplicateFrames = systemCoreConfig.skipDuplicateFrames
+            skipDuplicateFrames = coreBundle.skipDuplicateFrames
         }
 
         val retroGameView = GLRetroView(this, data)
@@ -586,7 +579,7 @@ abstract class BaseGameActivity : com.mozhimen.emulatork.common.android.Immersiv
             else -> GameLoaderError.Generic
         }
         retroGameView = null
-        displayGameLoaderError(gameLoaderError, systemCoreConfig)
+        displayGameLoaderError(gameLoaderError, coreBundle)
     }
 
     private fun transformExposedSetting(systemExposedSetting: GameSystemExposedSetting, coreOptions: List<CoreOption>): CoreOptionSetting? {
@@ -596,7 +589,7 @@ abstract class BaseGameActivity : com.mozhimen.emulatork.common.android.Immersiv
     }
 
     private suspend fun isAutoSaveEnabled(): Boolean {
-        return systemCoreConfig.statesSupported && settingsManager().autoSave()
+        return coreBundle.statesSupported && settingManager().autoSave()
     }
 
     private fun getCoreOptions(): List<CoreOption> {
@@ -604,7 +597,7 @@ abstract class BaseGameActivity : com.mozhimen.emulatork.common.android.Immersiv
             ?.map { CoreOption.fromLibretroDroidVariable(it) } ?: listOf()
     }
 
-    private fun updateCoreVariables(options: List<com.mozhimen.emulatork.core.CoreVariable>) {
+    private fun updateCoreVariables(options: List<CoreProperty>) {
         val updatedVariables = options.map { Variable(it.key, it.value) }
             .toTypedArray()
 
@@ -616,17 +609,17 @@ abstract class BaseGameActivity : com.mozhimen.emulatork.common.android.Immersiv
     }
 
     // Now that we wait for the first rendered frame this is probably no longer needed, but we'll keep it just to be sure
-    private suspend fun restoreQuickSave(saveState: SaveState) {
+    private suspend fun restoreQuickSave(archiveState: ArchiveState) {
         var times = 10
 
-        while (!loadSaveState(saveState) && times > 0) {
+        while (!loadArchiveState(archiveState) && times > 0) {
             delay(200)
             times--
         }
     }
 
     private suspend fun initializeGamePadShortcutsFlow() {
-        inputDeviceManager().getInputMenuShortCutObservable()
+        inputUnitManager().getInputMenuShortCutObservable()
             .distinctUntilChanged()
             .collectSafe { shortcut ->
                 shortcut?.let {
@@ -637,7 +630,7 @@ abstract class BaseGameActivity : com.mozhimen.emulatork.common.android.Immersiv
 
     private suspend fun initializeVirtualGamePadMotionsFlow() {
         val events = combine(
-            inputDeviceManager().getGamePadsPortMapperObservable(),
+            inputUnitManager().getGamePadsPortMapperObservable(),
             motionEventsFlow,
             ::NTuple2
         )
@@ -647,7 +640,7 @@ abstract class BaseGameActivity : com.mozhimen.emulatork.common.android.Immersiv
                 ports(event.device)?.let { it to event }
             }
             .map { (port, event) ->
-                val axes = event.device.getInputClass().getAxesMap().entries
+                val axes = event.device.getInputKeyMap().getAxesMap().entries
 
                 axes.map { (axis, button) ->
                     val action = if (event.getAxisValue(axis) > 0.5) {
@@ -669,7 +662,7 @@ abstract class BaseGameActivity : com.mozhimen.emulatork.common.android.Immersiv
 
     private suspend fun initializeGamePadMotionsFlow() {
         val events = combine(
-            inputDeviceManager().getGamePadsPortMapperObservable(),
+            inputUnitManager().getGamePadsPortMapperObservable(),
             motionEventsFlow,
             ::NTuple2
         )
@@ -691,13 +684,13 @@ abstract class BaseGameActivity : com.mozhimen.emulatork.common.android.Immersiv
             .map { Triple(it.device, it.action, it.keyCode) }
             .distinctUntilChanged()
 
-        val shortcutKeys = inputDeviceManager().getInputMenuShortCutObservable()
+        val shortcutKeys = inputUnitManager().getInputMenuShortCutObservable()
             .map { it?.keys ?: setOf() }
 
         val combinedObservable = combine(
             shortcutKeys,
-            inputDeviceManager().getGamePadsPortMapperObservable(),
-            inputDeviceManager().getInputBindingsObservable(),
+            inputUnitManager().getGamePadsPortMapperObservable(),
+            inputUnitManager().getInputBindingsObservable(),
             filteredKeyEvents,
             ::NTuple4
         )
@@ -743,7 +736,7 @@ abstract class BaseGameActivity : com.mozhimen.emulatork.common.android.Immersiv
         if (port < 0) return
         when (event.source) {
             InputDevice.SOURCE_JOYSTICK -> {
-                if (controllerConfigsState.value[port]?.mergeDPADAndLeftStickEvents == true) {
+                if (flowGamepadMap.value[port]?.mergeDPADAndLeftStickEvents == true) {
                     sendMergedMotionEvents(event, port)
                 } else {
                     sendSeparateMotionEvents(event, port)
@@ -891,7 +884,7 @@ abstract class BaseGameActivity : com.mozhimen.emulatork.common.android.Immersiv
         val state = getCurrentSaveState()
 
         if (state != null) {
-            statesManager().setAutoSave(game, systemCoreConfig.coreID, state)
+            saveStateManager().setAutoSave(game, coreBundle.eCoreType, state)
             Timber.i("Stored autosave file with size: ${state?.state?.size}")
         }
     }
@@ -899,7 +892,7 @@ abstract class BaseGameActivity : com.mozhimen.emulatork.common.android.Immersiv
     private suspend fun saveSRAM(game: Game) {
         val retroGameView = retroGameView ?: return
         val sramState = retroGameView.serializeSRAM()
-        legacySavesManager().setSaveRAM(game, sramState)
+        saveManager().setSaveRAM(game, sramState)
         Timber.i("Stored sram file with size: ${sramState.size}")
     }
 
@@ -907,7 +900,7 @@ abstract class BaseGameActivity : com.mozhimen.emulatork.common.android.Immersiv
         if (loadingState.value) return
         withLoading {
             getCurrentSaveState()?.let {
-                statesManager().setSlotSave(game, it, systemCoreConfig.coreID, index)
+                saveStateManager().setSlotSave(game, it, coreBundle.eCoreType, index)
                 runCatching {
                     takeScreenshotPreview(index)
                 }
@@ -919,9 +912,9 @@ abstract class BaseGameActivity : com.mozhimen.emulatork.common.android.Immersiv
         if (loadingState.value) return
         withLoading {
             try {
-                statesManager().getSlotSave(game, systemCoreConfig.coreID, index)?.let {
+                saveStateManager().getSlotSave(game, coreBundle.eCoreType, index)?.let {
                     val loaded = withContext(Dispatchers.IO) {
-                        loadSaveState(it)
+                        loadArchiveState(it)
                     }
                     withContext(Dispatchers.Main) {
                         if (!loaded)
@@ -934,39 +927,39 @@ abstract class BaseGameActivity : com.mozhimen.emulatork.common.android.Immersiv
         }
     }
 
-    private fun getCurrentSaveState(): SaveState? {
+    private fun getCurrentSaveState(): ArchiveState? {
         val retroGameView = retroGameView ?: return null
         val currentDisk = if (system.hasMultiDiskSupport) {
             retroGameView.getCurrentDisk()
         } else {
             0
         }
-        return SaveState(
+        return ArchiveState(
             retroGameView.serializeState(),
-            SaveState.SaveMetadata(currentDisk, systemCoreConfig.statesVersion)
+            ArchiveState.ArchiveMetadata(currentDisk, coreBundle.statesVersion)
         )
     }
 
-    private fun loadSaveState(saveState: SaveState): Boolean {
+    private fun loadArchiveState(archiveState: ArchiveState): Boolean {
         val retroGameView = retroGameView ?: return false
 
-        if (systemCoreConfig.statesVersion != saveState.metadata.version) {
-            throw SaveStateIncompatibleException()
+        if (coreBundle.statesVersion != archiveState.metadata.version) {
+            throw ArchiveStateIncompatibleException()
         }
 
         if (system.hasMultiDiskSupport &&
             retroGameView.getAvailableDisks() > 1 &&
-            retroGameView.getCurrentDisk() != saveState.metadata.diskIndex
+            retroGameView.getCurrentDisk() != archiveState.metadata.diskIndex
         ) {
-            retroGameView.changeDisk(saveState.metadata.diskIndex)
+            retroGameView.changeDisk(archiveState.metadata.diskIndex)
         }
 
-        return retroGameView.unserializeState(saveState.state)
+        return retroGameView.unserializeState(archiveState.state)
     }
 
     private suspend fun displayLoadStateErrorMessage(throwable: Throwable) = withContext(Dispatchers.Main) {
         when (throwable) {
-            is SaveStateIncompatibleException ->
+            is ArchiveStateIncompatibleException ->
                 R.string.error_message_incompatible_state.showToast(Toast.LENGTH_LONG)
 
             else -> R.string.game_toast_load_state_failed.showToast()
@@ -985,37 +978,37 @@ abstract class BaseGameActivity : com.mozhimen.emulatork.common.android.Immersiv
     private suspend fun loadGame() {
         val requestLoadSave = intent.getBooleanExtra(EXTRA_LOAD_SAVE, false)
 
-        val autoSaveEnabled = settingsManager().autoSave()
-        val filter = settingsManager().screenFilter()
-        val hdMode = settingsManager().hdMode()
-        val forceLegacyHdMode = settingsManager().forceLegacyHdMode()
-        val lowLatencyAudio = settingsManager().lowLatencyAudio()
-        val enableRumble = settingsManager().enableRumble()
-        val directLoad = settingsManager().allowDirectGameLoad()
+        val autoSaveEnabled = settingManager().autoSave()
+        val filter = settingManager().screenFilter()
+        val hdMode = settingManager().hdMode()
+        val forceLegacyHdMode = settingManager().forceLegacyHdMode()
+        val lowLatencyAudio = settingManager().lowLatencyAudio()
+        val enableRumble = settingManager().enableRumble()
+        val directLoad = settingManager().allowDirectGameLoad()
 
-        val loadingStatesFlow = gameLoader().load(
+        val loadingStatesFlow = gameLoadManager().load(
             applicationContext,
             game,
             requestLoadSave && autoSaveEnabled,
-            systemCoreConfig,
+            coreBundle,
             directLoad
         )
 
         loadingStatesFlow
             .flowOn(Dispatchers.IO)
             .catch {
-                displayGameLoaderError((it as GameLoaderException).error, systemCoreConfig)
+                displayGameLoaderError((it as LoadException).sLoadError, coreBundle)
             }
             .collect { loadingState ->
                 displayLoadingState(loadingState)
-                if (loadingState is com.mozhimen.emulatork.common.game.GameLoader.LoadingState.Ready) {
+                if (loadingState is SGameLoadState.LoadReady) {
                     retroGameView = initializeRetroGameView(
-                        loadingState.gameData,
+                        loadingState.gameBundle,
                         hdMode,
                         forceLegacyHdMode,
                         filter,
                         lowLatencyAudio,
-                        systemCoreConfig.rumbleSupported && enableRumble
+                        coreBundle.isSupportRumble && enableRumble
                     )
                 }
             }
@@ -1029,26 +1022,26 @@ abstract class BaseGameActivity : com.mozhimen.emulatork.common.android.Immersiv
 
     private suspend fun retroGameViewFlow() = retroGameViewFlow.filterNotNull().first()
 
-    private fun displayLoadingState(loadingState: com.mozhimen.emulatork.common.game.GameLoader.LoadingState) {
-        loadingMessageStateFlow.value = when (loadingState) {
-            is com.mozhimen.emulatork.common.game.GameLoader.LoadingState.LoadingCore -> getString(R.string.game_loading_download_core)
-            is com.mozhimen.emulatork.common.game.GameLoader.LoadingState.LoadingGame -> getString(R.string.game_loading_preparing_game)
+    private fun displayLoadingState(sGameLoadState: SGameLoadState) {
+        loadingMessageStateFlow.value = when (sGameLoadState) {
+            is SGameLoadState.LoadingCore -> getString(R.string.game_loading_download_core)
+            is SGameLoadState.LoadingGame -> getString(R.string.game_loading_preparing_game)
             else -> ""
         }
     }
 
-    private fun displayGameLoaderError(gameError: GameLoaderError, coreConfig: GameSystemCoreConfig) {
+    private fun displayGameLoaderError(sLoadError: SLoadError, coreBundle: CoreBundle) {
 
-        val messageId = when (gameError) {
-            is GameLoaderError.GLIncompatible -> getString(R.string.game_loader_error_gl_incompatible)
-            is GameLoaderError.Generic -> getString(R.string.game_loader_error_generic)
-            is GameLoaderError.LoadCore -> getString(R.string.game_loader_error_load_core)
-            is GameLoaderError.LoadGame -> getString(R.string.game_loader_error_load_game)
-            is GameLoaderError.Saves -> getString(R.string.game_loader_error_save)
-            is GameLoaderError.UnsupportedArchitecture -> getString(R.string.game_loader_error_unsupported_architecture)
-            is GameLoaderError.MissingBiosFiles -> getString(
+        val messageId = when (sLoadError) {
+            is SLoadError.GLIncompatible -> getString(R.string.game_loader_error_gl_incompatible)
+            is SLoadError.Generic -> getString(R.string.game_loader_error_generic)
+            is SLoadError.LoadCore -> getString(R.string.game_loader_error_load_core)
+            is SLoadError.LoadGame -> getString(R.string.game_loader_error_load_game)
+            is SLoadError.Saves -> getString(R.string.game_loader_error_save)
+            is SLoadError.UnsupportedArchitecture -> getString(R.string.game_loader_error_unsupported_architecture)
+            is SLoadError.MissingBiosFiles -> getString(
                 R.string.game_loader_error_missing_bios,
-                gameError.missingFiles
+                sLoadError.missingFiles
             )
         }
 

@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
-import com.mozhimen.emulatork.db.game.entities.DataFile
+import com.mozhimen.emulatork.db.game.entities.GameDataFile
 
 /**
  * @ClassName DataFileDao
@@ -14,20 +14,20 @@ import com.mozhimen.emulatork.db.game.entities.DataFile
  * @Version 1.0
  */
 @Dao
-interface DataFileDao {
+interface GameDataFileDao {
 
     @Query("SELECT * FROM datafiles where gameId = :gameId")
-    fun selectDataFilesForGame(gameId: Int): List<DataFile>
+    fun selectDataFilesForGame(gameId: Int): List<GameDataFile>
 
     @Query("SELECT * FROM datafiles WHERE lastIndexedAt < :lastIndexedAt")
-    fun selectByLastIndexedAtLessThan(lastIndexedAt: Long): List<DataFile>
+    fun selectByLastIndexedAtLessThan(lastIndexedAt: Long): List<GameDataFile>
 
     @Insert
-    fun insert(dataFile: DataFile)
+    fun insert(gameDataFile: GameDataFile)
 
     @Insert
-    fun insert(dataFiles: List<DataFile>)
+    fun insert(gameDataFiles: List<GameDataFile>)
 
     @Delete
-    fun delete(dataFiles: List<DataFile>)
+    fun delete(gameDataFiles: List<GameDataFile>)
 }

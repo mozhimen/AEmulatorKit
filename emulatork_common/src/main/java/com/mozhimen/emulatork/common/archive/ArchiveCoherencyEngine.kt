@@ -2,7 +2,7 @@ package com.mozhimen.emulatork.common.archive
 
 import com.mozhimen.emulatork.common.save.SaveManager
 import com.mozhimen.emulatork.common.save.SaveStateManager
-import com.mozhimen.emulatork.core.ECoreType
+import com.mozhimen.emulatork.core.type.ECoreType
 import com.mozhimen.emulatork.db.game.entities.Game
 
 /**

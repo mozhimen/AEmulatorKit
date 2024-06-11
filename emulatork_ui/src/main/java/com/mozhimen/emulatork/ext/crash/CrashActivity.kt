@@ -1,4 +1,4 @@
-package com.mozhimen.emulatork.ext.game.crash
+package com.mozhimen.emulatork.ext.crash
 
 import android.app.Activity
 import android.content.Intent
@@ -14,7 +14,7 @@ import com.mozhimen.emulatork.ui.R
  * @Date 2024/5/13
  * @Version 1.0
  */
-class GameCrashActivity : Activity() {
+class CrashActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_crash)
@@ -38,7 +38,7 @@ class GameCrashActivity : Activity() {
         private const val EXTRA_MESSAGE_DETAIL = "EXTRA_MESSAGE_DETAIL"
 
         fun launch(activity: Activity, message: String, messageDetail: String?) {
-            val intent = Intent(activity, GameCrashActivity::class.java).apply {
+            val intent = Intent(activity, CrashActivity::class.java).apply {
                 putExtra(EXTRA_MESSAGE, message)
                 putExtra(EXTRA_MESSAGE_DETAIL, messageDetail)
             }

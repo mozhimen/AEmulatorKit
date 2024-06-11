@@ -2,7 +2,7 @@ package com.mozhimen.emulatork.common.archive
 
 import android.app.Activity
 import android.content.Context
-import com.mozhimen.emulatork.core.ECoreType
+import com.mozhimen.emulatork.core.type.ECoreType
 import com.mozhimen.emulatork.basic.storage.StorageDirProvider
 
 /**

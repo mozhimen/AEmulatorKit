@@ -33,7 +33,7 @@ import com.mozhimen.emulatork.ext.covers.CoverShortcutGenerator
 import com.mozhimen.emulatork.ext.game.GameInteractor
 import com.mozhimen.emulatork.ext.game.GameLaunchTaskHandler
 import com.mozhimen.emulatork.ext.game.GameLauncher
-import com.mozhimen.emulatork.ext.game.pad.GamePadPreferencesManager
+import com.mozhimen.emulatork.ext.input.GamePadPreferencesManager
 import com.mozhimen.emulatork.ext.library.SettingsInteractor
 import com.mozhimen.emulatork.ext.preferences.PreferencesBios
 import com.mozhimen.emulatork.ext.preferences.PreferencesCoreSelection

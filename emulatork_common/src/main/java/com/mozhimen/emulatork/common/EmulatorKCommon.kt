@@ -3,20 +3,21 @@ package com.mozhimen.emulatork.common
 import android.util.Log
 import com.mozhimen.basick.utilk.commons.IUtilK
 import com.mozhimen.basick.utilk.kotlinx.coroutines.batch_ofSizeTime
-import com.mozhimen.emulatork.basic.game.db.entities.DataFile
-import com.mozhimen.emulatork.basic.game.db.entities.Game
 import com.mozhimen.emulatork.basic.metadata.Metadata
 import com.mozhimen.emulatork.basic.metadata.MetadataProvider
-import com.mozhimen.emulatork.basic.game.system.GameSystems
+import com.mozhimen.emulatork.basic.rom.SRomFileType
 import com.mozhimen.emulatork.basic.storage.StorageBaseFile
 import com.mozhimen.emulatork.basic.storage.StorageFileGroup
-import com.mozhimen.emulatork.basic.storage.StorageRomFile
 import com.mozhimen.emulatork.basic.storage.StorageFile
-import com.mozhimen.emulatork.basic.storage.StorageFilesMerger
+import com.mozhimen.emulatork.common.storage.StorageFileMerger
 import com.mozhimen.emulatork.basic.storage.StorageDirProvider
 import com.mozhimen.emulatork.common.bios.BiosManager
+import com.mozhimen.emulatork.common.storage.StorageProvider
 import com.mozhimen.emulatork.common.storage.StorageProviderRegistry
+import com.mozhimen.emulatork.common.system.SystemProvider
 import com.mozhimen.emulatork.db.game.database.RetrogradeDatabase
+import com.mozhimen.emulatork.db.game.entities.Game
+import com.mozhimen.emulatork.db.game.entities.GameDataFile
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
@@ -35,7 +36,7 @@ import timber.log.Timber
  * @Date 2024/5/11
  * @Version 1.0
  */
-open class EmulatorKBasic(
+open class EmulatorKCommon(
     private val retrogradedb: RetrogradeDatabase,
     private val storageProviderRegistry: Lazy<StorageProviderRegistry>,
     private val metadataProvider: Lazy<MetadataProvider>,
@@ -52,9 +53,9 @@ open class EmulatorKBasic(
 
     fun getGameFiles(
         game: Game,
-        dataFiles: List<DataFile>,
+        dataFiles: List<GameDataFile>,
         allowVirtualFiles: Boolean
-    ): StorageRomFile {
+    ): SRomFileType {
         val provider = storageProviderRegistry.value
         return provider.getStorageProvider(game).getGameRomFiles(game, dataFiles, allowVirtualFiles)
     }
@@ -94,12 +95,12 @@ open class EmulatorKBasic(
 
     @OptIn(FlowPreview::class)
     private fun indexSingleProvider(
-        provider: StorageDirProvider,
+        provider: StorageProvider,
         startedAtMs: Long,
         gameMetadata: MetadataProvider
     ): Flow<Unit> {
-        return provider.listBaseStorageFiles()
-            .flatMapConcat { StorageFilesMerger.mergeDataFiles(provider, it).asFlow() }
+        return provider.listStorageBaseFiles()
+            .flatMapConcat { StorageFileMerger.mergeDataFiles(provider, it).asFlow() }
             .batch_ofSizeTime(MAX_BUFFER_SIZE, MAX_TIME)
             .flatMapMerge {
                 processBatch(it, provider, startedAtMs, gameMetadata)
@@ -108,7 +109,7 @@ open class EmulatorKBasic(
 
     private suspend fun processBatch(
         batch: List<StorageFileGroup>,
-        provider: StorageDirProvider,
+        provider: StorageProvider,
         startedAtMs: Long,
         gameMetadata: MetadataProvider
     ) = flow<Unit> {
@@ -168,8 +169,8 @@ open class EmulatorKBasic(
         gameId: Int,
         storageBaseFile: StorageBaseFile,
         startedAtMs: Long
-    ): DataFile {
-        return DataFile(
+    ): GameDataFile {
+        return GameDataFile(
             gameId = gameId,
             fileUri = storageBaseFile.uri.toString(),
             fileName = storageBaseFile.name,
@@ -181,7 +182,7 @@ open class EmulatorKBasic(
     private fun handleNewEntries(
         entries: List<ScanEntry>,
         startedAtMs: Long,
-        provider: StorageDirProvider
+        provider: StorageProvider
     ) {
         val gameFiles = entries
             .filterIsInstance<ScanEntry.GameFile>()
@@ -214,7 +215,7 @@ open class EmulatorKBasic(
     }
 
     private fun handleUnknownFiles(
-        provider: StorageDirProvider,
+        provider: StorageProvider,
         files: List<StorageBaseFile>,
         startedAtMs: Long
     ) {
@@ -230,7 +231,7 @@ open class EmulatorKBasic(
 
     private suspend fun buildEntryFromMetadata(
         groupedStorageFile: StorageFileGroup,
-        provider: StorageDirProvider,
+        provider: StorageProvider,
         metadataProvider: MetadataProvider,
         startedAtMs: Long
     ): ScanEntry {
@@ -248,7 +249,7 @@ open class EmulatorKBasic(
     }
 
     private fun safeStorageFile(
-        provider: StorageDirProvider,
+        provider: StorageProvider,
         storageBaseFile: StorageBaseFile
     ): StorageFile? {
         return runCatching {
@@ -290,7 +291,7 @@ open class EmulatorKBasic(
             return null
         }
 
-        val gameSystem = GameSystems.findById(metadata.system!!)
+        val gameSystem = SystemProvider.findSysByName(metadata.system!!)
 
         // If the databased matched a data file (as with bin/cue) we force link the primary filename
         val fileName = if (groupedStorageFile.dataFiles.isNotEmpty()) {
@@ -303,7 +304,7 @@ open class EmulatorKBasic(
             fileName = fileName,
             fileUri = groupedStorageFile.primaryFile.uri.toString(),
             title = metadata.name ?: groupedStorageFile.primaryFile.name,
-            systemId = gameSystem.id.dbname,
+            systemName = gameSystem.eSystemType.simpleName,
             developer = metadata.developer,
             coverFrontUrl = metadata.thumbnail,
             lastIndexedAt = lastIndexedAt

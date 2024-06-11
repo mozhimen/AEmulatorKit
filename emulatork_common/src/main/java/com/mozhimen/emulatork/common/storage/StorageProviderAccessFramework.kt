@@ -1,10 +1,10 @@
-package com.mozhimen.emulatork.common.storage.local
+package com.mozhimen.emulatork.common.storage
 
 import android.content.Context
 import android.net.Uri
 import android.provider.DocumentsContract
 import androidx.documentfile.provider.DocumentFile
-import com.mozhimen.abilityk.jetpack.documentfile.utils.isZipped
+import com.mozhimen.basick.elemk.androidx.documentfile.isTypeZip
 import com.mozhimen.basick.utilk.java.io.inputStream2file_use_ofCopyTo
 import com.mozhimen.basick.utilk.java.util.extractEntryToFile_use
 import com.mozhimen.emulatork.common.R
@@ -12,9 +12,9 @@ import com.mozhimen.emulatork.basic.preferences.SharedPreferencesManager
 import com.mozhimen.emulatork.basic.storage.StorageFile
 import com.mozhimen.emulatork.basic.storage.StorageDirProvider
 import com.mozhimen.emulatork.basic.storage.StorageBaseFile
-import com.mozhimen.emulatork.common.storage.StorageProvider
 import com.mozhimen.emulatork.basic.rom.SRomFileType
-import com.mozhimen.emulatork.db.game.entities.DataFile
+import com.mozhimen.emulatork.basic.storage.DocumentFileParser
+import com.mozhimen.emulatork.db.game.entities.GameDataFile
 import com.mozhimen.emulatork.db.game.entities.Game
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -31,7 +31,7 @@ import java.util.zip.ZipInputStream
  * @Date 2024/5/10
  * @Version 1.0
  */
-class StorageLocalAccessFrameworkProvider(private val context: Context) : StorageProvider {
+class StorageProviderAccessFramework(private val context: Context) : StorageProvider {
 
     companion object {
         const val VIRTUAL_FILE_PATH = "/virtual/file/path"
@@ -49,7 +49,7 @@ class StorageLocalAccessFrameworkProvider(private val context: Context) : Storag
 
     override val enabledByDefault = true
 
-    override fun listBaseStorageFiles(): Flow<List<StorageBaseFile>> {
+    override fun listStorageBaseFiles(): Flow<List<StorageBaseFile>> {
         return getExternalFolder()?.let { folder ->
             traverseDirectoryEntries(Uri.parse(folder))
         } ?: emptyFlow()
@@ -59,16 +59,16 @@ class StorageLocalAccessFrameworkProvider(private val context: Context) : Storag
         return DocumentFileParser.parseDocumentFile(context, storageBaseFile)
     }
 
-    override fun getGameRomFiles(game: Game, dataFiles: List<DataFile>, allowVirtualFiles: Boolean): SRomFileType {
+    override fun getGameRomFiles(game: Game, gameDataFiles: List<GameDataFile>, allowVirtualFiles: Boolean): SRomFileType {
         val originalDocumentUri = Uri.parse(game.fileUri)
         val originalDocument = DocumentFile.fromSingleUri(context, originalDocumentUri)!!
 
-        val isZipped = originalDocument.isZipped() && originalDocument.name != game.fileName
+        val isZipped = originalDocument.isTypeZip() && originalDocument.name != game.fileName
 
         return when {
-            isZipped && dataFiles.isEmpty() -> getGameRomFilesZipped(game, originalDocument)
-            allowVirtualFiles -> getGameRomFilesVirtual(game, dataFiles)
-            else -> getGameRomFilesStandard(game, dataFiles, originalDocument)
+            isZipped && gameDataFiles.isEmpty() -> getGameRomFilesZipped(game, originalDocument)
+            allowVirtualFiles -> getGameRomFilesVirtual(game, gameDataFiles)
+            else -> getGameRomFilesStandard(game, gameDataFiles, originalDocument)
         }
     }
 
@@ -150,14 +150,14 @@ class StorageLocalAccessFrameworkProvider(private val context: Context) : Storag
         return resultFiles to resultDirectories
     }
 
-    private fun getGameRomFilesStandard(game: Game, dataFiles: List<DataFile>, originalDocument: DocumentFile): SRomFileType {
+    private fun getGameRomFilesStandard(game: Game, gameDataFiles: List<GameDataFile>, originalDocument: DocumentFile): SRomFileType {
         val gameEntry = getGameRomStandard(game, originalDocument)
-        val dataEntries = dataFiles.map { getDataFileStandard(game, it) }
+        val dataEntries = gameDataFiles.map { getDataFileStandard(game, it) }
         return SRomFileType.Standard(listOf(gameEntry) + dataEntries)
     }
 
     private fun getGameRomFilesZipped(game: Game, originalDocument: DocumentFile): SRomFileType {
-        val cacheFile = StorageLocalUtil.getCacheFileForGame(StorageDirProvider.SAF_CACHE_SUBFOLDER, context, game)
+        val cacheFile = StorageUtil.getCacheFileForGame(StorageDirProvider.SAF_CACHE_SUBFOLDER, context, game)
         if (cacheFile.exists()) {
             return SRomFileType.Standard(listOf(cacheFile))
         }
@@ -169,32 +169,32 @@ class StorageLocalAccessFrameworkProvider(private val context: Context) : Storag
         return SRomFileType.Standard(listOf(cacheFile))
     }
 
-    private fun getGameRomFilesVirtual(game: Game, dataFiles: List<DataFile>): SRomFileType {
+    private fun getGameRomFilesVirtual(game: Game, gameDataFiles: List<GameDataFile>): SRomFileType {
         val gameEntry = getGameRomVirtual(game)
-        val dataEntries = dataFiles.map { getDataFileVirtual(it) }
+        val dataEntries = gameDataFiles.map { getDataFileVirtual(it) }
         return SRomFileType.Virtual(listOf(gameEntry) + dataEntries)
     }
 
-    private fun getDataFileVirtual(dataFile: DataFile): SRomFileType.Virtual.Entry {
+    private fun getDataFileVirtual(gameDataFile: GameDataFile): SRomFileType.Virtual.Entry {
         return SRomFileType.Virtual.Entry(
-            "$VIRTUAL_FILE_PATH/${dataFile.fileName}",
-            context.contentResolver.openFileDescriptor(Uri.parse(dataFile.fileUri), "r")!!
+            "$VIRTUAL_FILE_PATH/${gameDataFile.fileName}",
+            context.contentResolver.openFileDescriptor(Uri.parse(gameDataFile.fileUri), "r")!!
         )
     }
 
-    private fun getDataFileStandard(game: Game, dataFile: DataFile): File {
-        val cacheFile = StorageLocalUtil.getDataFileForGame(
+    private fun getDataFileStandard(game: Game, gameDataFile: GameDataFile): File {
+        val cacheFile = StorageUtil.getDataFileForGame(
             StorageDirProvider.SAF_CACHE_SUBFOLDER,
             context,
             game,
-            dataFile
+            gameDataFile
         )
 
         if (cacheFile.exists()) {
             return cacheFile
         }
 
-        val stream = context.contentResolver.openInputStream(Uri.parse(dataFile.fileUri))!!
+        val stream = context.contentResolver.openInputStream(Uri.parse(gameDataFile.fileUri))!!
         stream.inputStream2file_use_ofCopyTo(cacheFile)
         return cacheFile
     }
@@ -207,7 +207,7 @@ class StorageLocalAccessFrameworkProvider(private val context: Context) : Storag
     }
 
     private fun getGameRomStandard(game: Game, originalDocument: DocumentFile): File {
-        val cacheFile = StorageLocalUtil.getCacheFileForGame(StorageDirProvider.SAF_CACHE_SUBFOLDER, context, game)
+        val cacheFile = StorageUtil.getCacheFileForGame(StorageDirProvider.SAF_CACHE_SUBFOLDER, context, game)
 
         if (cacheFile.exists()) {
             return cacheFile

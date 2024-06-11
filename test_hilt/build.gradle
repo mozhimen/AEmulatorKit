@@ -57,7 +57,7 @@ dependencies {
 
     implementation project(':ARxKit:rxk_epoxy4')
     implementation project(":APagingKit:pagingk_epoxy4")
-    implementation project(':AAbilityKit_Jetpack:startup')
+    implementation project(':ALibKit_Jetpack:startup')
     implementation project(":AXmlKit:recyclerk")
 
     kapt "com.airbnb.android:epoxy-processor:4.6.3-vinay-compose"

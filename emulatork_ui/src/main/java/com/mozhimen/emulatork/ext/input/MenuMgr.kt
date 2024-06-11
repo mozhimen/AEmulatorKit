@@ -1,4 +1,4 @@
-package com.mozhimen.emulatork.ext.game.menu
+package com.mozhimen.emulatork.ext.input
 
 import android.app.Activity
 import android.content.Context
@@ -9,14 +9,14 @@ import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceScreen
 import androidx.preference.SwitchPreference
-import com.mozhimen.emulatork.core.ECoreId
-import com.mozhimen.emulatork.basic.game.system.GameSystemCoreConfig
-import com.mozhimen.emulatork.basic.game.db.entities.Game
-import com.mozhimen.emulatork.basic.save.SaveInfo
-import com.mozhimen.emulatork.basic.save.SaveStatePreviewManager
 import com.mozhimen.emulatork.ui.R
 import com.mozhimen.basick.utilk.android.util.dp2pxI
-import com.mozhimen.emulatork.basic.game.menu.GameMenuContract
+import com.mozhimen.emulatork.basic.archive.ArchiveInfo
+import com.mozhimen.emulatork.common.core.CoreBundle
+import com.mozhimen.emulatork.common.save.SaveStatePreviewManager
+import com.mozhimen.emulatork.core.type.ECoreType
+import com.mozhimen.emulatork.db.game.entities.Game
+import com.mozhimen.emulatork.input.virtual.menu.MenuContract
 import java.text.SimpleDateFormat
 
 /**
@@ -26,7 +26,7 @@ import java.text.SimpleDateFormat
  * @Date 2024/5/13
  * @Version 1.0
  */
-object GameMenuMgr {
+object MenuMgr {
 
     fun setupAudioOption(screen: PreferenceScreen, audioEnabled: Boolean) {
         val preference = screen.findPreference<SwitchPreference>(MUTE)
@@ -45,23 +45,23 @@ object GameMenuMgr {
 
     fun setupSaveOption(
         screen: PreferenceScreen,
-        systemCoreConfig: GameSystemCoreConfig
+        coreBundle: CoreBundle
     ) {
         val savesOption = screen.findPreference<Preference>(SECTION_SAVE_GAME)
-        savesOption?.isVisible = systemCoreConfig.statesSupported
+        savesOption?.isVisible = coreBundle.isSupportStates
 
         val loadOption = screen.findPreference<Preference>(SECTION_LOAD_GAME)
-        loadOption?.isVisible = systemCoreConfig.statesSupported
+        loadOption?.isVisible = coreBundle.isSupportStates
     }
 
     fun setupSettingsOption(
         screen: PreferenceScreen,
-        systemCoreConfig: GameSystemCoreConfig
+        coreBundle: CoreBundle
     ) {
         screen.findPreference<Preference>(SECTION_CORE_OPTIONS)?.isVisible = sequenceOf(
-            systemCoreConfig.exposedSystemSettings.isNotEmpty(),
-            systemCoreConfig.exposedAdvancedSettings.isNotEmpty(),
-            systemCoreConfig.controllerConfigs.values.any { it.size > 1 }
+            coreBundle.systemSettings_exposed.isNotEmpty(),
+            coreBundle.systemSettings_exposedAdvanced.isNotEmpty(),
+            coreBundle.gamepadConfigMap.values.any { it.size > 1 }
         ).any { it }
     }
 
@@ -90,7 +90,7 @@ object GameMenuMgr {
         changeDiskPreference?.setValueIndex(currentDisk)
         changeDiskPreference?.setOnPreferenceChangeListener { _, newValue ->
             val resultIntent = Intent().apply {
-                putExtra(GameMenuContract.RESULT_CHANGE_DISK, (newValue as String).toInt())
+                putExtra(MenuContract.RESULT_CHANGE_DISK, (newValue as String).toInt())
             }
             setResultAndFinish(activity, resultIntent)
             true
@@ -100,13 +100,13 @@ object GameMenuMgr {
     fun addSavePreference(
         screen: PreferenceScreen,
         index: Int,
-        saveStateInfo: SaveInfo,
+        archiveInfo: ArchiveInfo,
         bitmap: Bitmap?
     ) {
         screen.addPreference(
             Preference(screen.context).apply {
                 this.key = "pref_game_save_$index"
-                this.summary = getDateString(saveStateInfo)
+                this.summary = getDateString(archiveInfo)
                 this.title = context.getString(R.string.game_menu_state, (index + 1).toString())
                 this.icon = BitmapDrawable(screen.context.resources, bitmap)
             }
@@ -116,14 +116,14 @@ object GameMenuMgr {
     fun addLoadPreference(
         screen: PreferenceScreen,
         index: Int,
-        saveStateInfo: SaveInfo,
+        archiveInfo: ArchiveInfo,
         bitmap: Bitmap?
     ) {
         screen.addPreference(
             Preference(screen.context, null).apply {
                 this.key = "pref_game_load_$index"
-                this.summary = getDateString(saveStateInfo)
-                this.isEnabled = saveStateInfo.exists
+                this.summary = getDateString(archiveInfo)
+                this.isEnabled = archiveInfo.exists
                 this.title = context.getString(R.string.game_menu_state, (index + 1).toString())
                 this.icon = BitmapDrawable(screen.context.resources, bitmap)
             }
@@ -143,7 +143,7 @@ object GameMenuMgr {
             "pref_game_mute" -> {
                 val currentValue = (preference as SwitchPreference).isChecked
                 val resultIntent = Intent().apply {
-                    putExtra(GameMenuContract.RESULT_ENABLE_AUDIO, !currentValue)
+                    putExtra(MenuContract.RESULT_ENABLE_AUDIO, !currentValue)
                 }
                 setResultAndFinish(activity, resultIntent)
                 true
@@ -151,28 +151,28 @@ object GameMenuMgr {
             "pref_game_fast_forward" -> {
                 val currentValue = (preference as SwitchPreference).isChecked
                 val resultIntent = Intent().apply {
-                    putExtra(GameMenuContract.RESULT_ENABLE_FAST_FORWARD, currentValue)
+                    putExtra(MenuContract.RESULT_ENABLE_FAST_FORWARD, currentValue)
                 }
                 setResultAndFinish(activity, resultIntent)
                 true
             }
             "pref_game_reset" -> {
                 val resultIntent = Intent().apply {
-                    putExtra(GameMenuContract.RESULT_RESET, true)
+                    putExtra(MenuContract.RESULT_RESET, true)
                 }
                 setResultAndFinish(activity, resultIntent)
                 true
             }
             "pref_game_quit" -> {
                 val resultIntent = Intent().apply {
-                    putExtra(GameMenuContract.RESULT_QUIT, true)
+                    putExtra(MenuContract.RESULT_QUIT, true)
                 }
                 setResultAndFinish(activity, resultIntent)
                 true
             }
             "pref_game_edit_touch_controls" -> {
                 val resultIntent = Intent().apply {
-                    putExtra(GameMenuContract.RESULT_EDIT_TOUCH_CONTROLS, true)
+                    putExtra(MenuContract.RESULT_EDIT_TOUCH_CONTROLS, true)
                 }
                 setResultAndFinish(activity, resultIntent)
                 true
@@ -183,7 +183,7 @@ object GameMenuMgr {
 
     private fun handleSaveAction(activity: Activity?, index: Int): Boolean {
         val resultIntent = Intent().apply {
-            putExtra(GameMenuContract.RESULT_SAVE, index)
+            putExtra(MenuContract.RESULT_SAVE, index)
         }
         setResultAndFinish(activity, resultIntent)
         return true
@@ -191,7 +191,7 @@ object GameMenuMgr {
 
     private fun handleLoadAction(activity: Activity?, index: Int): Boolean {
         val resultIntent = Intent().apply {
-            putExtra(GameMenuContract.RESULT_LOAD, index)
+            putExtra(MenuContract.RESULT_LOAD, index)
         }
         setResultAndFinish(activity, resultIntent)
         return true
@@ -202,10 +202,10 @@ object GameMenuMgr {
         activity?.finish()
     }
 
-    private fun getDateString(saveInfo: SaveInfo): String {
+    private fun getDateString(archiveInfo: ArchiveInfo): String {
         val formatter = SimpleDateFormat.getDateTimeInstance()
-        return if (saveInfo.exists) {
-            formatter.format(saveInfo.date)
+        return if (archiveInfo.exists) {
+            formatter.format(archiveInfo.date)
         } else {
             ""
         }
@@ -214,14 +214,14 @@ object GameMenuMgr {
     suspend fun getSaveStateBitmap(
         context: Context,
         saveStatePreviewManager: SaveStatePreviewManager,
-        saveStateInfo: SaveInfo,
+        archiveInfo: ArchiveInfo,
         game: Game,
-        coreID: com.mozhimen.emulatork.core.ECoreId,
+        eCoreType: ECoreType,
         index: Int
     ): Bitmap? {
-        if (!saveStateInfo.exists) return null
+        if (!archiveInfo.exists) return null
         val imageSize = 96f.dp2pxI()
-        return saveStatePreviewManager.getPreviewForSlot(game, coreID, index, imageSize)
+        return saveStatePreviewManager.getPreviewForSlot(game, eCoreType, index, imageSize)
     }
 
     const val FAST_FORWARD = "pref_game_fast_forward"

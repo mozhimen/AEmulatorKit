@@ -7,7 +7,7 @@ import com.mozhimen.emulatork.basic.system.SystemProperty
 import com.mozhimen.emulatork.basic.system.SystemSetting
 import com.mozhimen.emulatork.common.core.CoreBundle
 import com.mozhimen.emulatork.basic.system.SystemScanOption
-import com.mozhimen.emulatork.core.ECoreType
+import com.mozhimen.emulatork.core.type.ECoreType
 import com.mozhimen.emulatork.core.property.CoreProperty
 import com.mozhimen.emulatork.db.game.entities.Game
 import com.mozhimen.emulatork.input.virtual.gamepad.GamepadConfigProvider

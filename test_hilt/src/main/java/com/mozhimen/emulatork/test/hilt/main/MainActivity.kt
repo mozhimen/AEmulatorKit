@@ -23,7 +23,7 @@ import com.mozhimen.emulatork.basic.game.GameBusyActivity
 import com.mozhimen.emulatork.basic.game.review.GameReviewManager
 import com.mozhimen.emulatork.basic.system.ESystemType
 import com.mozhimen.emulatork.basic.save.sync.SaveSyncManager
-import com.mozhimen.emulatork.ext.game.BaseGameActivity
+import com.mozhimen.emulatork.ext.game.AbsGameActivity
 import com.mozhimen.emulatork.ext.game.GameLaunchTaskHandler
 import com.mozhimen.emulatork.ext.works.WorkScheduler
 import com.mozhimen.emulatork.ui.R
@@ -99,7 +99,7 @@ class MainActivity : AppCompatActivity(), GameBusyActivity,IUtilK {
         super.onActivityResult(requestCode, resultCode, data)
 
         when (requestCode) {
-            BaseGameActivity.REQUEST_PLAY_GAME -> {
+            AbsGameActivity.REQUEST_PLAY_GAME -> {
                 GlobalScope.launchSafe {
                     gameLaunchTaskHandler.handleGameFinish(true, this@MainActivity, resultCode, data, WorkSaveSync::class.java, WorkStorageCacheCleaner::class.java)
                 }
