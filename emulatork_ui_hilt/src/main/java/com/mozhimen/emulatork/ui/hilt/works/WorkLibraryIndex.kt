@@ -1,9 +1,9 @@
-package com.mozhimen.emulatork.test.hilt.works
+package com.mozhimen.emulatork.ui.hilt.works
 
 import android.content.Context
 import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
-import com.mozhimen.emulatork.basic.EmulatorKBasic
+import com.mozhimen.emulatork.common.EmulatorKCommon
 import com.mozhimen.emulatork.ui.works.AbsWorkLibraryIndex
 import com.mozhimen.emulatork.ui.hilt.game.GameActivity
 import com.mozhimen.emulatork.ui.game.AbsGameActivity
@@ -22,13 +22,13 @@ import dagger.assisted.AssistedInject
 class WorkLibraryIndex @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted workerParams: WorkerParameters,
-    private val lemuroidLibrary: EmulatorKBasic,
+    private val emulatorKCommon: EmulatorKCommon,
 ) : AbsWorkLibraryIndex(context, workerParams) {
 
     ///////////////////////////////////////////////////////////////////////////
 
-    override fun lemuroidLibrary(): EmulatorKBasic {
-        return lemuroidLibrary
+    override fun emulatorKCommon(): EmulatorKCommon {
+        return emulatorKCommon
     }
 
     override fun gameActivityClazz(): Class<out AbsGameActivity> {

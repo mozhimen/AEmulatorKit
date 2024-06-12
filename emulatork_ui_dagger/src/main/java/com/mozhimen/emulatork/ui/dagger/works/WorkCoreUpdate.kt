@@ -3,12 +3,12 @@ package com.mozhimen.emulatork.ui.dagger.works
 import android.content.Context
 import androidx.work.ListenableWorker
 import androidx.work.WorkerParameters
+import com.mozhimen.emulatork.common.core.CoreSelectionManager
 import com.mozhimen.emulatork.core.download.CoreDownload
-import com.mozhimen.emulatork.basic.core.CoreSelection
-import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
 import com.mozhimen.emulatork.ui.works.AbsWorkCoreUpdate
 import com.mozhimen.emulatork.common.dagger.AndroidWorkerInjection
 import com.mozhimen.emulatork.common.dagger.annors.WorkerKey
+import com.mozhimen.emulatork.db.game.database.RetrogradeDatabase
 import com.mozhimen.emulatork.ui.dagger.game.GameActivity
 import dagger.Binds
 import dagger.android.AndroidInjector
@@ -30,15 +30,15 @@ class WorkCoreUpdate(context: Context, workerParams: WorkerParameters) : AbsWork
     lateinit var coreDownload: CoreDownload
 
     @Inject
-    lateinit var coresSelection: CoreSelection
+    lateinit var coreSelectionManager: CoreSelectionManager
 
 
-    override fun coreUpdater(): CoreDownload {
+    override fun coreDownload(): CoreDownload {
         return coreDownload
     }
 
-    override fun coresSelection(): CoreSelection {
-        return coresSelection
+    override fun coreSelectionManager(): CoreSelectionManager {
+        return coreSelectionManager
     }
 
     override fun gameActivityClazz(): Class<*> {

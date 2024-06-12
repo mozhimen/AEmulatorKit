@@ -29,7 +29,7 @@
             android:theme="@style/Theme.AGameKit_Emulator.Game" />
 
         <activity
-            android:name="com.mozhimen.emulatork.ui.hilt.game.menu.GameMenuActivity"
+            android:name="com.mozhimen.emulatork.ui.dagger.game.menu.GameMenuActivity"
             android:process=":game"
             android:theme="@style/Theme.AGameKit_Emulator.Menu" />
 

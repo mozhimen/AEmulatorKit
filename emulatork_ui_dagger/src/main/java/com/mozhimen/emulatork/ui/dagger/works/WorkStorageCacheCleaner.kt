@@ -3,7 +3,7 @@ package com.mozhimen.emulatork.ui.dagger.works
 import android.content.Context
 import androidx.work.ListenableWorker
 import androidx.work.WorkerParameters
-import com.mozhimen.emulatork.basic.game.setting.GameSettingsManager
+import com.mozhimen.emulatork.basic.setting.SettingManager
 import com.mozhimen.emulatork.ui.works.AbsWorkStorageCacheCleaner
 import javax.inject.Inject
 import com.mozhimen.emulatork.common.dagger.AndroidWorkerInjection
@@ -25,9 +25,9 @@ class WorkStorageCacheCleaner constructor(
 ) : AbsWorkStorageCacheCleaner(context, workerParams) {
 
     @Inject
-    lateinit var gameSettingsManager: GameSettingsManager
+    lateinit var gameSettingsManager: SettingManager
 
-    override fun settingsManager(): GameSettingsManager {
+    override fun settingManager(): SettingManager {
         return gameSettingsManager
     }
 

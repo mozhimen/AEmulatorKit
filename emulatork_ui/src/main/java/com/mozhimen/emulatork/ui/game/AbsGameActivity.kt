@@ -63,6 +63,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.math.roundToInt
 import com.mozhimen.emulatork.input.theme.InputTheme
+import com.mozhimen.emulatork.input.virtual.gamepad.GamepadSettingManager
+import com.mozhimen.emulatork.input.virtual.menu.MenuContract
+import com.mozhimen.emulatork.input.virtual.gamepad.EGamepadOrientation
+import com.mozhimen.emulatork.input.virtual.gamepad.GamepadCustomizer
 
 /**
  * @ClassName GameActivity
@@ -234,7 +238,7 @@ abstract class AbsGameActivity : AbsGameActivity() {
         val theme = InputTheme.getGamePadTheme(leftGamePadContainer)
 
         val leftConfig = InputConfigRadialGamePadProvider.getRadialGamePadConfig(
-            inputAreaConfig.leftConfig,
+            inputAreaConfig.inputAreaLeft,
             hapticConfig,
             theme
         )
@@ -242,7 +246,7 @@ abstract class AbsGameActivity : AbsGameActivity() {
         leftGamePadContainer.addView(leftPad)
 
         val rightConfig = InputConfigRadialGamePadProvider.getRadialGamePadConfig(
-            inputAreaConfig.rightConfig,
+            inputAreaConfig.inputAreaRight,
             hapticConfig,
             theme
         )
@@ -451,7 +455,7 @@ abstract class AbsGameActivity : AbsGameActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == DIALOG_REQUEST) {
-            if (data?.getBooleanExtra(GameMenuContract.RESULT_EDIT_TOUCH_CONTROLS, false) == true) {
+            if (data?.getBooleanExtra(MenuContract.RESULT_EDIT_TOUCH_CONTROLS, false) == true) {
                 lifecycleScope.launch {
                     displayCustomizationOptions()
                 }
@@ -497,35 +501,35 @@ abstract class AbsGameActivity : AbsGameActivity() {
     }
 
     private suspend fun storeTouchControllerSettings(
-        controllerConfig: ControllerTouchConfig,
+        gamepadConfig: GamepadConfig,
         orientation: Int,
-        settings: ControllerTouchSettingsManager.Settings
+        settings: GamepadSetting
     ) {
-        val settingsManager = getTouchControllerSettingsManager(controllerConfig, orientation)
-        return settingsManager.storeSettings(settings)
+        val settingsManager = getTouchControllerSettingsManager(gamepadConfig, orientation)
+        return settingsManager.storeSetting(settings)
     }
 
     private suspend fun loadTouchControllerSettings(
-        controllerConfig: ControllerTouchConfig,
+        gamepadConfig: GamepadConfig,
         orientation: Int
     ) {
-        val settingsManager = getTouchControllerSettingsManager(controllerConfig, orientation)
-        flowGamepadSetting.value = settingsManager.retrieveSettings()
+        val settingsManager = getTouchControllerSettingsManager(gamepadConfig, orientation)
+        flowGamepadSetting.value = settingsManager.retrieveSetting()
     }
 
     private fun getTouchControllerSettingsManager(
-        controllerConfig: ControllerTouchConfig,
+        gamepadConfig: GamepadConfig,
         orientation: Int
-    ): ControllerTouchSettingsManager {
+    ): GamepadSettingManager {
         val settingsOrientation = if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-            ControllerTouchSettingsManager.Orientation.PORTRAIT
+            EGamepadOrientation.PORTRAIT
         } else {
-            ControllerTouchSettingsManager.Orientation.LANDSCAPE
+            EGamepadOrientation.LANDSCAPE
         }
 
-        return ControllerTouchSettingsManager(
+        return GamepadSettingManager(
             applicationContext,
-            controllerConfig.touchControllerID,
+            gamepadConfig.inputType,
             sharedPreferences(),
             settingsOrientation
         )
@@ -534,7 +538,7 @@ abstract class AbsGameActivity : AbsGameActivity() {
     private suspend fun displayCustomizationOptions() {
         findViewById<View>(R.id.editcontrolsdarkening).isVisible = true
 
-        val customizer = ControllerTouchCustomizer()
+        val customizer = GamepadCustomizer()
 
         val insets = insetsState
             .filterNotNull()
@@ -546,7 +550,7 @@ abstract class AbsGameActivity : AbsGameActivity() {
         val padSettings = flowGamepadSetting.filterNotNull()
             .first()
 
-        val initialSettings = ControllerTouchCustomizer.Settings(
+        val initialSettings = GamepadSetting(
             padSettings.scale,
             padSettings.rotation,
             padSettings.marginX,
@@ -560,18 +564,18 @@ abstract class AbsGameActivity : AbsGameActivity() {
             insets,
             initialSettings
         )
-            .takeWhile { it !is ControllerTouchCustomizer.Event.Close }
+            .takeWhile { it !is GamepadCustomizer.Event.Close }
             .scan(padSettings) { current, it ->
                 when (it) {
-                    is ControllerTouchCustomizer.Event.Scale -> {
+                    is GamepadCustomizer.Event.Scale -> {
                         current.copy(scale = it.value)
                     }
 
-                    is ControllerTouchCustomizer.Event.Rotation -> {
+                    is GamepadCustomizer.Event.Rotation -> {
                         current.copy(rotation = it.value)
                     }
 
-                    is ControllerTouchCustomizer.Event.Margins -> {
+                    is GamepadCustomizer.Event.Margins -> {
                         current.copy(marginX = it.x, marginY = it.y)
                     }
 
@@ -589,7 +593,7 @@ abstract class AbsGameActivity : AbsGameActivity() {
 
         private fun handleRetroViewLayout(
             constraintSet: ConstraintSet,
-            controllerConfig: ControllerTouchConfig,
+            gamepadConfig: GamepadConfig,
             orientation: Int,
             touchControllerVisible: Boolean,
             insets: Rect
@@ -665,7 +669,7 @@ abstract class AbsGameActivity : AbsGameActivity() {
                     ConstraintSet.TOP
                 )
 
-                if (controllerConfig.allowTouchOverlay) {
+                if (gamepadConfig.allowTouchOverlay) {
                     constraintSet.connect(
                         R.id.gamecontainer,
                         ConstraintSet.LEFT,
@@ -704,12 +708,12 @@ abstract class AbsGameActivity : AbsGameActivity() {
 
         private fun handleTouchControllerLayout(
             constraintSet: ConstraintSet,
-            padSettings: ControllerTouchSettingsManager.Settings,
-            controllerConfig: ControllerTouchConfig,
+            gamepadSetting: GamepadSetting,
+            gamepadConfig: GamepadConfig,
             orientation: Int,
             insets: Rect
         ) {
-            val touchControllerConfig = controllerConfig.getTouchControllerConfig()
+            val touchControllerConfig = gamepadConfig.getInputAreaConfig()
 
             val leftPad = leftPad ?: return
             val rightPad = rightPad ?: return
@@ -732,25 +736,25 @@ abstract class AbsGameActivity : AbsGameActivity() {
                 )
             }
 
-            val minScale = ControllerTouchSettingsManager.MIN_SCALE
-            val maxScale = ControllerTouchSettingsManager.MAX_SCALE
+            val minScale = GamepadSetting.MIN_SCALE
+            val maxScale = GamepadSetting.MAX_SCALE
 
             val leftScale = UtilKMathInterpolation.get_ofLinear(
-                padSettings.scale,
+                gamepadSetting.scale,
                 minScale,
                 maxScale
-            ) * touchControllerConfig.leftScale
+            ) * touchControllerConfig.scaleLeft
 
             val rightScale = UtilKMathInterpolation.get_ofLinear(
-                padSettings.scale,
+                gamepadSetting.scale,
                 minScale,
                 maxScale
-            ) * touchControllerConfig.rightScale
+            ) * touchControllerConfig.scaleRight
 
-            val maxMargins = ControllerTouchSettingsManager.MAX_MARGINS.dp2px()
+            val maxMargins = GamepadSetting.MAX_MARGINS.dp2px()
 
-            constraintSet.setHorizontalWeight(R.id.leftgamepad, touchControllerConfig.leftScale)
-            constraintSet.setHorizontalWeight(R.id.rightgamepad, touchControllerConfig.rightScale)
+            constraintSet.setHorizontalWeight(R.id.leftgamepad, touchControllerConfig.scaleLeft)
+            constraintSet.setHorizontalWeight(R.id.rightgamepad, touchControllerConfig.scaleRight)
 
             leftPad.primaryDialMaxSizeDp = DEFAULT_PRIMARY_DIAL_SIZE * leftScale
             rightPad.primaryDialMaxSizeDp = DEFAULT_PRIMARY_DIAL_SIZE * rightScale
@@ -762,7 +766,7 @@ abstract class AbsGameActivity : AbsGameActivity() {
                     leftPad,
                     rightPad,
                     maxMargins,
-                    padSettings,
+                    gamepadSetting,
                     baseVerticalMargin.roundToInt() + insets.bottom
                 )
             } else {
@@ -770,7 +774,7 @@ abstract class AbsGameActivity : AbsGameActivity() {
                     leftPad,
                     rightPad,
                     maxMargins,
-                    padSettings,
+                    gamepadSetting,
                     baseVerticalMargin.roundToInt() + insets.bottom,
                     maxOf(insets.left, insets.right)
                 )
@@ -802,10 +806,10 @@ abstract class AbsGameActivity : AbsGameActivity() {
             constraintSet.constrainWidth(R.id.leftgamepad, constrainWidth)
             constraintSet.constrainWidth(R.id.rightgamepad, constrainWidth)
 
-            if (controllerConfig.allowTouchRotation) {
-                val maxRotation = ControllerTouchSettingsManager.MAX_ROTATION
-                leftPad.secondaryDialRotation = UtilKMathInterpolation.get_ofLinear(padSettings.rotation, 0f, maxRotation)
-                rightPad.secondaryDialRotation = -UtilKMathInterpolation.get_ofLinear(padSettings.rotation, 0f, maxRotation)
+            if (gamepadConfig.allowTouchRotation) {
+                val maxRotation = GamepadSetting.MAX_ROTATION
+                leftPad.secondaryDialRotation = UtilKMathInterpolation.get_ofLinear(gamepadSetting.rotation, 0f, maxRotation)
+                rightPad.secondaryDialRotation = -UtilKMathInterpolation.get_ofLinear(gamepadSetting.rotation, 0f, maxRotation)
             }
         }
 
@@ -813,20 +817,20 @@ abstract class AbsGameActivity : AbsGameActivity() {
             leftPad: RadialGamePad,
             rightPad: RadialGamePad,
             maxMargins: Float,
-            padSettings: ControllerTouchSettingsManager.Settings,
+            gamepadSetting: GamepadSetting,
             verticalSpacing: Int,
             horizontalSpacing: Int
         ) {
             leftPad.spacingBottom = verticalSpacing
             leftPad.spacingLeft = UtilKMathInterpolation.get_ofLinear(
-                padSettings.marginX,
+                gamepadSetting.marginX,
                 0f,
                 maxMargins
             ).roundToInt() + horizontalSpacing
 
             rightPad.spacingBottom = verticalSpacing
             rightPad.spacingRight = UtilKMathInterpolation.get_ofLinear(
-                padSettings.marginX,
+                gamepadSetting.marginX,
                 0f,
                 maxMargins
             ).roundToInt() + horizontalSpacing
@@ -834,32 +838,32 @@ abstract class AbsGameActivity : AbsGameActivity() {
             leftPad.offsetX = 0f
             rightPad.offsetX = 0f
 
-            leftPad.offsetY = -UtilKMathInterpolation.get_ofLinear(padSettings.marginY, 0f, maxMargins)
-            rightPad.offsetY = -UtilKMathInterpolation.get_ofLinear(padSettings.marginY, 0f, maxMargins)
+            leftPad.offsetY = -UtilKMathInterpolation.get_ofLinear(gamepadSetting.marginY, 0f, maxMargins)
+            rightPad.offsetY = -UtilKMathInterpolation.get_ofLinear(gamepadSetting.marginY, 0f, maxMargins)
         }
 
         private fun setupMarginsForPortrait(
             leftPad: RadialGamePad,
             rightPad: RadialGamePad,
             maxMargins: Float,
-            padSettings: ControllerTouchSettingsManager.Settings,
+            gamepadSetting: GamepadSetting,
             verticalSpacing: Int
         ) {
             leftPad.spacingBottom = UtilKMathInterpolation.get_ofLinear(
-                padSettings.marginY,
+                gamepadSetting.marginY,
                 0f,
                 maxMargins
             ).roundToInt() + verticalSpacing
             leftPad.spacingLeft = 0
             rightPad.spacingBottom = UtilKMathInterpolation.get_ofLinear(
-                padSettings.marginY,
+                gamepadSetting.marginY,
                 0f,
                 maxMargins
             ).roundToInt() + verticalSpacing
             rightPad.spacingRight = 0
 
-            leftPad.offsetX = UtilKMathInterpolation.get_ofLinear(padSettings.marginX, 0f, maxMargins)
-            rightPad.offsetX = -UtilKMathInterpolation.get_ofLinear(padSettings.marginX, 0f, maxMargins)
+            leftPad.offsetX = UtilKMathInterpolation.get_ofLinear(gamepadSetting.marginX, 0f, maxMargins)
+            rightPad.offsetX = -UtilKMathInterpolation.get_ofLinear(gamepadSetting.marginX, 0f, maxMargins)
 
             leftPad.offsetY = 0f
             rightPad.offsetY = 0f
@@ -867,10 +871,10 @@ abstract class AbsGameActivity : AbsGameActivity() {
 
         private fun updateDividers(
             orientation: Int,
-            controllerConfig: ControllerTouchConfig,
+            gamepadConfig: GamepadConfig,
             touchControllerVisible: Boolean
         ) {
-            val theme = InputOverlayThemes.getGamePadTheme(leftGamePadContainer)
+            val theme = InputTheme.getGamePadTheme(leftGamePadContainer)
 
             val displayHorizontalDivider = UtilKBoolean.allTrue(
                 orientation == Configuration.ORIENTATION_PORTRAIT,
@@ -879,7 +883,7 @@ abstract class AbsGameActivity : AbsGameActivity() {
 
             val displayVerticalDivider = UtilKBoolean.allTrue(
                 orientation != Configuration.ORIENTATION_PORTRAIT,
-                !controllerConfig.allowTouchOverlay,
+                !gamepadConfig.allowTouchOverlay,
                 touchControllerVisible
             )
 
@@ -894,19 +898,19 @@ abstract class AbsGameActivity : AbsGameActivity() {
         }
 
         fun updateLayout(
-            config: ControllerTouchConfig,
-            padSettings: ControllerTouchSettingsManager.Settings,
+            gamepadConfig: GamepadConfig,
+            gamepadSetting: GamepadSetting,
             orientation: Int,
             touchControllerVisible: Boolean,
             insets: Rect
         ) {
-            updateDividers(orientation, config, touchControllerVisible)
+            updateDividers(orientation, gamepadConfig, touchControllerVisible)
 
             val constraintSet = ConstraintSet()
             constraintSet.clone(mainContainerLayout)
 
-            handleTouchControllerLayout(constraintSet, padSettings, config, orientation, insets)
-            handleRetroViewLayout(constraintSet, config, orientation, touchControllerVisible, insets)
+            handleTouchControllerLayout(constraintSet, gamepadSetting, gamepadConfig, orientation, insets)
+            handleRetroViewLayout(constraintSet, gamepadConfig, orientation, touchControllerVisible, insets)
 
             constraintSet.applyTo(mainContainerLayout)
 

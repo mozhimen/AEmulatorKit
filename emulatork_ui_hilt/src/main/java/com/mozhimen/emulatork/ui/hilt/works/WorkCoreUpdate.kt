@@ -1,11 +1,11 @@
-package com.mozhimen.emulatork.test.hilt.works
+package com.mozhimen.emulatork.ui.hilt.works
 
 import android.content.Context
 import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
+import com.mozhimen.emulatork.common.core.CoreSelectionManager
 import com.mozhimen.emulatork.core.download.CoreDownload
-import com.mozhimen.emulatork.basic.core.CoreSelection
-import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
+import com.mozhimen.emulatork.db.game.database.RetrogradeDatabase
 import com.mozhimen.emulatork.ui.works.AbsWorkCoreUpdate
 import com.mozhimen.emulatork.ui.hilt.game.GameActivity
 import dagger.assisted.Assisted
@@ -24,15 +24,15 @@ class WorkCoreUpdate @AssistedInject constructor(
     @Assisted workerParams: WorkerParameters,
     private val retrogradeDatabase: RetrogradeDatabase,
     private val coreDownload: CoreDownload,
-    private val coresSelection: CoreSelection
+    private val coreSelectionManager: CoreSelectionManager
 ) : AbsWorkCoreUpdate(context, workerParams) {
 
-    override fun coreUpdater(): CoreDownload {
+    override fun coreDownload(): CoreDownload {
         return coreDownload
     }
 
-    override fun coresSelection(): CoreSelection {
-        return coresSelection
+    override fun coreSelectionManager(): CoreSelectionManager {
+        return coreSelectionManager
     }
 
     override fun gameActivityClazz(): Class<*> {

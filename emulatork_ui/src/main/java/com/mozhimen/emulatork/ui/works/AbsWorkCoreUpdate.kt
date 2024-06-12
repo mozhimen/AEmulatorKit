@@ -4,16 +4,15 @@ import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
-import com.mozhimen.emulatork.core.CoreDownloader
-import com.mozhimen.emulatork.basic.core.CoreSelection
-import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
-import com.mozhimen.emulatork.basic.game.system.GameSystems
+import com.mozhimen.emulatork.common.core.CoreSelectionManager
+import com.mozhimen.emulatork.core.download.CoreDownload
+import com.mozhimen.emulatork.db.game.database.RetrogradeDatabase
 import com.mozhimen.emulatork.ext.library.NotificationsManager
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
 import timber.log.Timber
-
+import com.mozhimen.emulatork.common.system.SystemProvider
 /**
  * @ClassName CoreUpdateWork
  * @Description TODO
@@ -30,11 +29,11 @@ abstract class AbsWorkCoreUpdate(context: Context, workerParams: WorkerParameter
 
     //    @Inject
 //    lateinit var coreUpdater: CoreUpdater
-    abstract fun coreUpdater(): com.mozhimen.emulatork.core.CoreDownloader
+    abstract fun coreDownload(): CoreDownload
 
     //    @Inject
 //    lateinit var coresSelection: CoresSelection
-    abstract fun coresSelection(): CoreSelection
+    abstract fun coreSelectionManager(): CoreSelectionManager
 
     abstract fun gameActivityClazz(): Class<*>
 
@@ -54,12 +53,12 @@ abstract class AbsWorkCoreUpdate(context: Context, workerParams: WorkerParameter
         try {
             val cores = retrogradeDatabase().gameDao().selectSystems()
                 .asFlow()
-                .map { GameSystems.findById(it) }
-                .map { coresSelection().getCoreConfigForSystem(it) }
-                .map { it.coreID }
+                .map { SystemProvider.findSysByName(it) }
+                .map { coreSelectionManager().getCoreConfigForSystem(it) }
+                .map { it.eCoreType }
                 .toList()
 
-            coreUpdater().downloadCores(applicationContext, cores)
+            coreDownload().downloadCores(applicationContext, cores)
         } catch (e: Throwable) {
             Timber.e(e, "Core update work failed with exception: ${e.message}")
         }

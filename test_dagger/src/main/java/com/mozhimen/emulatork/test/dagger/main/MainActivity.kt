@@ -22,10 +22,7 @@ import com.mozhimen.emulatork.common.dagger.annors.PerActivity
 import com.mozhimen.emulatork.common.dagger.annors.PerFragment
 import com.mozhimen.emulatork.common.dagger.android.DaggerAppCompatActivity
 import com.mozhimen.emulatork.basic.system.ESystemType
-import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
-import com.mozhimen.emulatork.basic.save.sync.SaveSyncManager
 import com.mozhimen.emulatork.basic.storage.StorageDirProvider
-import com.mozhimen.emulatork.basic.game.review.GameReviewManager
 import com.mozhimen.emulatork.ui.R
 import com.mozhimen.emulatork.test.dagger.favorites.FavoritesFragment
 import com.mozhimen.emulatork.test.dagger.games.GamesFragment
@@ -44,7 +41,9 @@ import com.mozhimen.emulatork.ext.covers.CoverShortcutGenerator
 import com.mozhimen.emulatork.ext.game.GameInteractor
 import com.mozhimen.emulatork.ext.game.GameLauncher
 import com.mozhimen.emulatork.input.unit.InputUnitManager
-import com.mozhimen.emulatork.basic.game.GameBusyActivity
+import com.mozhimen.emulatork.common.android.BusyProvider
+import com.mozhimen.emulatork.common.archive.ArchiveManager
+import com.mozhimen.emulatork.db.game.database.RetrogradeDatabase
 import com.mozhimen.emulatork.ext.game.GameLaunchTaskHandler
 import com.mozhimen.emulatork.ext.input.GamePadPreferencesManager
 import com.mozhimen.emulatork.ext.game.AbsGameActivity
@@ -66,15 +65,15 @@ import com.mozhimen.emulatork.ui.dagger.works.WorkStorageCacheCleaner
  * @Version 1.0
  */
 @OptIn(DelicateCoroutinesApi::class)
-class MainActivity : DaggerAppCompatActivity(), GameBusyActivity ,IUtilK{
+class MainActivity : DaggerAppCompatActivity(), BusyProvider ,IUtilK{
 
     @Inject
     lateinit var gameLaunchTaskHandler: GameLaunchTaskHandler
 
     @Inject
-    lateinit var saveSyncManager: SaveSyncManager
+    lateinit var archiveManager: ArchiveManager
 
-    private val gameReviewManager = GameReviewManager()
+//    private val gameReviewManager = GameReviewManager()
     private var mainViewModel: MainViewModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,9 +90,9 @@ class MainActivity : DaggerAppCompatActivity(), GameBusyActivity ,IUtilK{
     private fun initializeActivity() {
         setSupportActionBar(findViewById(R.id.toolbar))
 
-        GlobalScope.launchSafe {
-            gameReviewManager.initialize(applicationContext)
-        }
+//        GlobalScope.launchSafe {
+//            gameReviewManager.initialize(applicationContext)
+//        }
 
         val navView: BottomNavigationView = findViewById(com.mozhimen.emulatork.test.dagger.R.id.nav_view)
         val navController = findNavController(R.id.nav_host_fragment)
@@ -131,8 +130,8 @@ class MainActivity : DaggerAppCompatActivity(), GameBusyActivity ,IUtilK{
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-        val isSupported = saveSyncManager.isSupported()
-        val isConfigured = saveSyncManager.isConfigured()
+        val isSupported = archiveManager.isSupported()
+        val isConfigured = archiveManager.isConfigured()
         menu.findItem(R.id.menu_options_sync)?.isVisible = isSupported && isConfigured
         return super.onPrepareOptionsMenu(menu)
     }

@@ -1,6 +1,6 @@
 package com.mozhimen.emulatork.ui.hilt.game.menu
-import com.mozhimen.emulatork.basic.save.SaveStateManager
-import com.mozhimen.emulatork.basic.save.SaveStatePreviewManager
+import com.mozhimen.emulatork.common.save.SaveStateManager
+import com.mozhimen.emulatork.common.save.SaveStatePreviewManager
 import com.mozhimen.emulatork.ui.game.menu.AbsGameMenuLoadFragment
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject

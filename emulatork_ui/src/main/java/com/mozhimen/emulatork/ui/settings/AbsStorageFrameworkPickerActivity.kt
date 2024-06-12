@@ -59,7 +59,7 @@ abstract class AbsStorageFrameworkPickerActivity : FragmentActivity(), IUtilK {
 
         if (requestCode == REQUEST_CODE_PICK_FOLDER && resultCode == Activity.RESULT_OK) {
             val sharedPreferences = SharedPreferencesManager.getLegacySharedPreferences(this)
-            val preferenceKey = getString(com.mozhimen.emulatork.basic.R.string.pref_key_extenral_folder)
+            val preferenceKey = getString(com.mozhimen.emulatork.common.R.string.pref_key_extenral_folder)
 
             val currentValue: String? = sharedPreferences.getString(preferenceKey, null)
             val newValue = resultData?.data

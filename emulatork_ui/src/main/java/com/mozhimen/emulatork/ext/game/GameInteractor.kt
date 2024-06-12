@@ -50,9 +50,9 @@ open class GameInteractor constructor(
         }
     }
 
-    fun onCreateShortcut(game: Game, hostName: String) {
+    fun onCreateShortcut(game: Game, scheme: String) {
         GlobalScope.launch {
-            coverShortcutGenerator.pinShortcutForGame(game,hostName)
+            coverShortcutGenerator.pinShortcutForGame(game,scheme)
         }
     }
 

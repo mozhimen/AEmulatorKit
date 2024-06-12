@@ -45,7 +45,7 @@ class CoverShortcutGenerator(
         return shortcutManager.isRequestPinShortcutSupported
     }
 
-    suspend fun pinShortcutForGame(game: Game, hostName: String) {
+    suspend fun pinShortcutForGame(game: Game, scheme: String) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
             return
 
@@ -55,7 +55,7 @@ class CoverShortcutGenerator(
         val shortcutInfo = ShortcutInfo.Builder(appContext, "game_${game.id}")
             .setShortLabel(game.title)
             .setLongLabel(game.title)
-            .setIntent(CommonUtil.launchIntentForGame(appContext, hostName, game))
+            .setIntent(CommonUtil.launchIntentForGame(appContext, scheme, game))
             .setIcon(Icon.createWithBitmap(bitmap))
             .build()
 

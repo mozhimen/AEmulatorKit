@@ -1,11 +1,11 @@
-package com.mozhimen.emulatork.test.hilt.works
+package com.mozhimen.emulatork.ui.hilt.works
 
 import android.content.Context
 import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
-import com.mozhimen.emulatork.basic.save.sync.SaveSyncManager
+import com.mozhimen.emulatork.basic.setting.SettingManager
+import com.mozhimen.emulatork.common.archive.ArchiveManager
 import com.mozhimen.emulatork.ui.works.AbsWorkSaveSync
-import com.mozhimen.emulatork.basic.game.setting.GameSettingsManager
 import com.mozhimen.emulatork.ui.hilt.game.GameActivity
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -21,16 +21,16 @@ import dagger.assisted.AssistedInject
 class WorkSaveSync @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted workerParams: WorkerParameters,
-    private val saveSyncManager: SaveSyncManager,
-    private val gameSettingsManager: GameSettingsManager,
+    private val archiveManager: ArchiveManager,
+    private val settingManager: SettingManager,
 ) : AbsWorkSaveSync(context, workerParams) {
 
-    override fun saveSyncManager(): SaveSyncManager {
-        return saveSyncManager
+    override fun archiveManager(): ArchiveManager {
+        return archiveManager
     }
 
-    override fun settingsManager(): GameSettingsManager {
-        return gameSettingsManager
+    override fun settingManager(): SettingManager {
+        return settingManager
     }
 
     override fun gameActivityClazz(): Class<*> {

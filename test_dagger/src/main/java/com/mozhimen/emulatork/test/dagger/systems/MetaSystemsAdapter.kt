@@ -8,9 +8,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.mozhimen.emulatork.basic.game.system.GameSystemMetaID
+import com.mozhimen.emulatork.basic.system.ESystemMetaType
+import com.mozhimen.emulatork.basic.system.SystemMetadata
 import com.mozhimen.emulatork.ui.R
-import com.mozhimen.emulatork.basic.game.system.GameSystemMetaInfo
 
 /**
  * @ClassName MetaSystemsAdapter
@@ -30,38 +30,38 @@ class MetaSystemViewHolder(parent: View) : RecyclerView.ViewHolder(parent) {
         subtextView = itemView.findViewById(R.id.subtext)
     }
 
-    fun bind(gameSystemMetaInfo: GameSystemMetaInfo, onSystemClick: (GameSystemMetaID) -> Unit) {
-        textView?.text = itemView.context.resources.getString(gameSystemMetaInfo.metaSystem.titleResId)
+    fun bind(systemMetadata: SystemMetadata, onSystemClick: (ESystemMetaType) -> Unit) {
+        textView?.text = itemView.context.resources.getString(systemMetadata.eSystemMetaType.titleResId)
         subtextView?.text = itemView.context.getString(
             R.string.system_grid_details,
-            gameSystemMetaInfo.count.toString()
+            systemMetadata.count.toString()
         )
-        coverView?.setImageResource(gameSystemMetaInfo.metaSystem.imageResId)
-        itemView.setOnClickListener { onSystemClick(gameSystemMetaInfo.metaSystem) }
+        coverView?.setImageResource(systemMetadata.eSystemMetaType.imageResId)
+        itemView.setOnClickListener { onSystemClick(systemMetadata.eSystemMetaType) }
     }
 }
 
 class MetaSystemsAdapter(
-    private val onSystemClick: (GameSystemMetaID) -> Unit
-) : ListAdapter<GameSystemMetaInfo, com.mozhimen.emulatork.test.dagger.systems.MetaSystemViewHolder>(com.mozhimen.emulatork.test.dagger.systems.MetaSystemsAdapter.Companion.DIFF_CALLBACK) {
+    private val onSystemClick: (ESystemMetaType) -> Unit
+) : ListAdapter<SystemMetadata, MetaSystemViewHolder>(DIFF_CALLBACK) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): com.mozhimen.emulatork.test.dagger.systems.MetaSystemViewHolder {
-        return com.mozhimen.emulatork.test.dagger.systems.MetaSystemViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MetaSystemViewHolder {
+        return MetaSystemViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.layout_system, parent, false)
         )
     }
 
-    override fun onBindViewHolder(holder: com.mozhimen.emulatork.test.dagger.systems.MetaSystemViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: MetaSystemViewHolder, position: Int) {
         getItem(position)?.let { holder.bind(it, onSystemClick) }
     }
 
     companion object {
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<GameSystemMetaInfo>() {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<SystemMetadata>() {
 
-            override fun areItemsTheSame(oldInfo: GameSystemMetaInfo, newInfo: GameSystemMetaInfo) =
-                oldInfo.metaSystem == newInfo.metaSystem
+            override fun areItemsTheSame(oldInfo: SystemMetadata, newInfo: SystemMetadata) =
+                oldInfo.eSystemMetaType == newInfo.eSystemMetaType
 
-            override fun areContentsTheSame(oldInfo: GameSystemMetaInfo, newInfo: GameSystemMetaInfo) =
+            override fun areContentsTheSame(oldInfo: SystemMetadata, newInfo: SystemMetadata) =
                 oldInfo == newInfo
         }
     }

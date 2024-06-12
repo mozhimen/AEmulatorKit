@@ -2,17 +2,17 @@ package com.mozhimen.emulatork.ui.hilt.game
 
 import android.app.Activity
 import android.content.SharedPreferences
-import com.mozhimen.emulatork.core.CoreVariablesManager
-import com.mozhimen.emulatork.basic.save.SaveManager
-import com.mozhimen.emulatork.basic.save.SaveStateManager
-import com.mozhimen.emulatork.basic.save.SaveStatePreviewManager
 import com.mozhimen.emulatork.ui.hilt.game.menu.GameMenuActivity
 import com.mozhimen.emulatork.ui.game.AbsGameActivity
 import com.mozhimen.emulatork.ui.game.AbsGameService
 import com.mozhimen.emulatork.input.unit.InputUnitManager
-import com.mozhimen.emulatork.basic.game.rumble.GameRumbleManager
-import com.mozhimen.emulatork.basic.controller.ControllerConfigsManager
-import com.mozhimen.emulatork.basic.game.setting.GameSettingsManager
+import com.mozhimen.emulatork.basic.setting.SettingManager
+import com.mozhimen.emulatork.common.core.CorePropertyManager
+import com.mozhimen.emulatork.common.input.GamepadConfigManager
+import com.mozhimen.emulatork.common.input.RumbleManager
+import com.mozhimen.emulatork.common.save.SaveManager
+import com.mozhimen.emulatork.common.save.SaveStateManager
+import com.mozhimen.emulatork.common.save.SaveStatePreviewManager
 import javax.inject.Inject
 import dagger.Lazy
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,7 +27,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class GameActivity : AbsGameActivity() {
     @Inject
-    lateinit var gameSettingsManager: GameSettingsManager
+    lateinit var settingsManager: SettingManager
 
     @Inject
     lateinit var saveStateManager: SaveStateManager
@@ -39,7 +39,7 @@ class GameActivity : AbsGameActivity() {
     lateinit var legacySaveManager: SaveManager
 
     @Inject
-    lateinit var coreVariablesManager: com.mozhimen.emulatork.core.CoreVariablesManager
+    lateinit var corePropertyManager: CorePropertyManager
 
     @Inject
     lateinit var inputUnitManager: InputUnitManager
@@ -48,10 +48,10 @@ class GameActivity : AbsGameActivity() {
     lateinit var gameLoadManager: com.mozhimen.emulatork.common.game.GameLoadManager
 
     @Inject
-    lateinit var controllerConfigsManager: ControllerConfigsManager
+    lateinit var gamepadConfigManager: GamepadConfigManager
 
     @Inject
-    lateinit var gameRumbleManager: GameRumbleManager
+    lateinit var rumbleManager: RumbleManager
 
     @Inject
     lateinit var sharedPreferences: Lazy<SharedPreferences>
@@ -68,8 +68,8 @@ class GameActivity : AbsGameActivity() {
         return GameService::class.java
     }
 
-    override fun settingManager(): GameSettingsManager {
-        return gameSettingsManager
+    override fun settingManager(): SettingManager {
+        return settingsManager
     }
 
     override fun saveStateManager(): SaveStateManager {
@@ -84,8 +84,8 @@ class GameActivity : AbsGameActivity() {
         return legacySaveManager
     }
 
-    override fun corePropertyManager(): com.mozhimen.emulatork.core.CoreVariablesManager {
-        return coreVariablesManager
+    override fun corePropertyManager(): CorePropertyManager {
+        return corePropertyManager
     }
 
     override fun inputUnitManager(): InputUnitManager {
@@ -96,11 +96,11 @@ class GameActivity : AbsGameActivity() {
         return gameLoadManager
     }
 
-    override fun gamepadConfigManager(): ControllerConfigsManager {
-        return controllerConfigsManager
+    override fun gamepadConfigManager(): GamepadConfigManager {
+        return gamepadConfigManager
     }
 
-    override fun rumbleManager(): GameRumbleManager {
-        return gameRumbleManager
+    override fun rumbleManager(): RumbleManager {
+        return rumbleManager
     }
 }

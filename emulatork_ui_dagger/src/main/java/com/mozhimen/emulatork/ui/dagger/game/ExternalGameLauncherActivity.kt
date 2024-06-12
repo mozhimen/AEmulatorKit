@@ -2,8 +2,8 @@ package com.mozhimen.emulatork.ui.dagger.game
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import com.mozhimen.emulatork.basic.core.CoreSelection
-import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
+import com.mozhimen.emulatork.common.core.CoreSelectionManager
+import com.mozhimen.emulatork.db.game.database.RetrogradeDatabase
 import com.mozhimen.emulatork.ui.game.AbsExternalGameLauncherActivity
 import com.mozhimen.emulatork.ext.game.GameLauncher
 import com.mozhimen.emulatork.ext.game.GameLaunchTaskHandler
@@ -39,7 +39,7 @@ class ExternalGameLauncherActivity :AbsExternalGameLauncherActivity(), HasFragme
     lateinit var gameLaunchTaskHandler: GameLaunchTaskHandler
 
     @Inject
-    lateinit var coresSelection: CoreSelection
+    lateinit var coreSelectionManager: CoreSelectionManager
 
     @Inject
     lateinit var gameLauncher: GameLauncher
@@ -63,8 +63,8 @@ class ExternalGameLauncherActivity :AbsExternalGameLauncherActivity(), HasFragme
         return gameLaunchTaskHandler
     }
 
-    override fun coresSelection(): CoreSelection {
-        return coresSelection
+    override fun coreSelectionManager(): CoreSelectionManager {
+        return coreSelectionManager
     }
 
     override fun gameLauncher(): GameLauncher {

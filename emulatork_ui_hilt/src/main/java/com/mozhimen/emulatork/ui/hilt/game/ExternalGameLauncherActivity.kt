@@ -1,12 +1,12 @@
 package com.mozhimen.emulatork.ui.hilt.game
 
-import com.mozhimen.emulatork.basic.core.CoreSelection
-import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
+import com.mozhimen.emulatork.common.core.CoreSelectionManager
+import com.mozhimen.emulatork.db.game.database.RetrogradeDatabase
 import com.mozhimen.emulatork.ui.game.AbsExternalGameLauncherActivity
 import com.mozhimen.emulatork.ext.game.GameLauncher
 import com.mozhimen.emulatork.ext.game.GameLaunchTaskHandler
-import com.mozhimen.emulatork.test.hilt.works.WorkSaveSync
-import com.mozhimen.emulatork.test.hilt.works.WorkStorageCacheCleaner
+import com.mozhimen.emulatork.ui.hilt.works.WorkSaveSync
+import com.mozhimen.emulatork.ui.hilt.works.WorkStorageCacheCleaner
 import com.mozhimen.emulatork.ui.works.AbsWorkSaveSync
 import com.mozhimen.emulatork.ui.works.AbsWorkStorageCacheCleaner
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,7 +28,7 @@ class ExternalGameLauncherActivity :AbsExternalGameLauncherActivity() {
     lateinit var gameLaunchTaskHandler: GameLaunchTaskHandler
 
     @Inject
-    lateinit var coresSelection: CoreSelection
+    lateinit var coreSelectionManager: CoreSelectionManager
 
     @Inject
     lateinit var gameLauncher: GameLauncher
@@ -41,8 +41,8 @@ class ExternalGameLauncherActivity :AbsExternalGameLauncherActivity() {
         return gameLaunchTaskHandler
     }
 
-    override fun coresSelection(): CoreSelection {
-        return coresSelection
+    override fun coreSelectionManager(): CoreSelectionManager {
+        return coreSelectionManager
     }
 
     override fun gameLauncher(): GameLauncher {

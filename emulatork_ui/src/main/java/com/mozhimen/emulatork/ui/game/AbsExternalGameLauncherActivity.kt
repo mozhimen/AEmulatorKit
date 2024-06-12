@@ -13,8 +13,8 @@ import com.mozhimen.basick.utilk.android.content.get_of_config_longAnimTime
 import com.mozhimen.basick.utilk.android.content.get_of_config_mediumAnimTime
 import com.mozhimen.basick.utilk.androidx.lifecycle.runOnLifecycleState
 import com.mozhimen.basick.utilk.kotlinx.coroutines.launchSafe
-import com.mozhimen.emulatork.basic.core.CoreSelection
-import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
+import com.mozhimen.emulatork.common.core.CoreSelectionManager
+import com.mozhimen.emulatork.db.game.database.RetrogradeDatabase
 import com.mozhimen.emulatork.ui.R
 import com.mozhimen.emulatork.ext.game.GameLaunchTaskHandler
 import com.mozhimen.emulatork.ext.game.AbsGameActivity
@@ -50,7 +50,7 @@ abstract class AbsExternalGameLauncherActivity : com.mozhimen.emulatork.common.a
 
     abstract fun gameLaunchTaskHandler(): GameLaunchTaskHandler
 
-    abstract fun coresSelection(): CoreSelection
+    abstract fun coreSelectionManager(): CoreSelectionManager
 
     abstract fun gameLauncher(): GameLauncher
 

@@ -2,7 +2,7 @@ package com.mozhimen.emulatork.test.dagger.games
 
 import android.view.ContextMenu
 import android.view.View
-import com.mozhimen.emulatork.basic.game.db.entities.Game
+import com.mozhimen.emulatork.db.game.entities.Game
 import com.mozhimen.emulatork.ui.R
 import com.mozhimen.emulatork.ext.game.GameInteractor
 
@@ -47,7 +47,7 @@ class GameContextMenuListener(
 
         if (gameInteractor.supportShortcuts()) {
             menu.add(R.string.game_context_menu_create_shortcut).setOnMenuItemClickListener {
-                gameInteractor.onCreateShortcut(game)
+                gameInteractor.onCreateShortcut(game,"mozhimen")
                 true
             }
         }

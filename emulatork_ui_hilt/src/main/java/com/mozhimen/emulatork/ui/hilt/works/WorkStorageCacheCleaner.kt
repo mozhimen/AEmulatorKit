@@ -1,13 +1,12 @@
-package com.mozhimen.emulatork.test.hilt.works
+package com.mozhimen.emulatork.ui.hilt.works
 
 import android.content.Context
 import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
-import com.mozhimen.emulatork.basic.game.setting.GameSettingsManager
+import com.mozhimen.emulatork.basic.setting.SettingManager
 import com.mozhimen.emulatork.ui.works.AbsWorkStorageCacheCleaner
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import javax.inject.Inject
 
 /**
  * @ClassName CacheCleanerWork
@@ -20,11 +19,11 @@ import javax.inject.Inject
 class WorkStorageCacheCleaner @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted workerParams: WorkerParameters,
-    private val gameSettingsManager: GameSettingsManager
+    private val settingManager: SettingManager
 ) : AbsWorkStorageCacheCleaner(context, workerParams) {
 
-    override fun settingsManager(): GameSettingsManager {
-        return gameSettingsManager
+    override fun settingManager(): SettingManager {
+        return settingManager
     }
 
 //    @dagger.Module(subcomponents = [Subcomponent::class])

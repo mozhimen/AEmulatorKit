@@ -9,7 +9,7 @@ import com.mozhimen.emulatork.basic.storage.StorageDirProvider
 import com.mozhimen.emulatork.ext.works.WorkPendingOperationsMonitor
 import com.mozhimen.emulatork.ui.R
 import com.mozhimen.emulatork.ext.preferences.PreferencesArchive
-import com.mozhimen.emulatork.test.hilt.works.WorkSaveSync
+import com.mozhimen.emulatork.ui.hilt.works.WorkSaveSync
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

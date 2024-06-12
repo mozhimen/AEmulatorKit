@@ -7,10 +7,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.mozhimen.basick.utilk.androidx.fragment.runOnViewLifecycleState
-import com.mozhimen.emulatork.basic.game.system.GameSystemMetaID
-import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
+import com.mozhimen.emulatork.basic.system.ESystemMetaType
 import com.mozhimen.emulatork.ui.R
 import com.mozhimen.emulatork.common.dagger.android.DaggerRecyclerViewFragment
+import com.mozhimen.emulatork.db.game.database.RetrogradeDatabase
 import com.mozhimen.xmlk.recyclerk.decoration.RecyclerKDecorationSpaceGrid
 import com.mozhimen.xmlk.recyclerk.manager.RecyclerKDynamicGridLayoutManager
 import javax.inject.Inject
@@ -27,7 +27,7 @@ class MetaSystemsFragment : DaggerRecyclerViewFragment() {
     @Inject
     lateinit var retrogradeDb: RetrogradeDatabase
 
-    private var metaSystemsAdapter: com.mozhimen.emulatork.test.dagger.systems.MetaSystemsAdapter? = null
+    private var metaSystemsAdapter: MetaSystemsAdapter? = null
 
     private lateinit var metaSystemsViewModel: MetaSystemsViewModel
 
@@ -37,7 +37,7 @@ class MetaSystemsFragment : DaggerRecyclerViewFragment() {
         val factory = MetaSystemsViewModel.Factory(retrogradeDb, requireContext().applicationContext)
         metaSystemsViewModel = ViewModelProvider(this, factory)[MetaSystemsViewModel::class.java]
 
-        metaSystemsAdapter = com.mozhimen.emulatork.test.dagger.systems.MetaSystemsAdapter { navigateToGames(it) }
+        metaSystemsAdapter = MetaSystemsAdapter { navigateToGames(it) }
 
         runOnViewLifecycleState(Lifecycle.State.CREATED) {
             metaSystemsViewModel.availableMetaSystems.collect {
@@ -55,9 +55,9 @@ class MetaSystemsFragment : DaggerRecyclerViewFragment() {
         }
     }
 
-    private fun navigateToGames(system: GameSystemMetaID) {
-        val dbNames = system.systemIDs
-            .map { it.dbname }
+    private fun navigateToGames(eSystemMetaType: ESystemMetaType) {
+        val dbNames = eSystemMetaType.eSystemTypes
+            .map { it.simpleName }
             .toTypedArray()
 
         val action = MetaSystemsFragmentDirections.actionNavigationSystemsToNavigationGames(dbNames)

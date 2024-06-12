@@ -4,7 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import androidx.preference.PreferenceFragmentCompat
 import com.mozhimen.emulatork.ext.preferences.PreferencesBios
-import com.mozhimen.abilityk.jetpack.preference.SafePreferenceDataStore
+import com.mozhimen.libk.jetpack.preference.SafePreferenceDataStore
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 

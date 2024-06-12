@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
-import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
-import com.mozhimen.emulatork.basic.game.db.entities.Game
+import com.mozhimen.emulatork.db.game.database.RetrogradeDatabase
+import com.mozhimen.emulatork.db.game.entities.Game
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow

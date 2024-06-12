@@ -3,10 +3,10 @@ package com.mozhimen.emulatork.ui.dagger.works
 import android.content.Context
 import androidx.work.ListenableWorker
 import androidx.work.WorkerParameters
+import com.mozhimen.emulatork.basic.setting.SettingManager
+import com.mozhimen.emulatork.common.archive.ArchiveManager
 import com.mozhimen.emulatork.common.dagger.annors.WorkerKey
-import com.mozhimen.emulatork.basic.save.sync.SaveSyncManager
 import com.mozhimen.emulatork.ui.works.AbsWorkSaveSync
-import com.mozhimen.emulatork.basic.game.setting.GameSettingsManager
 import com.mozhimen.emulatork.common.dagger.AndroidWorkerInjection
 import com.mozhimen.emulatork.ui.dagger.game.GameActivity
 import dagger.Binds
@@ -24,17 +24,17 @@ import javax.inject.Inject
 class WorkSaveSync constructor(context: Context, workerParams: WorkerParameters) : AbsWorkSaveSync(context, workerParams) {
 
     @Inject
-    lateinit var saveSyncManager: SaveSyncManager
+    lateinit var saveSyncManager: ArchiveManager
 
     @Inject
-    lateinit var gameSettingsManager: GameSettingsManager
+    lateinit var settingsManager: SettingManager
 
-    override fun saveSyncManager(): SaveSyncManager {
+    override fun archiveManager(): ArchiveManager {
         return saveSyncManager
     }
 
-    override fun settingsManager(): GameSettingsManager {
-        return gameSettingsManager
+    override fun settingManager(): SettingManager {
+        return settingsManager
     }
 
     override fun gameActivityClazz(): Class<*> {

@@ -3,11 +3,10 @@ package com.mozhimen.emulatork.ui.works
 import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.mozhimen.emulatork.basic.storage.cache.StorageCacheCleaner
-import com.mozhimen.emulatork.basic.game.setting.GameSettingsManager
+import com.mozhimen.emulatork.basic.setting.SettingManager
 import com.mozhimen.emulatork.ext.works.WorkScheduler
 import timber.log.Timber
-
+import com.mozhimen.emulatork.basic.cache.CacheCleaner
 /**
  * @ClassName CacheCleanerWork
  * @Description TODO
@@ -22,7 +21,7 @@ abstract class AbsWorkStorageCacheCleaner(
 
     //    @Inject
 //    lateinit var settingsManager: SettingsManager
-    abstract fun settingsManager(): GameSettingsManager
+    abstract fun settingManager(): SettingManager
 
     override suspend fun doWork(): Result {
 
@@ -45,11 +44,11 @@ abstract class AbsWorkStorageCacheCleaner(
     }
 
     private suspend fun cleanLRU(context: Context) {
-        val size = settingsManager().cacheSizeBytes().toLong()
-        StorageCacheCleaner.clean(context, size)
+        val size = settingManager().cacheSizeBytes().toLong()
+        CacheCleaner.clean(context, size)
     }
 
     private suspend fun cleanAll(context: Context) {
-        return StorageCacheCleaner.cleanAll(context)
+        return CacheCleaner.cleanAll(context)
     }
 }

@@ -3,8 +3,8 @@ package com.mozhimen.emulatork.ui.hilt.startup
 import com.mozhimen.emulatork.ui.startup.AbsMainProcessInitializer
 import com.mozhimen.emulatork.ui.works.AbsWorkCoreUpdate
 import com.mozhimen.emulatork.ui.works.AbsWorkSaveSync
-import com.mozhimen.emulatork.test.hilt.works.WorkSaveSync
-import com.mozhimen.emulatork.test.hilt.works.WorkCoreUpdate
+import com.mozhimen.emulatork.ui.hilt.works.WorkSaveSync
+import com.mozhimen.emulatork.ui.hilt.works.WorkCoreUpdate
 
 /**
  * @ClassName MainProcessInitializer

@@ -4,10 +4,11 @@ import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
-import com.mozhimen.emulatork.core.findByName
-import com.mozhimen.emulatork.basic.save.sync.SaveSyncManager
+import com.mozhimen.emulatork.basic.setting.SettingManager
+import com.mozhimen.emulatork.common.archive.ArchiveManager
+import com.mozhimen.emulatork.core.type.ECoreType
+import com.mozhimen.emulatork.core.utils.CoreUtil
 import com.mozhimen.emulatork.ext.library.NotificationsManager
-import com.mozhimen.emulatork.basic.game.setting.GameSettingsManager
 import com.mozhimen.emulatork.ext.works.WorkScheduler
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
@@ -25,11 +26,11 @@ abstract class AbsWorkSaveSync constructor(context: Context, workerParams: Worke
 
     //    @Inject
 //    lateinit var saveSyncManager: SaveSyncManager
-    abstract fun saveSyncManager(): SaveSyncManager
+    abstract fun archiveManager(): ArchiveManager
 
     //    @Inject
 //    lateinit var settingsManager: SettingsManager
-    abstract fun settingsManager(): GameSettingsManager
+    abstract fun settingManager(): SettingManager
 
     abstract fun gameActivityClazz(): Class<*>
 
@@ -41,12 +42,12 @@ abstract class AbsWorkSaveSync constructor(context: Context, workerParams: Worke
 
         displayNotification()
 
-        val coresToSync = settingsManager().syncStatesCores()
-            .mapNotNull { com.mozhimen.emulatork.core.findByName(it) }
+        val coresToSync: Set<ECoreType> = settingManager().syncStatesCores()
+            .mapNotNull { CoreUtil.findCoreTypeByCoreName(it) }
             .toSet()
 
         try {
-            saveSyncManager().sync(coresToSync)
+            archiveManager().sync(coresToSync)
         } catch (e: Throwable) {
             Timber.e(e, "Error in saves sync")
         }
@@ -56,9 +57,9 @@ abstract class AbsWorkSaveSync constructor(context: Context, workerParams: Worke
 
     private suspend fun shouldPerformSaveSync(): Boolean {
         val conditionsToRunThisWork = flow {
-            emit(saveSyncManager().isSupported())
-            emit(saveSyncManager().isConfigured())
-            emit(settingsManager().syncSaves())
+            emit(archiveManager().isSupported())
+            emit(archiveManager().isConfigured())
+            emit(settingManager().syncSaves())
             emit(shouldScheduleThisSync())
         }
 
@@ -68,7 +69,7 @@ abstract class AbsWorkSaveSync constructor(context: Context, workerParams: Worke
     private suspend fun shouldScheduleThisSync(): Boolean {
         val isAutoSync = inputData.getBoolean(WorkScheduler.SAVE_SYNC_IS_AUTO, false)
         val isManualSync = !isAutoSync
-        return settingsManager().autoSaveSync() && isAutoSync || isManualSync
+        return settingManager().autoSaveSync() && isAutoSync || isManualSync
     }
 
     private fun displayNotification() {

@@ -5,7 +5,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import com.mozhimen.basick.utilk.commons.IUtilK
-import com.mozhimen.emulatork.basic.EmulatorKBasic
+import com.mozhimen.emulatork.common.EmulatorKCommon
 import com.mozhimen.emulatork.ext.library.NotificationsManager
 import com.mozhimen.emulatork.ext.works.WorkScheduler
 import com.mozhimen.emulatork.ui.game.AbsGameActivity
@@ -23,7 +23,7 @@ import timber.log.Timber
 abstract class AbsWorkLibraryIndex(context: Context, workerParams: WorkerParameters) :
     CoroutineWorker(context, workerParams),IUtilK {
 
-    abstract fun lemuroidLibrary(): EmulatorKBasic
+    abstract fun emulatorKCommon(): EmulatorKCommon
 
     abstract fun gameActivityClazz(): Class<out AbsGameActivity>
 
@@ -41,7 +41,7 @@ abstract class AbsWorkLibraryIndex(context: Context, workerParams: WorkerParamet
 
         val result = withContext(Dispatchers.IO) {
             kotlin.runCatching {
-                lemuroidLibrary().indexLibrary()
+                emulatorKCommon().indexLibrary()
             }
         }
 

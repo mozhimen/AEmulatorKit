@@ -1,7 +1,7 @@
 package com.mozhimen.emulatork.ui.dagger.game.menu
 import android.content.Context
-import com.mozhimen.emulatork.basic.save.SaveStateManager
-import com.mozhimen.emulatork.basic.save.SaveStatePreviewManager
+import com.mozhimen.emulatork.common.save.SaveStateManager
+import com.mozhimen.emulatork.common.save.SaveStatePreviewManager
 import com.mozhimen.emulatork.ui.game.menu.AbsGameMenuLoadFragment
 import javax.inject.Inject
 import dagger.android.support.AndroidSupportInjection

@@ -5,8 +5,8 @@ import android.os.Bundle
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.mozhimen.emulatork.basic.preferences.SharedPreferencesManager
-import com.mozhimen.emulatork.basic.save.sync.SaveSyncManager
 import com.mozhimen.emulatork.basic.storage.StorageDirProvider
+import com.mozhimen.emulatork.common.archive.ArchiveManager
 import com.mozhimen.emulatork.ext.works.WorkPendingOperationsMonitor
 import com.mozhimen.emulatork.ui.R
 import com.mozhimen.emulatork.ext.preferences.PreferencesArchive
@@ -28,7 +28,7 @@ class SaveSyncFragment : PreferenceFragmentCompat() {
     lateinit var storageProvider: StorageDirProvider
 
     @Inject
-    lateinit var saveSyncManager: SaveSyncManager
+    lateinit var archiveManager: ArchiveManager
     private lateinit var saveSyncPreferences: PreferencesArchive
 
     override fun onAttach(context: Context) {
@@ -40,7 +40,7 @@ class SaveSyncFragment : PreferenceFragmentCompat() {
         preferenceManager.preferenceDataStore =
             SharedPreferencesManager.getSharedPreferencesDataStore(requireContext())
 
-        saveSyncPreferences = PreferencesArchive(saveSyncManager)
+        saveSyncPreferences = PreferencesArchive(archiveManager)
         setPreferencesFromResource(R.xml.empty_preference_screen, rootKey)
         saveSyncPreferences.addSaveSyncPreferences(preferenceScreen)
     }

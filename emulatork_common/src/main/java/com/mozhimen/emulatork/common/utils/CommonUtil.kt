@@ -17,6 +17,6 @@ import com.mozhimen.emulatork.db.game.entities.Game
 fun SystemBundle.getSystemMetaType() = ESystemMetaType.getSystemMetaType(eSystemType)
 
 object CommonUtil {
-    fun launchIntentForGame(appContext: Context, host: String, game: Game) =
-        Intent(Intent.ACTION_VIEW, Uri.parse("$host://${appContext.packageName}/play-game/id/${game.id}"))
+    fun launchIntentForGame(appContext: Context, scheme: String, game: Game) =
+        Intent(Intent.ACTION_VIEW, Uri.parse("$scheme://${appContext.packageName}/play-game/id/${game.id}"))
 }

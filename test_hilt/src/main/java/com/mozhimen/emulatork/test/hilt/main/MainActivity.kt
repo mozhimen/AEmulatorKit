@@ -27,8 +27,8 @@ import com.mozhimen.emulatork.ext.game.AbsGameActivity
 import com.mozhimen.emulatork.ext.game.GameLaunchTaskHandler
 import com.mozhimen.emulatork.ext.works.WorkScheduler
 import com.mozhimen.emulatork.ui.R
-import com.mozhimen.emulatork.test.hilt.works.WorkSaveSync
-import com.mozhimen.emulatork.test.hilt.works.WorkStorageCacheCleaner
+import com.mozhimen.emulatork.ui.hilt.works.WorkSaveSync
+import com.mozhimen.emulatork.ui.hilt.works.WorkStorageCacheCleaner
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope

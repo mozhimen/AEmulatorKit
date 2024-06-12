@@ -11,7 +11,7 @@ import com.mozhimen.emulatork.basic.R
  */
 /** Meta systems represents a collection of systems which appear the same to the user. It's currently
  *  only for Arcade (without separating FBNeo, MAME2000 or MAME2003). */
-enum class ESystemMetaType(val titleResId: Int, val imageResId: Int, val systemIDs: List<ESystemType>) {
+enum class ESystemMetaType(val titleResId: Int, val imageResId: Int, val eSystemTypes: List<ESystemType>) {
     NES(
         R.string.game_system_title_nes,
         R.drawable.game_system_nes,

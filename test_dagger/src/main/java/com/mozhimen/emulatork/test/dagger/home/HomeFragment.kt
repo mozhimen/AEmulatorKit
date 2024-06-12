@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.epoxy.Carousel
 import com.mozhimen.basick.utilk.android.app.UtilKActivityStart
 import com.mozhimen.basick.utilk.androidx.fragment.runOnViewLifecycleState
-import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
+import com.mozhimen.emulatork.db.game.database.RetrogradeDatabase
 import com.mozhimen.emulatork.test.dagger.R
 import com.mozhimen.emulatork.ext.library.SettingsInteractor
 import com.mozhimen.emulatork.ext.game.GameInteractor
@@ -122,7 +122,7 @@ class HomeFragment : Fragment() {
 
     private fun handleNotificationPermissionResponse(isGranted: Boolean) {
         if (!isGranted) {
-            UtilKActivityStart.startApplicationDetailsSettings(requireContext())
+            UtilKActivityStart.startSettingApplicationDetailsSettings(requireContext())
         }
     }
 

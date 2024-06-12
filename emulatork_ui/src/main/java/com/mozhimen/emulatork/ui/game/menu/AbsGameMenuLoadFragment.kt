@@ -6,15 +6,15 @@ import androidx.lifecycle.Lifecycle
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.mozhimen.basick.utilk.androidx.fragment.runOnViewLifecycleState
-import com.mozhimen.emulatork.basic.game.system.GameSystemCoreConfig
-import com.mozhimen.emulatork.basic.game.db.entities.Game
-import com.mozhimen.emulatork.basic.save.SaveStateManager
-import com.mozhimen.emulatork.basic.save.SaveStatePreviewManager
+import com.mozhimen.emulatork.common.core.CoreBundle
 import com.mozhimen.emulatork.ui.R
-import com.mozhimen.abilityk.jetpack.preference.SafePreferenceDataStore
-import com.mozhimen.emulatork.basic.game.menu.GameMenuContract
+import com.mozhimen.emulatork.common.save.SaveStateManager
+import com.mozhimen.emulatork.common.save.SaveStatePreviewManager
+import com.mozhimen.emulatork.db.game.entities.Game
 import com.mozhimen.emulatork.ext.input.MenuMgr
 import java.security.InvalidParameterException
+import com.mozhimen.libk.jetpack.preference.SafePreferenceDataStore
+import com.mozhimen.emulatork.input.virtual.menu.MenuContract
 
 /**
  * @ClassName GameMenuLoadFragment
@@ -25,12 +25,13 @@ import java.security.InvalidParameterException
  */
 abstract class AbsGameMenuLoadFragment : PreferenceFragmentCompat() {
 
-//    @Inject
+    //    @Inject
 //    lateinit var statesManager: StatesManager
-    abstract fun statesManager():SaveStateManager
-//    @Inject
+    abstract fun statesManager(): SaveStateManager
+
+    //    @Inject
 //    lateinit var statesPreviewManager: StatesPreviewManager
-    abstract fun statesPreviewManager():SaveStatePreviewManager
+    abstract fun statesPreviewManager(): SaveStatePreviewManager
 
 //    override fun onAttach(context: Context) {
 //        AndroidSupportInjection.inject(this)
@@ -47,19 +48,19 @@ abstract class AbsGameMenuLoadFragment : PreferenceFragmentCompat() {
 
         val extras = activity?.intent?.extras
 
-        val game = extras?.getSerializable(GameMenuContract.EXTRA_GAME) as Game?
+        val game = extras?.getSerializable(MenuContract.EXTRA_GAME) as Game?
             ?: throw InvalidParameterException("Missing EXTRA_GAME")
 
-        val systemCoreConfig = extras?.getSerializable(GameMenuContract.EXTRA_SYSTEM_CORE_CONFIG) as GameSystemCoreConfig?
+        val coreBundle = extras?.getSerializable(MenuContract.EXTRA_SYSTEM_CORE_BUNDLE) as CoreBundle?
             ?: throw InvalidParameterException("Missing EXTRA_SYSTEM_CORE_CONFIG")
 
         runOnViewLifecycleState(Lifecycle.State.CREATED) {
-            setupLoadPreference(game, systemCoreConfig)
+            setupLoadPreference(game, coreBundle)
         }
     }
 
-    private suspend fun setupLoadPreference(game: Game, systemCoreConfig: GameSystemCoreConfig) {
-        val slotsInfo = statesManager().getSavedSlotsInfo(game, systemCoreConfig.coreID)
+    private suspend fun setupLoadPreference(game: Game, coreBundle: CoreBundle) {
+        val slotsInfo = statesManager().getSavedSlotsInfo(game, coreBundle.eCoreType)
 
         slotsInfo.forEachIndexed { index, saveInfo ->
             val bitmap = MenuMgr.getSaveStateBitmap(
@@ -67,7 +68,7 @@ abstract class AbsGameMenuLoadFragment : PreferenceFragmentCompat() {
                 statesPreviewManager(),
                 saveInfo,
                 game,
-                systemCoreConfig.coreID,
+                coreBundle.eCoreType,
                 index
             )
 

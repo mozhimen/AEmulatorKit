@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.work.ListenableWorker
 import androidx.work.WorkerParameters
 import com.mozhimen.emulatork.common.dagger.annors.WorkerKey
-import com.mozhimen.emulatork.basic.EmulatorKBasic
+import com.mozhimen.emulatork.common.EmulatorKCommon
 import com.mozhimen.emulatork.ui.works.AbsWorkLibraryIndex
 import com.mozhimen.emulatork.common.dagger.AndroidWorkerInjection
 import com.mozhimen.emulatork.ui.dagger.game.GameActivity
@@ -25,12 +25,12 @@ import javax.inject.Inject
 class WorkLibraryIndex(context: Context, workerParams: WorkerParameters):AbsWorkLibraryIndex(context, workerParams) {
 
     @Inject
-    lateinit var lemuroidLibrary: EmulatorKBasic
+    lateinit var emulatorKCommon: EmulatorKCommon
 
     ///////////////////////////////////////////////////////////////////////////
 
-    override fun lemuroidLibrary(): EmulatorKBasic {
-        return lemuroidLibrary
+    override fun emulatorKCommon(): EmulatorKCommon {
+        return emulatorKCommon
     }
 
     override fun gameActivityClazz(): Class<out AbsGameActivity> {

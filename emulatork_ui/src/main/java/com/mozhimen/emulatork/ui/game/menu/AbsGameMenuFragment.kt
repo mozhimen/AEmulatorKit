@@ -3,8 +3,6 @@ package com.mozhimen.emulatork.ui.game.menu
 import android.os.Bundle
 import androidx.preference.PreferenceFragmentCompat
 import com.mozhimen.emulatork.ui.R
-import com.mozhimen.abilityk.jetpack.preference.SafePreferenceDataStore
-import com.mozhimen.emulatork.basic.game.menu.GameMenuContract
 import com.mozhimen.emulatork.common.core.CoreBundle
 import com.mozhimen.emulatork.ext.input.MenuMgr
 import com.mozhimen.emulatork.input.virtual.menu.MenuContract
@@ -40,15 +38,15 @@ abstract class AbsGameMenuFragment : PreferenceFragmentCompat() {
         )
 
         val coreBundle = activity?.intent?.getSerializableExtra(MenuContract.EXTRA_SYSTEM_CORE_BUNDLE) as? CoreBundle?
+        coreBundle?.let {
+            MenuMgr.setupSaveOption(preferenceScreen, coreBundle)
+            MenuMgr.setupSettingsOption(preferenceScreen, coreBundle)
+        }
 
-        MenuMgr.setupSaveOption(preferenceScreen, coreBundle)
-
-        val numDisks = activity?.intent?.getIntExtra(MenuContract.EXTRA_DISKS, 0) ?: 0
+        val numDisks = activity?.intent?.getIntExtra(MenuContract.EXTRA_AVAILABLE_DISKS, 0) ?: 0
         val currentDisk = activity?.intent?.getIntExtra(MenuContract.EXTRA_CURRENT_DISK, 0) ?: 0
         if (numDisks > 1) {
             MenuMgr.setupChangeDiskOption(activity, preferenceScreen, currentDisk, numDisks)
         }
-
-        MenuMgr.setupSettingsOption(preferenceScreen, coreBundle)
     }
 }

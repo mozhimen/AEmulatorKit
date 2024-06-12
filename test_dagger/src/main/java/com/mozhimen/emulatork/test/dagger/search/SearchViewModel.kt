@@ -3,8 +3,8 @@ package com.mozhimen.emulatork.test.dagger.search
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.paging.PagingData
-import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
-import com.mozhimen.emulatork.basic.game.db.entities.Game
+import com.mozhimen.emulatork.db.game.database.RetrogradeDatabase
+import com.mozhimen.emulatork.db.game.entities.Game
 import com.mozhimen.pagingk.paging3.basic.utils.Paging3Util
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
