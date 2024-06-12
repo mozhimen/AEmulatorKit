@@ -2,11 +2,13 @@ package com.mozhimen.emulatork.ui.game.menu
 
 import android.os.Bundle
 import androidx.preference.PreferenceFragmentCompat
-import com.mozhimen.emulatork.basic.game.system.GameSystemCoreConfig
 import com.mozhimen.emulatork.ui.R
 import com.mozhimen.abilityk.jetpack.preference.SafePreferenceDataStore
 import com.mozhimen.emulatork.basic.game.menu.GameMenuContract
+import com.mozhimen.emulatork.common.core.CoreBundle
 import com.mozhimen.emulatork.ext.input.MenuMgr
+import com.mozhimen.emulatork.input.virtual.menu.MenuContract
+import com.mozhimen.libk.jetpack.preference.SafePreferenceDataStore
 
 /**
  * @ClassName GameMenuFragment
@@ -21,21 +23,15 @@ abstract class AbsGameMenuFragment : PreferenceFragmentCompat() {
         setPreferencesFromResource(R.xml.mobile_game_settings, rootKey)
 
         val audioEnabled = activity?.intent?.getBooleanExtra(
-            GameMenuContract.EXTRA_AUDIO_ENABLED,
+            MenuContract.EXTRA_AUDIO_ENABLED,
             false
         ) ?: false
 
         MenuMgr.setupAudioOption(preferenceScreen, audioEnabled)
 
-        val fastForwardSupported = activity?.intent?.getBooleanExtra(
-            GameMenuContract.EXTRA_FAST_FORWARD_SUPPORTED,
-            false
-        ) ?: false
+        val fastForwardSupported = activity?.intent?.getBooleanExtra(MenuContract.EXTRA_FAST_FORWARD_SUPPORTED, false) ?: false
 
-        val fastForwardEnabled = activity?.intent?.getBooleanExtra(
-            GameMenuContract.EXTRA_FAST_FORWARD,
-            false
-        ) ?: false
+        val fastForwardEnabled = activity?.intent?.getBooleanExtra(MenuContract.EXTRA_FAST_FORWARD, false) ?: false
 
         MenuMgr.setupFastForwardOption(
             preferenceScreen,
@@ -43,18 +39,16 @@ abstract class AbsGameMenuFragment : PreferenceFragmentCompat() {
             fastForwardSupported
         )
 
-        val systemCoreConfig = activity?.intent?.getSerializableExtra(
-            GameMenuContract.EXTRA_SYSTEM_CORE_CONFIG
-        ) as GameSystemCoreConfig
+        val coreBundle = activity?.intent?.getSerializableExtra(MenuContract.EXTRA_SYSTEM_CORE_BUNDLE) as? CoreBundle?
 
-        MenuMgr.setupSaveOption(preferenceScreen, systemCoreConfig)
+        MenuMgr.setupSaveOption(preferenceScreen, coreBundle)
 
-        val numDisks = activity?.intent?.getIntExtra(GameMenuContract.EXTRA_DISKS, 0) ?: 0
-        val currentDisk = activity?.intent?.getIntExtra(GameMenuContract.EXTRA_CURRENT_DISK, 0) ?: 0
+        val numDisks = activity?.intent?.getIntExtra(MenuContract.EXTRA_DISKS, 0) ?: 0
+        val currentDisk = activity?.intent?.getIntExtra(MenuContract.EXTRA_CURRENT_DISK, 0) ?: 0
         if (numDisks > 1) {
             MenuMgr.setupChangeDiskOption(activity, preferenceScreen, currentDisk, numDisks)
         }
 
-        MenuMgr.setupSettingsOption(preferenceScreen, systemCoreConfig)
+        MenuMgr.setupSettingsOption(preferenceScreen, coreBundle)
     }
 }

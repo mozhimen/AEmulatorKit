@@ -5,9 +5,8 @@ import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceScreen
 import com.mozhimen.basick.utilk.commons.IUtilK
-import com.mozhimen.emulatork.basic.core.CoreSelection
-import com.mozhimen.emulatork.common.system.SystemBundle
-import com.mozhimen.emulatork.basic.game.system.GameSystems
+import com.mozhimen.emulatork.common.core.CoreSelectionManager
+import com.mozhimen.emulatork.common.system.SystemProvider
 import com.mozhimen.emulatork.ext.works.WorkScheduler
 import com.mozhimen.emulatork.ui.works.AbsWorkCoreUpdate
 
@@ -23,28 +22,28 @@ class PreferencesCoreSelection : IUtilK {
     fun addCoresSelectionPreferences(preferenceScreen: PreferenceScreen, workCoreUpdateClazz: Class<out AbsWorkCoreUpdate>) {
         val context = preferenceScreen.context
 
-        GameSystems.all()
-            .filter { it.systemCoreConfigs.size > 1 }
+        SystemProvider.getSystems()
+            .filter { it.coreBundles.size > 1 }
             .forEach {
                 preferenceScreen.addPreference(createPreference(context, it, workCoreUpdateClazz))
             }
     }
 
-    private fun createPreference(context: Context, system: com.mozhimen.emulatork.common.system.SystemBundle, workCoreUpdateClazz: Class<out AbsWorkCoreUpdate>): Preference {
+    private fun createPreference(context: Context, systemBundle: com.mozhimen.emulatork.common.system.SystemBundle, workCoreUpdateClazz: Class<out AbsWorkCoreUpdate>): Preference {
         val preference = ListPreference(context)
-        preference.key = CoreSelection.computeSystemPreferenceKey(system.id)
-        preference.title = context.getString(system.titleResId)
+        preference.key = CoreSelectionManager.computeSystemPreferenceKey(systemBundle.eSystemType)
+        preference.title = context.getString(systemBundle.titleResId)
         preference.isIconSpaceReserved = false
         preference.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
-        preference.setDefaultValue(system.systemCoreConfigs.map { it.coreID.coreName }.first())
-        preference.isEnabled = system.systemCoreConfigs.size > 1
+        preference.setDefaultValue(systemBundle.coreBundles.map { it.eCoreType.coreName }.first())
+        preference.isEnabled = systemBundle.coreBundles.size > 1
 
-        preference.entries = system.systemCoreConfigs
-            .map { it.coreID.coreDisplayName }
+        preference.entries = systemBundle.coreBundles
+            .map { it.eCoreType.coreNameDisplay }
             .toTypedArray()
 
-        preference.entryValues = system.systemCoreConfigs
-            .map { it.coreID.coreName }
+        preference.entryValues = systemBundle.coreBundles
+            .map { it.eCoreType.coreName }
             .toTypedArray()
 
         preference.setOnPreferenceChangeListener { _, _ ->

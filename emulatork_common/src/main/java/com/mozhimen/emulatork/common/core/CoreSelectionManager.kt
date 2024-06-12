@@ -18,8 +18,8 @@ open class CoreSelectionManager(private val sharedPreferences: Lazy<SharedPrefer
     companion object {
         private const val CORE_SELECTION_BINDING_PREFERENCE_BASE_KEY = "pref_key_core_selection"
 
-        fun computeSystemPreferenceKey(systemID: ESystemType) =
-            "${CORE_SELECTION_BINDING_PREFERENCE_BASE_KEY}_${systemID.simpleName}"
+        fun computeSystemPreferenceKey(eSystemType: ESystemType) =
+            "${CORE_SELECTION_BINDING_PREFERENCE_BASE_KEY}_${eSystemType.simpleName}"
     }
 
     ////////////////////////////////////////////////////////////////////////

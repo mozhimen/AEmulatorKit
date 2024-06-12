@@ -17,6 +17,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import com.mozhimen.basick.BuildConfig
 import com.mozhimen.basick.utilk.androidx.lifecycle.runOnLifecycleState
 import com.mozhimen.basick.utilk.commons.IUtilK
 import com.mozhimen.basick.utilk.kotlinx.coroutines.collectSafe
@@ -36,12 +37,15 @@ import com.mozhimen.emulatork.basic.archive.ArchiveState
 import com.mozhimen.emulatork.basic.archive.ArchiveStateIncompatibleException
 import com.mozhimen.emulatork.basic.load.LoadException
 import com.mozhimen.emulatork.basic.load.SLoadError
+import com.mozhimen.emulatork.basic.rom.SRomFileType
 import com.mozhimen.emulatork.ui.R
 import com.mozhimen.emulatork.input.unit.InputUnitManager
 import com.mozhimen.emulatork.input.key.InputKey
 import com.mozhimen.emulatork.basic.setting.SettingManager
+import com.mozhimen.emulatork.basic.system.SystemSetting
 import com.mozhimen.emulatork.common.core.CoreBundle
 import com.mozhimen.emulatork.common.core.CorePropertyManager
+import com.mozhimen.emulatork.common.game.GameBundle
 import com.mozhimen.emulatork.common.game.GameLoadManager
 import com.mozhimen.emulatork.common.game.SGameLoadState
 import com.mozhimen.emulatork.common.input.GamepadConfigManager
@@ -49,6 +53,8 @@ import com.mozhimen.emulatork.common.input.RumbleManager
 import com.mozhimen.emulatork.common.save.SaveManager
 import com.mozhimen.emulatork.common.save.SaveStateManager
 import com.mozhimen.emulatork.common.save.SaveStatePreviewManager
+import com.mozhimen.emulatork.common.system.SystemBundle
+import com.mozhimen.emulatork.common.system.SystemOption
 import com.mozhimen.emulatork.db.game.entities.Game
 import com.mozhimen.emulatork.input.virtual.gamepad.GamepadConfig
 import com.swordfish.libretrodroid.Controller
@@ -89,6 +95,10 @@ import com.mozhimen.emulatork.core.property.CoreProperty
 import com.mozhimen.emulatork.input.utils.getInputUnit
 import com.mozhimen.emulatork.input.virtual.menu.MenuContract
 import com.mozhimen.emulatork.input.utils.getInputKeyMap
+import com.mozhimen.emulatork.core.option.CoreOption
+import com.mozhimen.emulatork.core.utils.toCoreOption
+import com.mozhimen.emulatork.input.virtual.screen.ShaderConfigProvider
+
 /**
  * @ClassName BaseGameActivity
  * @Description TODO
@@ -121,7 +131,7 @@ abstract class AbsGameActivity : com.mozhimen.emulatork.common.android.Immersive
 
     //////////////////////////////////////////////////////////////////////////////////
 
-    private lateinit var system: com.mozhimen.emulatork.common.system.SystemBundle
+    private lateinit var system: SystemBundle
     private lateinit var gameContainerLayout: FrameLayout
     private lateinit var loadingView: ProgressBar
     private lateinit var loadingMessageView: TextView
@@ -305,19 +315,19 @@ abstract class AbsGameActivity : com.mozhimen.emulatork.common.android.Immersive
 
         val coreOptions = getCoreOptions()
 
-        val options = coreBundle.systemSettings_exposed
+        val systemOptions: List<SystemOption> = coreBundle.systemSettings_exposed
             .mapNotNull { transformExposedSetting(it, coreOptions) }
 
-        val advancedOptions = coreBundle.systemSettings_exposedAdvanced
+        val systemOptionsAdvanced: List<SystemOption> = coreBundle.systemSettings_exposedAdvanced
             .mapNotNull { transformExposedSetting(it, coreOptions) }
 
         val intent = Intent(this, gameMenuActivityClazz()).apply {
-            this.putExtra(MenuContract.EXTRA_CORE_OPTIONS, options.toTypedArray())
-            this.putExtra(MenuContract.EXTRA_ADVANCED_CORE_OPTIONS, advancedOptions.toTypedArray())
+            this.putExtra(MenuContract.EXTRA_SYSTEM_OPTIONS, systemOptions.toTypedArray())
+            this.putExtra(MenuContract.EXTRA_SYSTEM_OPTIONS_ADVANCED, systemOptionsAdvanced.toTypedArray())
             this.putExtra(MenuContract.EXTRA_CURRENT_DISK, retroGameView?.getCurrentDisk() ?: 0)
-            this.putExtra(MenuContract.EXTRA_DISKS, retroGameView?.getAvailableDisks() ?: 0)
+            this.putExtra(MenuContract.EXTRA_AVAILABLE_DISKS, retroGameView?.getAvailableDisks() ?: 0)
             this.putExtra(MenuContract.EXTRA_GAME, game)
-            this.putExtra(MenuContract.EXTRA_SYSTEM_CORE_CONFIG, coreBundle)
+            this.putExtra(MenuContract.EXTRA_SYSTEM_CORE_BUNDLE, coreBundle)
             this.putExtra(MenuContract.EXTRA_AUDIO_ENABLED, retroGameView?.audioEnabled)
             this.putExtra(MenuContract.EXTRA_FAST_FORWARD_SUPPORTED, system.fastForwardSupport)
             this.putExtra(MenuContract.EXTRA_FAST_FORWARD, (retroGameView?.frameSpeed ?: 1) > 1)
@@ -473,12 +483,12 @@ abstract class AbsGameActivity : com.mozhimen.emulatork.common.android.Immersive
         val previewSize = sizeInDp.dp2pxI()
         val preview = retroGameView?.takeScreenshotOnMain(previewSize, 3)
         if (preview != null) {
-            saveStatePreviewManager().setPreviewForSlot(game, preview, coreBundle.coreID, index)
+            saveStatePreviewManager().setPreviewForSlot(game, preview, coreBundle.eCoreType, index)
         }
     }
 
     private fun initializeRetroGameView(
-        gameData: com.mozhimen.emulatork.common.game.GameLoader.GameData,
+        gameBundle: GameBundle,
         hdMode: Boolean,
         forceLegacyHdMode: Boolean,
         screenFilter: String,
@@ -486,29 +496,29 @@ abstract class AbsGameActivity : com.mozhimen.emulatork.common.android.Immersive
         enableRumble: Boolean
     ): GLRetroView {
         val data = GLRetroViewData(this).apply {
-            coreFilePath = gameData.coreLibrary
+            coreFilePath = gameBundle.coreLibrary
 
-            when (val gameFiles = gameData.gameFiles) {
-                is StorageRomFile.Standard -> {
+            when (val gameFiles = gameBundle.gameFiles) {
+                is SRomFileType.Standard -> {
                     gameFilePath = gameFiles.files.first().absolutePath
                 }
 
-                is StorageRomFile.Virtual -> {
+                is SRomFileType.Virtual -> {
                     gameVirtualFiles = gameFiles.files
-                        .map { VirtualFile(it.filePath, it.fd) }
+                        .map { VirtualFile(it.filePath, it.fileDescriptor) }
                 }
             }
 
-            systemDirectory = gameData.systemDirectory.absolutePath
-            savesDirectory = gameData.savesDirectory.absolutePath
-            variables = gameData.coreVariables.map { Variable(it.key, it.value) }.toTypedArray()
-            saveRAMState = gameData.saveRAMData
-            shader = GameShaderChooser.getShaderForSystem(
+            systemDirectory = gameBundle.systemDirectory.absolutePath
+            savesDirectory = gameBundle.savesDirectory.absolutePath
+            variables = gameBundle.coreProperties.map { Variable(it.key, it.value) }.toTypedArray()
+            saveRAMState = gameBundle.saveRAMData
+            shader = ShaderConfigProvider.getShaderBySystem(
                 applicationContext,
                 hdMode,
                 forceLegacyHdMode,
                 screenFilter,
-                system
+                system.eSystemType
             )
             preferLowLatencyAudio = lowLatencyAudio
             rumbleEventsEnabled = enableRumble
@@ -530,7 +540,7 @@ abstract class AbsGameActivity : com.mozhimen.emulatork.common.android.Immersive
         retroGameView.layoutParams = layoutParams
 
         lifecycleScope.launch {
-            gameData.quickSaveData?.let {
+            gameBundle.quickSaveData?.let {
                 restoreAutoSaveAsync(it)
             }
         }
@@ -548,10 +558,10 @@ abstract class AbsGameActivity : com.mozhimen.emulatork.common.android.Immersive
         }
     }
 
-    private fun updateControllers(controllers: Map<Int, ControllerTouchConfig>) {
+    private fun updateControllers(gamepadConfigMap: Map<Int, GamepadConfig>) {
         retroGameView
             ?.getControllers()?.array2indexedMap()
-            ?.zipOnKeys(controllers, this::findControllerId)
+            ?.zipOnKeys(gamepadConfigMap, this::findControllerId)
             ?.filterNotNullValues()
             ?.forEach { (port, controllerId) ->
                 Timber.i("Controls setting $port to $controllerId")
@@ -559,12 +569,12 @@ abstract class AbsGameActivity : com.mozhimen.emulatork.common.android.Immersive
             }
     }
 
-    private fun findControllerId(supported: Array<Controller>, controllerConfig: ControllerTouchConfig): Int? {
+    private fun findControllerId(supported: Array<Controller>, gamepadConfig: GamepadConfig): Int? {
         return supported
             .firstOrNull { controller ->
                 sequenceOf(
-                    controller.id == controllerConfig.libretroId,
-                    controller.description == controllerConfig.libretroDescriptor
+                    controller.id == gamepadConfig.libretroId,
+                    controller.description == gamepadConfig.libretroDescriptor
                 ).any { it }
             }?.id
     }
@@ -572,29 +582,29 @@ abstract class AbsGameActivity : com.mozhimen.emulatork.common.android.Immersive
     private fun handleRetroViewError(errorCode: Int) {
         Timber.e("Error in GLRetroView $errorCode")
         val gameLoaderError = when (errorCode) {
-            GLRetroView.ERROR_GL_NOT_COMPATIBLE -> GameLoaderError.GLIncompatible
-            GLRetroView.ERROR_LOAD_GAME -> GameLoaderError.LoadGame
-            GLRetroView.ERROR_LOAD_LIBRARY -> GameLoaderError.LoadCore
-            GLRetroView.ERROR_SERIALIZATION -> GameLoaderError.Saves
-            else -> GameLoaderError.Generic
+            GLRetroView.ERROR_GL_NOT_COMPATIBLE -> SLoadError.GLIncompatible
+            GLRetroView.ERROR_LOAD_GAME -> SLoadError.LoadGame
+            GLRetroView.ERROR_LOAD_LIBRARY -> SLoadError.LoadCore
+            GLRetroView.ERROR_SERIALIZATION -> SLoadError.Saves
+            else -> SLoadError.Generic
         }
         retroGameView = null
         displayGameLoaderError(gameLoaderError, coreBundle)
     }
 
-    private fun transformExposedSetting(systemExposedSetting: GameSystemExposedSetting, coreOptions: List<CoreOption>): CoreOptionSetting? {
+    private fun transformExposedSetting(systemExposedSetting: SystemSetting, coreOptions: List<CoreOption>): SystemOption? {
         return coreOptions
-            .firstOrNull { it.variable.key == systemExposedSetting.key }
-            ?.let { CoreOptionSetting(systemExposedSetting, it) }
+            .firstOrNull { it.coreProperty.key == systemExposedSetting.key }
+            ?.let { SystemOption(systemExposedSetting, it) }
     }
 
     private suspend fun isAutoSaveEnabled(): Boolean {
-        return coreBundle.statesSupported && settingManager().autoSave()
+        return coreBundle.isSupportStates && settingManager().autoSave()
     }
 
     private fun getCoreOptions(): List<CoreOption> {
         return retroGameView?.getVariables()
-            ?.map { CoreOption.fromLibretroDroidVariable(it) } ?: listOf()
+            ?.map { it.toCoreOption() } ?: listOf()
     }
 
     private fun updateCoreVariables(options: List<CoreProperty>) {

@@ -8,9 +8,10 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceScreen
 import androidx.preference.SwitchPreference
 import com.mozhimen.basick.utilk.commons.IUtilK
-import com.mozhimen.emulatork.core.ECoreId
-import com.mozhimen.emulatork.basic.save.sync.SaveSyncManager
-import com.mozhimen.emulatork.basic.game.system.GameSystems
+import com.mozhimen.emulatork.common.archive.ArchiveManager
+import com.mozhimen.emulatork.common.system.SystemBundle
+import com.mozhimen.emulatork.common.system.SystemProvider
+import com.mozhimen.emulatork.core.type.ECoreType
 import com.mozhimen.emulatork.ui.R
 import com.mozhimen.emulatork.ext.works.WorkScheduler
 import com.mozhimen.emulatork.ui.works.AbsWorkSaveSync
@@ -22,7 +23,7 @@ import com.mozhimen.emulatork.ui.works.AbsWorkSaveSync
  * @Date 2024/5/14
  * @Version 1.0
  */
-class PreferencesSaveSync(private val saveSyncManager: SaveSyncManager):IUtilK {
+class PreferencesArchive(private val archiveManager: ArchiveManager):IUtilK {
 
     fun addSaveSyncPreferences(preferenceScreen: PreferenceScreen) {
         val context = preferenceScreen.context
@@ -61,26 +62,26 @@ class PreferencesSaveSync(private val saveSyncManager: SaveSyncManager):IUtilK {
         preferenceScreen.findPreference<Preference>(keyConfigure(context))?.apply {
             title = context.getString(
                 R.string.settings_save_sync_configure,
-                saveSyncManager.getProvider()
+                archiveManager.getProvider()
             )
             isIconSpaceReserved = false
             isEnabled = !syncInProgress
-            summary = saveSyncManager.getConfigInfo()
+            summary = archiveManager.getConfigInfo()
         }
 
         preferenceScreen.findPreference<Preference>(keySyncEnabled(context))?.apply {
             title = context.getString(R.string.settings_save_sync_include_saves)
             summary = context.getString(
                 R.string.settings_save_sync_include_saves_description,
-                saveSyncManager.computeSavesSpace()
+                archiveManager.computeSavesSpace()
             )
-            isEnabled = saveSyncManager.isConfigured() && !syncInProgress
+            isEnabled = archiveManager.isConfigured() && !syncInProgress
             isIconSpaceReserved = false
         }
 
         preferenceScreen.findPreference<Preference>(keyAutoSync(context))?.apply {
             title = context.getString(R.string.settings_save_sync_enable_auto)
-            isEnabled = saveSyncManager.isConfigured() && !syncInProgress
+            isEnabled = archiveManager.isConfigured() && !syncInProgress
             summary = context.getString(R.string.settings_save_sync_enable_auto_description)
             dependency = keySyncEnabled(context)
             isIconSpaceReserved = false
@@ -88,10 +89,10 @@ class PreferencesSaveSync(private val saveSyncManager: SaveSyncManager):IUtilK {
 
         preferenceScreen.findPreference<Preference>(keyForceSync(context))?.apply {
             title = context.getString(R.string.settings_save_sync_refresh)
-            isEnabled = saveSyncManager.isConfigured() && !syncInProgress
+            isEnabled = archiveManager.isConfigured() && !syncInProgress
             summary = context.getString(
                 R.string.settings_save_sync_refresh_description,
-                saveSyncManager.getLastSyncInfo()
+                archiveManager.getLastSyncInfo()
             )
             dependency = keySyncEnabled(context)
             isIconSpaceReserved = false
@@ -101,25 +102,25 @@ class PreferencesSaveSync(private val saveSyncManager: SaveSyncManager):IUtilK {
             title = context.getString(R.string.settings_save_sync_include_states)
             summary = context.getString(R.string.settings_save_sync_include_states_description)
             dependency = keySyncEnabled(context)
-            isEnabled = saveSyncManager.isConfigured() && !syncInProgress
-            entries = com.mozhimen.emulatork.core.ECoreId.values().map { getDisplayNameForCore(context, it) }.toTypedArray()
-            entryValues = com.mozhimen.emulatork.core.ECoreId.values().map { it.coreName }.toTypedArray()
+            isEnabled = archiveManager.isConfigured() && !syncInProgress
+            entries = ECoreType.values().map { getDisplayNameForCore(context, it) }.toTypedArray()
+            entryValues = ECoreType.values().map { it.coreName }.toTypedArray()
             isIconSpaceReserved = false
         }
     }
 
-    private fun getDisplayNameForCore(context: Context, coreID: com.mozhimen.emulatork.core.ECoreId): String {
-        val systems = GameSystems.findSystemForCore(coreID)
-        val systemHasMultipleCores = systems.any { it.systemCoreConfigs.size > 1 }
+    private fun getDisplayNameForCore(context: Context, eCoreType: ECoreType): String {
+        val systemBundles :List<SystemBundle> = SystemProvider.findSysByCoreType(eCoreType)
+        val systemHasMultipleCores = systemBundles.any { it.coreBundles.size > 1 }
 
         val chunks = mutableListOf<String>().apply {
-            add(systems.joinToString(", ") { context.getString(it.shortTitleResId) })
+            add(systemBundles.joinToString(", ") { context.getString(it.shortTitleResId) })
 
             if (systemHasMultipleCores) {
-                add(coreID.coreDisplayName)
+                add(eCoreType.coreNameDisplay)
             }
 
-            add(saveSyncManager.computeStatesSpace(coreID))
+            add(archiveManager.computeStatesSpace(eCoreType))
         }
 
         return chunks.joinToString(" - ")
@@ -159,7 +160,7 @@ class PreferencesSaveSync(private val saveSyncManager: SaveSyncManager):IUtilK {
 
     private fun handleSaveSyncConfigure(activity: Activity?) {
         activity?.startActivity(
-            Intent(activity, saveSyncManager.getSettingsActivity())
+            Intent(activity, archiveManager.getSettingsActivity())
         )
     }
 

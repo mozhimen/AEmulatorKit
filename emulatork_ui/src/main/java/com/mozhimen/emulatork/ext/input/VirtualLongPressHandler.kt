@@ -9,10 +9,10 @@ import android.widget.ImageView
 import androidx.core.view.isVisible
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.mozhimen.basick.utilk.android.util.dp2pxI
-import com.mozhimen.emulatork.input.InputOverlayThemes
 import com.mozhimen.emulatork.ui.R
 import com.mozhimen.basick.utilk.android.widget.applyProgressAnimate
 import com.mozhimen.basick.utilk.android.view.applyVisibleIfElseGoneAnimate
+import com.mozhimen.emulatork.input.theme.InputTheme
 import com.mozhimen.emulatork.ui.game.AbsGameActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -39,7 +39,7 @@ object VirtualLongPressHandler {
     ///////////////////////////////////////////////////////////////////////
 
     fun initializeTheme(gameActivity: AbsGameActivity) {
-        val palette = InputOverlayThemes.getGamePadTheme(longPressView(gameActivity))
+        val palette = InputTheme.getGamePadTheme(longPressView(gameActivity))
         longPressIconView(gameActivity).setColorFilter(palette.textColor)
         longPressProgressBar(gameActivity).setIndicatorColor(palette.textColor)
         longPressView(gameActivity).background = buildCircleDrawable(

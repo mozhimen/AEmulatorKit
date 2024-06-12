@@ -9,7 +9,7 @@ import com.mozhimen.emulatork.basic.save.sync.SaveSyncManager
 import com.mozhimen.emulatork.basic.storage.StorageDirProvider
 import com.mozhimen.emulatork.ext.works.WorkPendingOperationsMonitor
 import com.mozhimen.emulatork.ui.R
-import com.mozhimen.emulatork.ext.preferences.PreferencesSaveSync
+import com.mozhimen.emulatork.ext.preferences.PreferencesArchive
 import com.mozhimen.emulatork.ui.dagger.works.WorkSaveSync
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
@@ -29,7 +29,7 @@ class SaveSyncFragment : PreferenceFragmentCompat() {
 
     @Inject
     lateinit var saveSyncManager: SaveSyncManager
-    private lateinit var saveSyncPreferences: PreferencesSaveSync
+    private lateinit var saveSyncPreferences: PreferencesArchive
 
     override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
@@ -40,7 +40,7 @@ class SaveSyncFragment : PreferenceFragmentCompat() {
         preferenceManager.preferenceDataStore =
             SharedPreferencesManager.getSharedPreferencesDataStore(requireContext())
 
-        saveSyncPreferences = PreferencesSaveSync(saveSyncManager)
+        saveSyncPreferences = PreferencesArchive(saveSyncManager)
         setPreferencesFromResource(R.xml.empty_preference_screen, rootKey)
         saveSyncPreferences.addSaveSyncPreferences(preferenceScreen)
     }

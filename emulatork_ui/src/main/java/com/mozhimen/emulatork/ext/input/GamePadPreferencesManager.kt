@@ -9,12 +9,12 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceScreen
 import androidx.preference.SwitchPreference
-import com.mozhimen.emulatork.input.InputMenuShortcut
 import com.mozhimen.emulatork.input.key.InputKey
 import com.mozhimen.emulatork.input.key.InputKeyRetro
 import com.mozhimen.emulatork.input.unit.InputUnitManager
+import com.mozhimen.emulatork.input.utils.getDefaultMenu
+import com.mozhimen.emulatork.input.utils.getInputUnit
 import com.mozhimen.emulatork.ui.R
-import com.mozhimen.emulatork.input.unit.getEmulatorKInputDevice
 import com.mozhimen.emulatork.ui.game.pad.AbsGamePadBindingActivity
 import java.util.Locale
 
@@ -133,7 +133,7 @@ open class GamePadPreferencesManager constructor(
         val category = createCategory(context, preferenceScreen, inputDevice.name)
         preferenceScreen.addPreference(category)
 
-        inputDevice.getEmulatorKInputDevice().getCustomizableKeys()
+        inputDevice.getInputUnit().getCustomizableKeys()
             .map { buildKeyBindingPreference(context, inputDevice, it) }
             .forEach {
                 category.addPreference(it)
@@ -152,7 +152,7 @@ open class GamePadPreferencesManager constructor(
             .map { it.value to it.key }
             .toMap()
 
-        inputDevice.getEmulatorKInputDevice().getCustomizableKeys()
+        inputDevice.getInputUnit().getCustomizableKeys()
             .forEach { retroKey ->
                 val boundKey = inverseBindings[retroKey]?.keyCode ?: KeyEvent.KEYCODE_UNKNOWN
                 val preferenceKey = InputUnitManager.computeKeyBindingRetroKeyPreference(inputDevice, retroKey)
@@ -170,7 +170,7 @@ open class GamePadPreferencesManager constructor(
         val preference = SwitchPreference(context)
         preference.key = InputUnitManager.computeEnabledGamePadPreference(inputDevice)
         preference.title = inputDevice.name
-        preference.setDefaultValue(inputDevice.getEmulatorKInputDevice().isEnabledByDefault(context))
+        preference.setDefaultValue(inputDevice.getInputUnit().isEnabledByDefault(context))
         preference.isIconSpaceReserved = false
         return preference
     }
@@ -209,8 +209,8 @@ open class GamePadPreferencesManager constructor(
         context: Context,
         inputDevice: InputDevice
     ): Preference? {
-        val default = InputMenuShortcut.getDefault(inputDevice) ?: return null
-        val supportedShortcuts = inputDevice.getEmulatorKInputDevice().getSupportedShortcuts()
+        val default = inputDevice.getDefaultMenu() ?: return null
+        val supportedShortcuts = inputDevice.getInputUnit().getSupportMenus()
 
         val preference = ListPreference(context)
         preference.key = InputUnitManager.computeGameMenuShortcutPreference(inputDevice)
