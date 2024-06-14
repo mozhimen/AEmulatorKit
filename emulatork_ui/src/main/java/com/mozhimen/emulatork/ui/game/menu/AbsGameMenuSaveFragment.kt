@@ -80,9 +80,7 @@ abstract class AbsGameMenuSaveFragment : PreferenceFragmentCompat() {
         }
     }
 
-    override fun onPreferenceTreeClick(preference: Preference?): Boolean {
+    override fun onPreferenceTreeClick(preference: Preference): Boolean {
         return MenuMgr.onPreferenceTreeClicked(activity, preference)
     }
-
-
 }

@@ -13,7 +13,7 @@ import androidx.room.PrimaryKey
  * @Version 1.0
  */
 @Entity(
-    tableName = "games",
+    tableName = "roms",
     indices = [
         Index("romName"),
         Index("crc32"),

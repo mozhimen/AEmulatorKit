@@ -1,7 +1,6 @@
 package com.mozhimen.emulatork.test.hilt.home
 
 import android.Manifest
-import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -13,19 +12,16 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.epoxy.Carousel
 import com.mozhimen.basick.utilk.android.app.UtilKActivityStart
 import com.mozhimen.basick.utilk.androidx.fragment.runOnViewLifecycleState
-import com.mozhimen.basick.utilk.androidx.lifecycle.UtilKViewModel
-import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
-import com.mozhimen.emulatork.test.hilt.R
-import com.mozhimen.emulatork.ext.library.SettingsInteractor
-import com.mozhimen.emulatork.ext.game.GameInteractor
+import com.mozhimen.emulatork.db.game.database.RetrogradeDatabase
 import com.mozhimen.emulatork.ext.covers.CoverLoader
+import com.mozhimen.emulatork.ext.game.GameInteractor
+import com.mozhimen.emulatork.ext.library.SettingsInteractor
+import com.mozhimen.emulatork.test.hilt.R
 import com.mozhimen.emulatork.ui.hilt.settings.StorageFrameworkPickerActivity
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
@@ -42,9 +38,6 @@ import javax.inject.Inject
 class HomeFragment : Fragment() {
 
     @Inject
-    lateinit var retrogradeDb: RetrogradeDatabase
-
-    @Inject
     lateinit var gameInteractor: GameInteractor
 
     @Inject
@@ -56,10 +49,9 @@ class HomeFragment : Fragment() {
     @Inject
     lateinit var homeViewModelFactory: HomeViewModel.Factory
 
-    private val homeViewModel: HomeViewModel by viewModels { HomeViewModel.provideFactory(
-        homeViewModelFactory,
-        requireContext()
-    ) }
+    private val homeViewModel: HomeViewModel by viewModels {
+        HomeViewModel.provideFactory(homeViewModelFactory, requireContext())
+    }
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -127,7 +119,7 @@ class HomeFragment : Fragment() {
 
     private fun handleNotificationPermissionResponse(isGranted: Boolean) {
         if (!isGranted) {
-            UtilKActivityStart.startApplicationDetailsSettings(requireContext())
+            UtilKActivityStart.startSettingApplicationDetailsSettings(requireContext())
         }
     }
 

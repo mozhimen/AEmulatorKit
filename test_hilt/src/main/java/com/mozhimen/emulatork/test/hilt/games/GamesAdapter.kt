@@ -3,7 +3,7 @@ package com.mozhimen.emulatork.test.hilt.games
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
-import com.mozhimen.emulatork.basic.game.db.entities.Game
+import com.mozhimen.emulatork.db.game.entities.Game
 import com.mozhimen.emulatork.ext.covers.CoverLoader
 import com.mozhimen.emulatork.ext.game.GameInteractor
 

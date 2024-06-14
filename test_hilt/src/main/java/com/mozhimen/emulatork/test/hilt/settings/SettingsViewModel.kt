@@ -31,7 +31,7 @@ class SettingsViewModel constructor(
         fun provideFactory(context: Context,flowSharedPreferences: FlowSharedPreferences): ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    val directoryPreference = context.getString(com.mozhimen.emulatork.basic.R.string.pref_key_extenral_folder)
+                    val directoryPreference = context.getString(com.mozhimen.emulatork.common.R.string.pref_key_extenral_folder)
                     return SettingsViewModel(context, directoryPreference,flowSharedPreferences) as T
                 }
             }

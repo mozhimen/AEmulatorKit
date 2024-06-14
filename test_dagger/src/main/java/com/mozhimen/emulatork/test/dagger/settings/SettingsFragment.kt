@@ -103,7 +103,7 @@ class SettingsFragment : PreferenceFragmentCompat(), IUtilK {
         }
     }
 
-    override fun onPreferenceTreeClick(preference: Preference?): Boolean {
+    override fun onPreferenceTreeClick(preference: Preference): Boolean {
         when (preference?.key) {
             getString(R.string.pref_key_rescan) -> rescanLibrary()
             getString(R.string.pref_key_stop_rescan) -> stopRescanLibrary()

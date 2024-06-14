@@ -3,31 +3,19 @@ package com.mozhimen.emulatork.test.hilt
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.room.Room
-import com.mozhimen.emulatork.basic.EmulatorKBasic
-import com.mozhimen.emulatork.basic.bios.BiosManager
-import com.mozhimen.emulatork.basic.controller.ControllerConfigsManager
-import com.mozhimen.emulatork.basic.core.CoreSelection
 import com.mozhimen.emulatork.core.download.CoreDownload
 import com.mozhimen.emulatork.core.download.CoreDownloaderImpl
 import com.mozhimen.emulatork.common.core.CorePropertyManager
-import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
-import com.mozhimen.emulatork.basic.game.db.daos.GameSearchDao
-import com.mozhimen.emulatork.basic.game.db.helpers.Migrations
 import com.mozhimen.emulatork.basic.metadata.MetadataProvider
-import com.mozhimen.emulatork.basic.game.review.GameReviewManager
-import com.mozhimen.emulatork.basic.game.rumble.GameRumbleManager
-import com.mozhimen.emulatork.basic.game.setting.GameSettingsManager
 import com.mozhimen.emulatork.basic.preferences.SharedPreferencesManager
-import com.mozhimen.emulatork.basic.save.SaveCoherencyEngine
-import com.mozhimen.emulatork.basic.save.SaveManager
-import com.mozhimen.emulatork.basic.save.SaveStateManager
-import com.mozhimen.emulatork.basic.save.SaveStatePreviewManager
-import com.mozhimen.emulatork.basic.save.sync.SaveSyncManager
-import com.mozhimen.emulatork.basic.save.sync.SaveSyncManagerImpl
 import com.mozhimen.emulatork.basic.storage.StorageDirProvider
-import com.mozhimen.emulatork.basic.storage.StorageProviderRegistry
-import com.mozhimen.emulatork.basic.storage.local.StorageLocalAccessFrameworkProvider
-import com.mozhimen.emulatork.basic.storage.local.StorageLocalProvider
+import com.mozhimen.emulatork.common.EmulatorKCommon
+import com.mozhimen.emulatork.common.archive.ArchiveCoherencyEngine
+import com.mozhimen.emulatork.common.archive.ArchiveManager
+import com.mozhimen.emulatork.common.archive.ArchiveManagerImpl
+import com.mozhimen.emulatork.common.bios.BiosManager
+import com.mozhimen.emulatork.common.core.CoreSelectionManager
+import com.mozhimen.emulatork.common.input.GamepadConfigManager
 import com.mozhimen.emulatork.ext.covers.CoverLoader
 import com.mozhimen.emulatork.ext.covers.CoverShortcutGenerator
 import com.mozhimen.emulatork.ext.game.GameInteractor
@@ -40,6 +28,10 @@ import com.mozhimen.emulatork.ext.preferences.PreferencesCoreSelection
 import com.mozhimen.emulatork.input.unit.InputUnitManager
 import com.mozhimen.emulatork.db.libretro.database.LibretroDBManager
 import com.mozhimen.emulatork.common.metadata.MetadataProviderLibretroDB
+import com.mozhimen.emulatork.common.storage.StorageProvider
+import com.mozhimen.emulatork.common.storage.StorageProviderAccessFramework
+import com.mozhimen.emulatork.common.storage.StorageProviderLocal
+import com.mozhimen.emulatork.db.game.database.RetrogradeDatabase
 import com.mozhimen.emulatork.ui.hilt.game.GameActivity
 import com.mozhimen.emulatork.ui.hilt.game.pad.GamePadBindingActivity
 import dagger.Binds
@@ -62,6 +54,14 @@ import java.lang.reflect.Type
 import java.util.concurrent.TimeUnit
 import java.util.zip.ZipInputStream
 import javax.inject.Singleton
+import com.mozhimen.emulatork.db.game.daos.GameSearchDao
+import com.mozhimen.emulatork.db.game.helpers.Migrations
+import com.mozhimen.emulatork.common.storage.StorageProviderRegistry
+import com.mozhimen.emulatork.common.save.SaveStateManager
+import com.mozhimen.emulatork.common.save.SaveManager
+import com.mozhimen.emulatork.common.save.SaveStatePreviewManager
+import  com.mozhimen.emulatork.basic.setting.SettingManager
+import com.mozhimen.emulatork.common.input.RumbleManager
 
 /**
  * @ClassName LemuroidApplicationModule
@@ -75,7 +75,7 @@ import javax.inject.Singleton
 abstract class LemuroidApplicationModule {
     @Binds
     @Singleton
-    abstract fun saveSyncManager(saveSyncManagerImpl: SaveSyncManagerImpl): SaveSyncManager
+    abstract fun saveSyncManager(saveSyncManagerImpl: ArchiveManagerImpl): ArchiveManager
 }
 
 @Module
@@ -109,23 +109,23 @@ class LemuroidApplicationModule2 {
     @Provides
     @IntoSet
     @Singleton
-    fun localSAFStorageProvider(@ApplicationContext context: Context): StorageDirProvider =
-        StorageLocalAccessFrameworkProvider(context)
+    fun localSAFStorageProvider(@ApplicationContext context: Context): StorageProvider =
+        StorageProviderAccessFramework(context)
 
     @Provides
     @IntoSet
     @Singleton
     fun localGameStorageProvider(
         @ApplicationContext context: Context,
-        storageProvider: StorageDirProvider
-    ): StorageDirProvider =
-        StorageLocalProvider(context, storageProvider)
+        storageDirProvider: StorageDirProvider
+    ): StorageProvider =
+        StorageProviderLocal(context, storageDirProvider)
 
     @Provides
     @Singleton
     fun gameStorageProviderRegistry(
         @ApplicationContext context: Context,
-        providers: Set<@JvmSuppressWildcards StorageDirProvider>
+        providers: Set<@JvmSuppressWildcards StorageProvider>
     ) =
         StorageProviderRegistry(context, providers)
 
@@ -136,7 +136,7 @@ class LemuroidApplicationModule2 {
         storageProviderRegistry: Lazy<StorageProviderRegistry>,
         metadataProvider: Lazy<MetadataProvider>,
         biosManager: BiosManager
-    ) = EmulatorKBasic(db, lazy { storageProviderRegistry.get() }, lazy { metadataProvider.get() }, biosManager)
+    ) = EmulatorKCommon(db, lazy { storageProviderRegistry.get() }, lazy { metadataProvider.get() }, biosManager)
 
     @Provides
     @Singleton
@@ -204,21 +204,21 @@ class LemuroidApplicationModule2 {
     @Singleton
     @Provides
     fun gameLoader(
-        lemuroidLibrary: EmulatorKBasic,
+        emulatorKCommon: EmulatorKCommon,
         saveStateManager: SaveStateManager,
         saveManager: SaveManager,
         corePropertyManager: CorePropertyManager,
         retrogradeDatabase: RetrogradeDatabase,
-        saveCoherencyEngine: SaveCoherencyEngine,
+        archiveCoherencyEngine: ArchiveCoherencyEngine,
         storageProvider: StorageDirProvider,
         biosManager: BiosManager
     ) = com.mozhimen.emulatork.common.game.GameLoadManager(
-        lemuroidLibrary,
+        emulatorKCommon,
         saveStateManager,
         saveManager,
         corePropertyManager,
         retrogradeDatabase,
-        saveCoherencyEngine,
+        archiveCoherencyEngine,
         storageProvider,
         biosManager
     )
@@ -238,8 +238,8 @@ class LemuroidApplicationModule2 {
 
     @Singleton
     @Provides
-    fun coresSelection(sharedPreferences: Lazy<SharedPreferences>) =
-        CoreSelection(lazy { sharedPreferences.get() })
+    fun coresSelectionManager(sharedPreferences: Lazy<SharedPreferences>) =
+        CoreSelectionManager(lazy { sharedPreferences.get() })
 
     @Singleton
     @Provides
@@ -247,20 +247,20 @@ class LemuroidApplicationModule2 {
 
     @Singleton
     @Provides
-    fun savesCoherencyEngine(saveManager: SaveManager, saveStateManager: SaveStateManager) =
-        SaveCoherencyEngine(saveManager, saveStateManager)
+    fun archiveCoherencyEngine(saveManager: SaveManager, saveStateManager: SaveStateManager) =
+        ArchiveCoherencyEngine(saveManager, saveStateManager)
 
     @Singleton
     @Provides
-    fun saveSyncManagerImpl(
+    fun archiveManagerImpl(
         @ApplicationContext context: Context,
         storageProvider: StorageDirProvider
-    ) = SaveSyncManagerImpl(context, storageProvider)
+    ) = ArchiveManagerImpl(context, storageProvider)
 
     @Singleton
     @Provides
     fun postGameHandler(retrogradeDatabase: RetrogradeDatabase) =
-        GameLaunchTaskHandler(GameReviewManager(), retrogradeDatabase)
+        GameLaunchTaskHandler(/*GameReviewManager(), */retrogradeDatabase)
 
     @Singleton
     @Provides
@@ -269,13 +269,13 @@ class LemuroidApplicationModule2 {
 
     @Singleton
     @Provides
-    fun retroControllerManager(sharedPreferences: Lazy<SharedPreferences>) =
-        ControllerConfigsManager(lazy { sharedPreferences.get() })
+    fun gamepadConfigManager(sharedPreferences: Lazy<SharedPreferences>) =
+        GamepadConfigManager(lazy { sharedPreferences.get() })
 
     @Singleton
     @Provides
     fun settingsManager(@ApplicationContext context: Context, sharedPreferences: Lazy<SharedPreferences>) =
-        GameSettingsManager(context, lazy { sharedPreferences.get() })
+        SettingManager(context, lazy { sharedPreferences.get() })
 
     @Singleton
     @Provides
@@ -285,19 +285,19 @@ class LemuroidApplicationModule2 {
     @Singleton
     @Provides
     fun gameLauncher(
-        coresSelection: CoreSelection,
+        coreSelectionManager: CoreSelectionManager,
         gameLaunchTaskHandler: GameLaunchTaskHandler
     ) =
-        GameLauncher(coresSelection, gameLaunchTaskHandler)
+        GameLauncher(coreSelectionManager, gameLaunchTaskHandler)
 
     @Singleton
     @Provides
     fun rumbleManager(
         @ApplicationContext context: Context,
-        gameSettingsManager: GameSettingsManager,
+        settingManager: SettingManager,
         inputUnitManager: InputUnitManager
     ) =
-        GameRumbleManager(context, gameSettingsManager, inputUnitManager)
+        RumbleManager(context, settingManager, inputUnitManager)
 
     @Singleton
     @Provides

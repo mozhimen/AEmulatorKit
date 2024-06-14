@@ -13,8 +13,8 @@ import com.fredporciuncula.flow.preferences.FlowSharedPreferences
 import com.mozhimen.basick.utilk.androidx.fragment.runOnViewLifecycleState
 import com.mozhimen.basick.utilk.commons.IUtilK
 import com.mozhimen.emulatork.basic.preferences.SharedPreferencesManager
-import com.mozhimen.emulatork.basic.save.sync.SaveSyncManager
 import com.mozhimen.emulatork.basic.storage.StorageDirProvider
+import com.mozhimen.emulatork.common.archive.ArchiveManager
 import com.mozhimen.emulatork.ui.R
 import com.mozhimen.emulatork.ext.works.WorkScheduler
 import com.mozhimen.emulatork.ext.library.SettingsInteractor
@@ -41,7 +41,7 @@ class SettingsFragment : PreferenceFragmentCompat(), IUtilK {
     lateinit var storageProvider: StorageDirProvider
 
     @Inject
-    lateinit var saveSyncManager: SaveSyncManager
+    lateinit var saveSyncManager: ArchiveManager
 
     ///////////////////////////////////////////////////////////////////////
 
@@ -71,7 +71,7 @@ class SettingsFragment : PreferenceFragmentCompat(), IUtilK {
 
         settingsViewModel.refreshData()
 
-        val currentDirectory: Preference? = findPreference(getString(com.mozhimen.emulatork.basic.R.string.pref_key_extenral_folder))
+        val currentDirectory: Preference? = findPreference(getString(com.mozhimen.emulatork.common.R.string.pref_key_extenral_folder))
         val rescanPreference: Preference? = findPreference(getString(R.string.pref_key_rescan))
         val stopRescanPreference: Preference? = findPreference(getString(R.string.pref_key_stop_rescan))
         val displayBiosPreference: Preference? = findPreference(getString(R.string.pref_key_display_bios_info))
@@ -98,11 +98,11 @@ class SettingsFragment : PreferenceFragmentCompat(), IUtilK {
         }
     }
 
-    override fun onPreferenceTreeClick(preference: Preference?): Boolean {
+    override fun onPreferenceTreeClick(preference: Preference): Boolean {
         when (preference?.key) {
             getString(R.string.pref_key_rescan) -> rescanLibrary()
             getString(R.string.pref_key_stop_rescan) -> stopRescanLibrary()
-            getString(com.mozhimen.emulatork.basic.R.string.pref_key_extenral_folder) -> handleChangeExternalFolder()
+            getString(com.mozhimen.emulatork.common.R.string.pref_key_extenral_folder) -> handleChangeExternalFolder()
             getString(R.string.pref_key_open_gamepad_settings) -> handleOpenGamePadSettings()
             getString(R.string.pref_key_open_save_sync_settings) -> handleDisplaySaveSync()
             getString(R.string.pref_key_open_cores_selection) -> handleDisplayCorePage()

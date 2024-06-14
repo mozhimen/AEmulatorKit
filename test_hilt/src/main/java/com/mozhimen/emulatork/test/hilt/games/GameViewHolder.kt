@@ -5,12 +5,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.ToggleButton
 import androidx.recyclerview.widget.RecyclerView
-import com.mozhimen.emulatork.basic.game.db.entities.Game
+import com.mozhimen.emulatork.db.game.entities.Game
 import com.mozhimen.emulatork.ui.R
 import com.mozhimen.emulatork.ext.game.GameInteractor
-import com.mozhimen.emulatork.basic.game.GameUtil
 import com.mozhimen.emulatork.ext.covers.CoverLoader
-
+import com.mozhimen.emulatork.common.system.SystemProvider
 /**
  * @ClassName GameViewHolder
  * @Description TODO
@@ -33,7 +32,7 @@ class GameViewHolder(parent: View) : RecyclerView.ViewHolder(parent) {
 
     fun bind(game: Game, gameInteractor: GameInteractor, coverLoader: CoverLoader) {
         titleView?.text = game.title
-        subtitleView?.text = GameUtil.getGameSubtitle(itemView.context, game)
+        subtitleView?.text = SystemProvider.getGameSubtitle(itemView.context, game)
         favoriteToggle?.isChecked = game.isFavorite
 
         coverLoader.loadCover(game, coverView)

@@ -7,8 +7,8 @@ import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import com.mozhimen.basick.utilk.android.util.UtilKLogWrapper
 import com.mozhimen.basick.utilk.commons.IUtilK
-import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
-import com.mozhimen.emulatork.basic.game.db.entities.Game
+import com.mozhimen.emulatork.db.game.database.RetrogradeDatabase
+import com.mozhimen.emulatork.db.game.entities.Game
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
@@ -21,7 +21,6 @@ import com.mozhimen.emulatork.ext.works.WorkPendingOperationsMonitor
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import dagger.hilt.android.lifecycle.HiltViewModel
 
 /**
  * @ClassName HomeViewModel
@@ -32,6 +31,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
  */
 @OptIn(FlowPreview::class)
 class HomeViewModel @AssistedInject constructor(@Assisted private val appContext: Context, private val retrogradeDb: RetrogradeDatabase) : ViewModel(), IUtilK {
+
     @AssistedFactory
     interface Factory {
         fun create(appContext: Context): HomeViewModel

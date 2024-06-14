@@ -4,7 +4,7 @@ import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.epoxy.carousel
 import com.mozhimen.basick.BuildConfig
 import com.mozhimen.basick.utilk.kotlin.sequences.UtilKSequence
-import com.mozhimen.emulatork.basic.game.db.entities.Game
+import com.mozhimen.emulatork.db.game.entities.Game
 import com.mozhimen.emulatork.ui.R
 import com.mozhimen.emulatork.ext.game.GameInteractor
 import com.mozhimen.emulatork.ext.covers.CoverLoader

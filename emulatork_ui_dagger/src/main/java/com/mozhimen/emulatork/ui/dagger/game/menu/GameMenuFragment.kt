@@ -20,7 +20,7 @@ import dagger.android.support.AndroidSupportInjection
         super.onAttach(context)
     }
 
-    override fun onPreferenceTreeClick(preference: Preference?): Boolean {
+    override fun onPreferenceTreeClick(preference: Preference): Boolean {
         if (MenuMgr.onPreferenceTreeClicked(activity, preference))
             return true
 

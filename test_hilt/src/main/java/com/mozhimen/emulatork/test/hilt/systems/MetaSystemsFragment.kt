@@ -5,14 +5,12 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.mozhimen.basick.utilk.androidx.fragment.runOnViewLifecycleState
-import com.mozhimen.basick.utilk.androidx.lifecycle.UtilKViewModel
-import com.mozhimen.emulatork.basic.game.system.GameSystemMetaID
-import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
-import com.mozhimen.emulatork.ui.R
+import com.mozhimen.emulatork.basic.system.ESystemMetaType
 import com.mozhimen.emulatork.common.android.RecyclerViewFragment
+import com.mozhimen.emulatork.db.game.database.RetrogradeDatabase
+import com.mozhimen.emulatork.ui.R
 import com.mozhimen.xmlk.recyclerk.decoration.RecyclerKDecorationSpaceGrid
 import com.mozhimen.xmlk.recyclerk.manager.RecyclerKDynamicGridLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -59,9 +57,9 @@ class MetaSystemsFragment : RecyclerViewFragment() {
         }
     }
 
-    private fun navigateToGames(system: GameSystemMetaID) {
-        val dbNames = system.systemIDs
-            .map { it.dbname }
+    private fun navigateToGames(eSystemMetaType: ESystemMetaType) {
+        val dbNames = eSystemMetaType.eSystemTypes
+            .map { it.simpleName }
             .toTypedArray()
 
         val action = MetaSystemsFragmentDirections.actionNavigationSystemsToNavigationGames(dbNames)

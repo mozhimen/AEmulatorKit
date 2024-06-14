@@ -50,16 +50,16 @@ interface GameDao {
     @Query("SELECT * FROM games WHERE lastPlayedAt IS NULL LIMIT :limit")
     fun selectFirstNotPlayed(limit: Int): Flow<List<Game>>
 
-    @Query("SELECT * FROM games WHERE systemId = :systemId ORDER BY title ASC, id DESC")
-    fun selectBySystem(systemId: String): PagingSource<Int, Game>
+    @Query("SELECT * FROM games WHERE systemName = :systemName ORDER BY title ASC, id DESC")
+    fun selectBySystem(systemName: String): PagingSource<Int, Game>
 
-    @Query("SELECT * FROM games WHERE systemId IN (:systemIds) ORDER BY title ASC, id DESC")
-    fun selectBySystems(systemIds: List<String>): PagingSource<Int, Game>
+    @Query("SELECT * FROM games WHERE systemName IN (:systemNames) ORDER BY title ASC, id DESC")
+    fun selectBySystems(systemNames: List<String>): PagingSource<Int, Game>
 
-    @Query("SELECT DISTINCT systemId FROM games ORDER BY systemId ASC")
+    @Query("SELECT DISTINCT systemName FROM games ORDER BY systemName ASC")
     fun selectSystems(): List<String>
 
-    @Query("SELECT count(*) count, systemId systemId FROM games GROUP BY systemId")
+    @Query("SELECT count(*) count, systemName systemName FROM games GROUP BY systemName")
     fun selectSystemsWithCount(): Flow<List<SystemCount>>
 
     @Insert
@@ -75,4 +75,4 @@ interface GameDao {
     fun update(games: List<Game>)
 }
 
-data class SystemCount(val systemId: String, val count: Int)
+data class SystemCount(val systemName: String, val count: Int)

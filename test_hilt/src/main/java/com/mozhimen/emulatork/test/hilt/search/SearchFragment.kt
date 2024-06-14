@@ -13,7 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mozhimen.basick.utilk.androidx.fragment.runOnViewLifecycleState
 import com.mozhimen.emulatork.common.android.RecyclerViewFragment
-import com.mozhimen.emulatork.basic.game.db.RetrogradeDatabase
+import com.mozhimen.emulatork.db.game.database.RetrogradeDatabase
 import com.mozhimen.emulatork.ext.game.GameInteractor
 import com.mozhimen.emulatork.test.hilt.games.GamesAdapter
 import com.mozhimen.emulatork.ext.covers.CoverLoader

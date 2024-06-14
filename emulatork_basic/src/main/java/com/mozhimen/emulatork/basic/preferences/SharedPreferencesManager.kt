@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import com.frybits.harmony.getHarmonySharedPreferences
-import com.mozhimen.abilityk.jetpack.preference.SharedPreferencesPreferenceDataStore
+import com.mozhimen.libk.jetpack.preference.SharedPreferencesPreferenceDataStore
 import com.mozhimen.emulatork.basic.R
 
 /**

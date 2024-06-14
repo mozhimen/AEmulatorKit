@@ -4,7 +4,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.mozhimen.basick.utilk.android.app.UtilKApplicationWrapper
-import com.mozhimen.emulatork.db.libretro.daos.GameDao
+import com.mozhimen.emulatork.db.libretro.daos.RomDao
 import com.mozhimen.emulatork.db.libretro.entities.LibretroRom
 
 /**
@@ -20,7 +20,7 @@ import com.mozhimen.emulatork.db.libretro.entities.LibretroRom
     exportSchema = false
 )
 abstract class LibretroDB : RoomDatabase() {
-    abstract fun gameDao(): GameDao
+    abstract fun gameDao(): RomDao
 
     companion object{
         private const val DB_NAME = "libretro-db"

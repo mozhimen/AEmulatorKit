@@ -178,14 +178,7 @@
     <string name="game_edit_touch_controls_error_not_visible">Disconnect your pad to edit your touch controls</string>
 
 
-    <string name="mobile_settings_help">Help</string>
     <string name="mobile_settings_support">Support</string>
-    <string name="lemuroid_help_content"><![CDATA[
-        <b>&#8226;How do I use Lemuroid?</b><br/>
-        Copy all your ROMs files into a directory on your device and select it within Lemuroid. This directory is allowed to have subdirectories. After the scan completes you should see your games.<br/><br/>
-        <b>&#8226;Why aren\'t my games detected?</b><br/>
-        If your games are compressed, try uncompressing them. If this doesn\'t work try putting ROMs into separate directories, one for each system with the following names: $SYSTEMS.
-    ]]></string>
 
     <string name="shader_filter_names_auto">Auto</string>
     <string name="shader_filter_names_sharp">Sharp</string>

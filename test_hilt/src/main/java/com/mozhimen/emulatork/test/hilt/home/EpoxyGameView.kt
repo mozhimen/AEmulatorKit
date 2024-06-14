@@ -7,12 +7,12 @@ import com.airbnb.epoxy.EpoxyAttribute
 import com.airbnb.epoxy.EpoxyHolder
 import com.airbnb.epoxy.EpoxyModelClass
 import com.airbnb.epoxy.EpoxyModelWithHolder
-import com.mozhimen.emulatork.basic.game.db.entities.Game
+import com.mozhimen.emulatork.common.system.SystemProvider
+import com.mozhimen.emulatork.db.game.entities.Game
 import com.mozhimen.emulatork.test.hilt.R
 import com.mozhimen.emulatork.test.hilt.games.GameContextMenuListener
 import com.mozhimen.emulatork.ext.game.GameInteractor
 import com.mozhimen.emulatork.ext.covers.CoverLoader
-import com.mozhimen.emulatork.basic.game.GameUtil
 
 /**
  * @ClassName EpoxyGameView
@@ -35,7 +35,7 @@ abstract class EpoxyGameView : EpoxyModelWithHolder<EpoxyGameView.Holder>() {
 
     override fun bind(holder: Holder) {
         holder.titleView?.text = game.title
-        holder.subtitleView?.let { it.text = GameUtil.getGameSubtitle(it.context, game) }
+        holder.subtitleView?.let { it.text = SystemProvider.getGameSubtitle(it.context, game) }
 
         coverLoader.loadCover(game, holder.coverView)
 

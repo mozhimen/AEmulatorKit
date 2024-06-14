@@ -17,7 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
  class GameMenuFragment : AbsGameMenuFragment() {
 
-    override fun onPreferenceTreeClick(preference: Preference?): Boolean {
+    override fun onPreferenceTreeClick(preference: Preference): Boolean {
         if (MenuMgr.onPreferenceTreeClicked(activity, preference))
             return true
 

@@ -29,7 +29,7 @@ import java.util.zip.ZipInputStream
  */
 class StorageProviderLocal(
     private val context: Context,
-    private val storageProvider: StorageDirProvider
+    private val storageDirProvider: StorageDirProvider
 ) : StorageProvider {
 
     override val id: String = "local"
@@ -43,7 +43,7 @@ class StorageProviderLocal(
     override val enabledByDefault = true
 
     override fun listStorageBaseFiles(): Flow<List<StorageBaseFile>> =
-        walkDirectory(getExternalFolder() ?: storageProvider.getExternalFileRoms())
+        walkDirectory(getExternalFolder() ?: storageDirProvider.getExternalFileRoms())
 
     override fun getStorageFile(storageBaseFile: StorageBaseFile): StorageFile? {
         return DocumentFileParser.parseDocumentFile(context, storageBaseFile)
