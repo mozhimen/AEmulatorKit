@@ -49,6 +49,8 @@ include ':ALibKit_Jetpack:documentfile'
 include ':ALibKit_Jetpack:startup'
 include ':ALibKit_Jetpack:room'
 include ':ALibKit_Jetpack:paging3'
+include ':ALibKit_Jetpack:hilt_work'
+include ':ALibKit_Jetpack:work'
 //ALibKit_Jetbrains
 include ':ALibKit_Jetbrains'
 project(':ALibKit_Jetbrains').projectDir = new File("D:\\WorkSpace\\GitHub\\ALibKit_Jetbrains")

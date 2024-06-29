@@ -128,17 +128,17 @@ class MainActivity : AppCompatActivity(), BusyProvider,IUtilK {
         }
     }
 
-    private fun displayLemuroidHelp() {
-        val systemFolders = ESystemType.values()
-            .map { it.simpleName }
-            .map { "<i>$it</i>" }
-            .joinToString(", ")
-
-        val message = getString(R.string.lemuroid_help_content).replace("\$SYSTEMS", systemFolders)
-        AlertDialog.Builder(this)
-            .setMessage(Html.fromHtml(message))
-            .show()
-    }
+//    private fun displayLemuroidHelp() {
+//        val systemFolders = ESystemType.values()
+//            .map { it.simpleName }
+//            .map { "<i>$it</i>" }
+//            .joinToString(", ")
+//
+//        val message = getString(R.string.lemuroid_help_content).replace("\$SYSTEMS", systemFolders)
+//        AlertDialog.Builder(this)
+//            .setMessage(Html.fromHtml(message))
+//            .show()
+//    }
 
     override fun onSupportNavigateUp(): Boolean =
         findNavController(R.id.nav_host_fragment).navigateUp()
