@@ -34,7 +34,7 @@ dependencies {
     implementation project(':emulatork_basic')
 
     implementation project(':ALibKit_Jetpack:room')
-    kapt 'androidx.room:room-compiler:2.5.2'
+    kapt 'androidx.room:room-compiler:2.6.1'
 //    kapt 'com.google.dagger:dagger-compiler:2.19'
 
     testImplementation 'junit:junit:4.13.2'

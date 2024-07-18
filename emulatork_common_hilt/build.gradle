@@ -31,8 +31,8 @@ android {
 
 dependencies {
     api project(':emulatork_common')
-    api project(':AInjectKit:injectk_hilt')
-    api project(':AInjectKit:injectk_hilt_work')
+    api project(':AInjectKit:injectk_dagger_hilt')
+    api project(':AInjectKit:injectk_androidx_hilt_work')
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

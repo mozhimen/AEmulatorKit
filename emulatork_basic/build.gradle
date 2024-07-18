@@ -42,12 +42,11 @@ dependencies {
     api project(':ALibKit_Jetpack:documentfile')
     api project(':ALibKit_Jetpack:preference')
     api project(':ALibKit_Jetpack:room')
-    kapt 'androidx.room:room-compiler:2.5.2'
+    kapt 'androidx.room:room-compiler:2.6.1'
 
     api project(':ATaskKit:taskk_work')
 
     api project(':ANetKit:netk_retrofit2')
-    api project(':ANetKit:netk_okio2')
 
     api project(':ACacheKit:cachek_harmony')
     api project(':ACacheKit:cachek_room_paging')

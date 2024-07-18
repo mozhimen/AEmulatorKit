@@ -40,6 +40,12 @@ include ':ALibKit_Squareup:okhttp3'
 include ':ALibKit_Squareup:okhttp3_log'
 include ':ALibKit_Squareup:retrofit2'
 include ':ALibKit_Squareup:moshi'
+include ':ALibKit_Squareup:okhttp3_logging_interceptor'
+//ALibKit_Google
+include ':ALibKit_Google'
+project(':ALibKit_Google').projectDir = new File("D:\\WorkSpace\\GitHub\\ALibKit_Google")
+include ':ALibKit_Google:dagger'
+include ':ALibKit_Google:dagger_hilt'
 //ALibKit_Jetpack
 include ':ALibKit_Jetpack'
 project(':ALibKit_Jetpack').projectDir = new File("D:\\WorkSpace\\GitHub\\ALibKit_Jetpack")
@@ -77,8 +83,8 @@ include ':APagingKit:pagingk_epoxy4'
 include ':AInjectKit'
 project(':AInjectKit').projectDir = new File("D:\\WorkSpace\\GitHub\\AInjectKit")
 include ':AInjectKit:injectk_dagger'
-include ':AInjectKit:injectk_hilt'
-include ':AInjectKit:injectk_hilt_work'
+include ':AInjectKit:injectk_dagger_hilt'
+include ':AInjectKit:injectk_androidx_hilt_work'
 //ANetKit
 include ':ANetKit'
 project(':ANetKit').projectDir = new File("D:\\WorkSpace\\GitHub\\ANetKit")
