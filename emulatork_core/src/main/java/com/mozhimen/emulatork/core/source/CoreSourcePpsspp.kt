@@ -60,7 +60,7 @@ class CoreSourcePpsspp : CoreSource {
         response.body()?.use { zipInputStream ->
             while (true) {
                 val entry = zipInputStream.nextEntry ?: break
-                Timber.d("Writing file: ${entry.name}")
+                com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.d(TAG,"Writing file: ${entry.name}")
                 val destFile = File(
                     coreAssetsDirectory,
                     entry.name

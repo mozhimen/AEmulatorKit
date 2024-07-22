@@ -85,14 +85,14 @@ class HomeFragment : Fragment() {
 
         runOnViewLifecycleState(Lifecycle.State.RESUMED) {
             pagingController.getActions().collect {
-                Timber.d("Received home view model action + $it")
+                com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.d(TAG,"Received home view model action + $it")
                 handleEpoxyAction(it)
             }
         }
 
         runOnViewLifecycleState(Lifecycle.State.RESUMED) {
             homeViewModel.getViewStates().collect {
-                Timber.d("getViewStates + $it")
+                com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.d(TAG,"getViewStates + $it")
                 pagingController.updateState(it)
             }
         }

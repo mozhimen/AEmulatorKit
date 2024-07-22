@@ -1,7 +1,5 @@
 package com.mozhimen.emulatork.db.libretro.database
 
-import android.content.Context
-
 /**
  * @ClassName LibretroDBManager
  * @Description TODO
@@ -9,6 +7,6 @@ import android.content.Context
  * @Date 2024/5/10
  * @Version 1.0
  */
-class LibretroDBManager(private val context: Context) {
+class LibretroDBManager {
     val db: LibretroDB by lazy { LibretroDB.getLibretroDB() }
 }

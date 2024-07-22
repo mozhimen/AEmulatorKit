@@ -1,5 +1,6 @@
 package com.mozhimen.emulatork.common.bios
 
+import com.mozhimen.basick.utilk.commons.IUtilK
 import com.mozhimen.basick.utilk.java.io.deleteFile
 import com.mozhimen.basick.utilk.java.io.inputStream2file_use_ofCopyTo
 import com.mozhimen.basick.utilk.kotlin.collections.associateByNotNull
@@ -21,7 +22,7 @@ import java.io.InputStream
  * @Date 2024/5/11
  * @Version 1.0
  */
-class BiosManager(private val storageProvider: StorageDirProvider) {
+class BiosManager(private val storageProvider: StorageDirProvider) : IUtilK {
 
     private val crcLookup = BiosProvider.getBioss().associateByNotNull { it.externalCRC32 }
     private val nameLookup = BiosProvider.getBioss().associateByNotNull { it.externalName }
@@ -37,13 +38,13 @@ class BiosManager(private val storageProvider: StorageDirProvider) {
             .filter { it.isNotBlank() }
             .toSet()
 
-        Timber.d("Found game labels: $gameLabels")
+        com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.d(TAG,"Found game labels: $gameLabels")
 
         val requiredRegionalFiles = gameLabels.intersect(regionalBiosFiles.keys)
             .ifEmpty { regionalBiosFiles.keys }
             .mapNotNull { regionalBiosFiles[it] }
 
-        Timber.d("Required regional files for game: $requiredRegionalFiles")
+        com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.d(TAG,"Required regional files for game: $requiredRegionalFiles")
 
         return (coreBundle.requiredBIOSFiles + requiredRegionalFiles)
             .filter { !File(storageProvider.getInternalFileSystem(), it).exists() }
@@ -55,7 +56,7 @@ class BiosManager(private val storageProvider: StorageDirProvider) {
             .map { File(storageProvider.getInternalFileSystem(), it.libretroFileName) }
             .filter { it.lastModified() < normalizeTimestamp(timestampMs) }
             .forEach {
-                Timber.d("Pruning old bios file: ${it.path}")
+                com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.d(TAG,"Pruning old bios file: ${it.path}")
                 it.deleteFile()
             }
     }
@@ -79,9 +80,9 @@ class BiosManager(private val storageProvider: StorageDirProvider) {
 
         val biosFile = File(storageProvider.getInternalFileSystem(), bios.libretroFileName)
         if (biosFile.exists() && biosFile.setLastModified(normalizeTimestamp(timestampMs))) {
-            Timber.d("Bios file already present. Updated last modification date.")
+            com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.d(TAG,"Bios file already present. Updated last modification date.")
         } else {
-            Timber.d("Bios file not available. Copying new file.")
+            com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.d(TAG,"Bios file not available. Copying new file.")
             inputStream.inputStream2file_use_ofCopyTo(biosFile)
         }
         return true

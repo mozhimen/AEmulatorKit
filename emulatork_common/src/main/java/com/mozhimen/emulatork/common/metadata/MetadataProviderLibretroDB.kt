@@ -38,7 +38,7 @@ class MetadataProviderLibretroDB(private val ovgdbManager: LibretroDBManager) : 
     override suspend fun retrieveMetadata(storageFile: StorageFile): Metadata? {
         val db = ovgdbManager.db
 
-        Timber.d("Looking metadata for file: $storageFile")
+        com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.d(TAG,"Looking metadata for file: $storageFile")
 
         val metadata = runCatching {
             findByCRC(storageFile, db)
@@ -53,7 +53,7 @@ class MetadataProviderLibretroDB(private val ovgdbManager: LibretroDBManager) : 
             null
         }
 
-        metadata?.let { Timber.d("Metadata retrieved for item: $it") }
+        metadata?.let { com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.d(TAG,"Metadata retrieved for item: $it") }
 
         return metadata
     }

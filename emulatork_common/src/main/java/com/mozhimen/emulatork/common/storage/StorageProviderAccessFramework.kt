@@ -113,7 +113,7 @@ class StorageProviderAccessFramework(private val context: Context) : StorageProv
 
         val childrenUri = DocumentsContract.buildChildDocumentsUriUsingTree(treeUri, rootDocumentId)
 
-        Timber.d("Querying files in directory: $childrenUri")
+        com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.d(TAG,"Querying files in directory: $childrenUri")
 
         val projection = arrayOf(
             DocumentsContract.Document.COLUMN_DOCUMENT_ID,

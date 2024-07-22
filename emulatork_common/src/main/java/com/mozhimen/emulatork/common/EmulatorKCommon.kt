@@ -126,7 +126,7 @@ open class EmulatorKCommon(
 
     private fun fetchEntriesFromDatabase(storageFile: StorageFileGroup): ScanEntry {
         val game = retrogradedb.gameDao().selectByFileUri(storageFile.primaryFile.uri.toString())
-        Timber.d("Retrieving scan entry game $game for uri: ${storageFile.primaryFile}")
+        com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.d(TAG,"Retrieving scan entry game $game for uri: ${storageFile.primaryFile}")
         return buildScanEntry(storageFile, game)
     }
 
@@ -149,7 +149,7 @@ open class EmulatorKCommon(
             .map { it.game.copy(lastIndexedAt = startedAtMs) }
 
         updatedGames
-            .forEach { Timber.d("Updating game: $it") }
+            .forEach { com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.d(TAG,"Updating game: $it") }
 
         retrogradedb.gameDao().update(updatedGames)
     }
@@ -160,7 +160,7 @@ open class EmulatorKCommon(
         }
 
         dataFiles
-            .forEach { Timber.d("Updating data file: $it") }
+            .forEach { com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.d(TAG,"Updating data file: $it") }
 
         retrogradedb.dataFileDao().insert(dataFiles)
     }
@@ -199,7 +199,7 @@ open class EmulatorKCommon(
         val games = pairs
             .map { it.game }
 
-        games.forEach { Timber.d("Insert: $it") }
+        games.forEach { com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.d(TAG,"Insert: $it") }
 
         val gameIds = retrogradedb.gameDao().insert(games)
         val dataFiles = pairs
@@ -313,13 +313,13 @@ open class EmulatorKCommon(
 
     private fun removeDeletedDataFiles(startedAtMs: Long) {
         val dataFiles = retrogradedb.dataFileDao().selectByLastIndexedAtLessThan(startedAtMs)
-        Timber.d("Deleting data files from db before: $startedAtMs games $dataFiles")
+        com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.d("Deleting data files from db before: $startedAtMs games $dataFiles")
         retrogradedb.dataFileDao().delete(dataFiles)
     }
 
     private fun removeDeletedGames(startedAtMs: Long) {
         val games = retrogradedb.gameDao().selectByLastIndexedAtLessThan(startedAtMs)
-        Timber.d("Deleting games from db before: $startedAtMs games $games")
+        com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.d(TAG,"Deleting games from db before: $startedAtMs games $games")
         retrogradedb.gameDao().delete(games)
     }
 }

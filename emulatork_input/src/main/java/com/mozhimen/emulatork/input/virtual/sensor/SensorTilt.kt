@@ -68,7 +68,7 @@ class SensorTilt(private val context: Context) : SensorEventListener {
     fun setSensitivity(sensitivity: Float) {
         maxRotation = UtilKMathInterpolation.get_ofLinear(sensitivity, MAX_MAX_ROTATION, MIN_MAX_ROTATION)
         deadZone = maxRotation * 0.1f
-        Timber.d("Setting tilt sensitivity max angle: ${Math.toDegrees(maxRotation.toDouble())}")
+        com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.d(TAG,"Setting tilt sensitivity max angle: ${Math.toDegrees(maxRotation.toDouble())}")
     }
 
     fun isAvailable(): Boolean {

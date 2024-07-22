@@ -3,8 +3,8 @@ package com.mozhimen.emulatork.basic.setting
 import android.content.Context
 import android.content.SharedPreferences
 import com.fredporciuncula.flow.preferences.FlowSharedPreferences
-import com.mozhimen.emulatork.basic.cache.CacheCleaner
 import com.mozhimen.emulatork.basic.R
+import com.mozhimen.emulatork.basic.cache.CacheCleaner2
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -48,7 +48,7 @@ open class SettingManager(private val context: Context, sharedPreferences: Lazy<
 
     suspend fun enableDeviceRumble() = booleanPreference(R.string.pref_key_enable_device_rumble, false)
 
-    suspend fun cacheSizeBytes() = stringPreference(R.string.pref_key_max_cache_size, CacheCleaner.getDefaultCacheLimit().toString())
+    suspend fun cacheSizeBytes() = stringPreference(R.string.pref_key_max_cache_size, CacheCleaner2.getDefaultCacheLimit().toString())
 
     suspend fun allowDirectGameLoad() = booleanPreference(R.string.pref_key_allow_direct_game_load, true)
 

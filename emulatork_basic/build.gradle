@@ -45,18 +45,13 @@ dependencies {
     kapt 'androidx.room:room-compiler:2.6.1'
 
     api project(':ATaskKit:taskk_work')
-
     api project(':ANetKit:netk_retrofit2')
-
     api project(':ACacheKit:cachek_harmony')
     api project(':ACacheKit:cachek_room_paging')
     api project(':ACacheKit:cachek_flow_preferences')
-
-    api project(':ALogKit:logk_timber')
-
     api project(":AEmulatorKit_LibretroDroid:libretrodroid")
-
     api project(':ASerialKit:serialk_serialization')
+    api project(':AIOKit:iok_cache')
 
     /////////////////////////////////////////////////////////
 

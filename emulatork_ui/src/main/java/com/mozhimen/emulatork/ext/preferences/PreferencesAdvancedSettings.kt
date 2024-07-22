@@ -4,7 +4,7 @@ import android.content.Context
 import android.text.format.Formatter
 import androidx.preference.ListPreference
 import androidx.preference.PreferenceScreen
-import com.mozhimen.emulatork.basic.cache.CacheCleaner
+import com.mozhimen.emulatork.basic.cache.CacheCleaner2
 
 /**
  * @ClassName AdvancedSettingsPreferences
@@ -18,7 +18,7 @@ object PreferencesAdvancedSettings {
     fun updateCachePreferences(preferenceScreen: PreferenceScreen) {
         val cacheKey = preferenceScreen.context.getString(com.mozhimen.emulatork.basic.R.string.pref_key_max_cache_size)
         preferenceScreen.findPreference<ListPreference>(cacheKey)?.apply {
-            val supportedCacheValues = CacheCleaner.getSupportedCacheLimits()
+            val supportedCacheValues = CacheCleaner2.getSupportedCacheLimits()
 
             entries = supportedCacheValues
                 .map { getSizeLabel(preferenceScreen.context, it) }
@@ -29,7 +29,7 @@ object PreferencesAdvancedSettings {
                 .toTypedArray()
 
             if (value == null) {
-                setValueIndex(supportedCacheValues.indexOf(CacheCleaner.getDefaultCacheLimit()))
+                setValueIndex(supportedCacheValues.indexOf(CacheCleaner2.getDefaultCacheLimit()))
             }
 
             summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()

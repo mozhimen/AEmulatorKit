@@ -33,7 +33,7 @@ android {
 }
 
 dependencies {
-    implementation project(':emulatork_basic')
+    implementation project(project.path.replace(project.name,'')+':emulatork_basic')
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

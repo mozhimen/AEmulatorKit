@@ -112,7 +112,7 @@ class GameLoadManager(
                 )
             )
         } catch (e: LoadException) {
-            Timber.e(e, "Error while preparing game")
+            UtilKLogWrapper.e(e, "Error while preparing game")
             throw e
         } catch (e: Exception) {
             Timber.e(e, "Error while preparing game")

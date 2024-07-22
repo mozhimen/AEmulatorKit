@@ -1,6 +1,7 @@
 package com.mozhimen.emulatork.basic.storage
 
 import android.content.Context
+import com.mozhimen.basick.utilk.commons.IUtilK
 import com.mozhimen.basick.utilk.java.io.getStrCrc32_use
 import com.mozhimen.basick.utilk.kotlin.long2strCrc32
 import com.mozhimen.emulatork.basic.system.SystemSerialExtractor
@@ -15,7 +16,7 @@ import java.util.zip.ZipInputStream
  * @Date 2024/5/11
  * @Version 1.0
  */
-object DocumentFileParser {
+object DocumentFileParser : IUtilK {
 
     private const val MAX_CHECKED_ENTRIES = 3
     private const val SINGLE_ARCHIVE_THRESHOLD = 0.9
@@ -25,10 +26,10 @@ object DocumentFileParser {
 
     fun parseDocumentFile(context: Context, storageBaseFile: StorageBaseFile): StorageFile {
         return if (storageBaseFile.extension == "zip") {
-            Timber.d("Detected zip file. ${storageBaseFile.name}")
+            com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.d(TAG,"Detected zip file. ${storageBaseFile.name}")
             parseZipFile(context, storageBaseFile)
         } else {
-            Timber.d("Detected standard file. ${storageBaseFile.name}")
+            com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.d(TAG,"Detected standard file. ${storageBaseFile.name}")
             parseStandardFile(context, storageBaseFile)
         }
     }
@@ -53,17 +54,17 @@ scenarios.*/
         return ZipInputStream(inputStream).use {
             val gameEntry = findGameEntry(it, storageBaseFile.size)
             if (gameEntry != null) {
-                Timber.d("Handing zip file as compressed game: ${storageBaseFile.name}")
+                com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.d(TAG,"Handing zip file as compressed game: ${storageBaseFile.name}")
                 parseCompressedGame(storageBaseFile, gameEntry, it)
             } else {
-                Timber.d("Handing zip file as standard: ${storageBaseFile.name}")
+                com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.d(TAG,"Handing zip file as standard: ${storageBaseFile.name}")
                 parseStandardFile(context, storageBaseFile)
             }
         }
     }
 
     private fun parseCompressedGame(storageBaseFile: StorageBaseFile, entry: ZipEntry, zipInputStream: ZipInputStream): StorageFile {
-        Timber.d("Processing zipped entry: ${entry.name}")
+        com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.d(TAG,"Processing zipped entry: ${entry.name}")
 
         val systemSerial = SystemSerialExtractor.extractInfo(entry.name, zipInputStream)
 
@@ -88,7 +89,7 @@ scenarios.*/
             null
         }
 
-        Timber.d("Parsed standard file: $storageBaseFile")
+        com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.d(TAG,"Parsed standard file: $storageBaseFile")
 
         return StorageFile(
             storageBaseFile.name,

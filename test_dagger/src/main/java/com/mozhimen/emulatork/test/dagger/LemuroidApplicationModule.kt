@@ -53,7 +53,6 @@ import com.mozhimen.emulatork.common.storage.StorageProviderAccessFramework
 import com.mozhimen.emulatork.common.storage.StorageProviderLocal
 import com.mozhimen.emulatork.common.storage.StorageProviderRegistry
 import com.mozhimen.emulatork.db.game.database.RetrogradeDatabase
-import com.mozhimen.emulatork.db.game.daos.GameSearchDao
 import com.mozhimen.emulatork.db.game.helpers.Migrations
 import com.mozhimen.emulatork.common.save.SaveManager
 import com.mozhimen.emulatork.common.save.SaveStateManager
@@ -105,15 +104,15 @@ abstract class LemuroidApplicationModule {
         @Provides
         @PerApp
         @JvmStatic
-        fun libretroDBManager(app: LemuroidApplication) = LibretroDBManager(app)
+        fun libretroDBManager(app: LemuroidApplication) = LibretroDBManager()
 
         @Provides
         @PerApp
         @JvmStatic
         fun retrogradeDb(app: LemuroidApplication) =
             Room.databaseBuilder(app, RetrogradeDatabase::class.java, RetrogradeDatabase.DB_NAME)
-                .addCallback(GameSearchDao.CALLBACK)
-                .addMigrations(GameSearchDao.MIGRATION, Migrations.VERSION_8_9)
+                .addCallback(Migrations.CALLBACK)
+                .addMigrations(Migrations.VERSION_7_8, Migrations.VERSION_8_9)
                 .fallbackToDestructiveMigration()
                 .build()
 

@@ -1,5 +1,6 @@
 package com.mozhimen.emulatork.basic.system
 
+import com.mozhimen.basick.utilk.commons.IUtilK
 import com.mozhimen.basick.utilk.kotlin.UtilKStrFile
 import com.mozhimen.basick.utilk.kotlin.kiloBytes
 import com.mozhimen.basick.utilk.kotlin.megaBytes
@@ -18,7 +19,7 @@ import kotlin.math.roundToInt
  * @Date 2024/5/11
  * @Version 1.0
  */
-object SystemSerialExtractor {
+object SystemSerialExtractor : IUtilK {
 
     private const val PS_SERIAL_MAX_SIZE = 12
 
@@ -110,7 +111,7 @@ object SystemSerialExtractor {
     //////////////////////////////////////////////////////////////////////////
 
     fun extractInfo(fileName: String, inputStream: InputStream): SystemSerial {
-        Timber.d("Extracting disk info for $fileName")
+        com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.d(TAG,"Extracting disk info for $fileName")
         inputStream.buffered(READ_BUFFER_SIZE).use {
             return when (UtilKStrFile.extractExtension(fileName)) {
                 "pbp" -> extractInfoForPBP(it)
@@ -133,7 +134,7 @@ object SystemSerialExtractor {
             }
             ?.eSystemType
 
-        Timber.d("SystemID detected via magic numbers: $detectedSystem")
+        com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.d(TAG,"SystemID detected via magic numbers: $detectedSystem")
 
         openedStream.reset()
 
@@ -155,7 +156,7 @@ object SystemSerialExtractor {
     }
 
     private fun extractInfoFor3DS(openedStream: InputStream): SystemSerial {
-        Timber.d("Parsing 3DS game")
+        com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.d(TAG,"Parsing 3DS game")
         openedStream.mark(0x2000)
         openedStream.skip(0x1150)
 
@@ -163,25 +164,25 @@ object SystemSerialExtractor {
 
         openedStream.reset()
 
-        Timber.d("Found 3DS serial: $rawSerial")
+        com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.d(TAG,"Found 3DS serial: $rawSerial")
         return SystemSerial(rawSerial, ESystemType.NINTENDO_3DS)
     }
 
     private fun extractInfoForSegaCD(openedStream: InputStream): SystemSerial {
-        Timber.d("Parsing SegaCD game")
+        com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.d(TAG,"Parsing SegaCD game")
         openedStream.mark(20000)
         openedStream.skip(0x193)
 
         val rawSerial = String(readByteArray(openedStream, ByteArray(16)), Charsets.US_ASCII)
 
-        Timber.d("Detected SegaCD raw serial read: $rawSerial")
+        com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.d(TAG,"Detected SegaCD raw serial read: $rawSerial")
 
         openedStream.reset()
         openedStream.skip(0x200)
 
         val regionID = String(readByteArray(openedStream, ByteArray(1)), Charsets.US_ASCII)
 
-        Timber.d("Detected SegaCD region: $regionID")
+        com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.d(TAG,"Detected SegaCD region: $regionID")
 
         val groups = SEGA_CD_REGEX.find(rawSerial)?.groupValues
 

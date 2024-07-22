@@ -54,7 +54,6 @@ import java.lang.reflect.Type
 import java.util.concurrent.TimeUnit
 import java.util.zip.ZipInputStream
 import javax.inject.Singleton
-import com.mozhimen.emulatork.db.game.daos.GameSearchDao
 import com.mozhimen.emulatork.db.game.helpers.Migrations
 import com.mozhimen.emulatork.common.storage.StorageProviderRegistry
 import com.mozhimen.emulatork.common.save.SaveStateManager
@@ -90,14 +89,14 @@ class LemuroidApplicationModule2 {
     @Provides
     @Singleton
     fun libretroDBManager(@ApplicationContext context: Context): LibretroDBManager =
-        LibretroDBManager(context)
+        LibretroDBManager()
 
     @Provides
     @Singleton
     fun retrogradeDb(@ApplicationContext context: Context): RetrogradeDatabase =
         Room.databaseBuilder(context, RetrogradeDatabase::class.java, RetrogradeDatabase.DB_NAME)
-            .addCallback(GameSearchDao.CALLBACK)
-            .addMigrations(GameSearchDao.MIGRATION, Migrations.VERSION_8_9)
+            .addCallback(Migrations.CALLBACK)
+            .addMigrations(Migrations.VERSION_7_8, Migrations.VERSION_8_9)
             .fallbackToDestructiveMigration()
             .build()
 

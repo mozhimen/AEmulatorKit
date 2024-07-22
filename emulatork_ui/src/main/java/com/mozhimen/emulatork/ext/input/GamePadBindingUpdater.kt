@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.view.InputDevice
 import android.view.KeyEvent
+import com.mozhimen.basick.utilk.commons.IUtilK
 import com.mozhimen.emulatork.input.key.InputKey
 import com.mozhimen.emulatork.input.key.InputKeyRetro
 import com.mozhimen.emulatork.input.unit.InputUnitManager
@@ -22,7 +23,7 @@ import timber.log.Timber
  * @Version 1.0
  */
 @OptIn(DelicateCoroutinesApi::class)
-class GamePadBindingUpdater(private val inputUnitManager: InputUnitManager, intent: Intent) {
+class GamePadBindingUpdater(private val inputUnitManager: InputUnitManager, intent: Intent):IUtilK {
 
     val extras = parseExtras(intent)
 
@@ -36,7 +37,7 @@ class GamePadBindingUpdater(private val inputUnitManager: InputUnitManager, inte
     }
 
     fun handleKeyEvent(event: KeyEvent): Boolean {
-        Timber.d("Received input binding event: $event ${event.device}")
+        com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.d(TAG,"Received input binding event: $event ${event.device}")
         return when (event.action) {
             KeyEvent.ACTION_DOWN -> onKeyDown(event)
             KeyEvent.ACTION_UP -> onKeyUp(event)

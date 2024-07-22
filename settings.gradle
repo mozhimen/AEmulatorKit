@@ -91,10 +91,6 @@ project(':ANetKit').projectDir = new File("D:\\WorkSpace\\GitHub\\ANetKit")
 include ':ANetKit:netk_retrofit2'
 include ':ANetKit:netk_okhttp3'
 include ':ANetKit:netk_okio2'
-//ALogKit
-include ':ALogKit'
-project(':ALogKit').projectDir = new File("D:\\WorkSpace\\GitHub\\ALogKit")
-include ':ALogKit:logk_timber'
 //ACacheKit
 include ':ACacheKit'
 project(':ACacheKit').projectDir = new File("D:\\WorkSpace\\GitHub\\ACacheKit")
@@ -124,5 +120,9 @@ include ':ASerialKit'
 project(':ASerialKit').projectDir = new File("D:\\WorkSpace\\GitHub\\ASerialKit")
 include ':ASerialKit:serialk_moshi'
 include ':ASerialKit:serialk_serialization'
+//AIOKit
+include ':AIOKit'
+project(':AIOKit').projectDir = new File("D:\\WorkSpace\\GitHub\\AIOKit")
+include ':AIOKit:iok_cache'
 
 

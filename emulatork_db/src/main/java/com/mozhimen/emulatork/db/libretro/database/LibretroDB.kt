@@ -20,8 +20,6 @@ import com.mozhimen.emulatork.db.libretro.entities.LibretroRom
     exportSchema = false
 )
 abstract class LibretroDB : RoomDatabase() {
-    abstract fun gameDao(): RomDao
-
     companion object{
         private const val DB_NAME = "libretro-db"
 
@@ -32,4 +30,8 @@ abstract class LibretroDB : RoomDatabase() {
                 .fallbackToDestructiveMigration()
                 .build()
     }
+
+    ////////////////////////////////////////////////////////////////////////
+
+    abstract fun gameDao(): RomDao
 }
