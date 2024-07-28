@@ -31,7 +31,7 @@ android {
 }
 
 dependencies {
-    implementation project(':emulatork_basic')
+    implementation project(project.path.replace(project.name,'')+':emulatork_basic')
     api "com.github.Swordfish90:RadialGamePad:2.0.0"
     api "com.dinuscxj:multitouchgesturedetector:1.0.0"
 

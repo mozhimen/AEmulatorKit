@@ -87,7 +87,7 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.scan
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import timber.log.Timber
+
 import kotlin.math.abs
 import kotlin.system.exitProcess
 import com.mozhimen.emulatork.common.system.SystemProvider
@@ -259,7 +259,7 @@ abstract class AbsGameActivity : com.mozhimen.emulatork.common.android.Immersive
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == DIALOG_REQUEST) {
-            Timber.i("Game menu dialog response: ${data?.extras.getStrDump()}")
+             com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.i(TAG,"Game menu dialog response: ${data?.extras.getStrDump()}")
             if (data?.getBooleanExtra(MenuContract.RESULT_RESET, false) == true) {
                 GlobalScope.launch {
                     reset()
@@ -396,13 +396,13 @@ abstract class AbsGameActivity : com.mozhimen.emulatork.common.android.Immersive
             val controllers = gamepadConfigManager().getGamepadConfigs(system.eSystemType, coreBundle)
             flowGamepadMap.value = controllers
         } catch (e: Exception) {
-            Timber.e(e)
+            com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.e(TAG,e)
         }
     }
 
     private suspend fun initializeRetroGameViewErrorsFlow() {
         retroGameViewFlow().getGLRetroErrors()
-            .catch { Timber.e(it, "Exception in GLRetroErrors. Ironic.") }
+            .catch { com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.e(TAG,"Exception in GLRetroErrors. Ironic.",it) }
             .collect { handleRetroViewError(it) }
     }
 
@@ -412,7 +412,7 @@ abstract class AbsGameActivity : com.mozhimen.emulatork.common.android.Immersive
             val options = corePropertyManager().getOptionsForCore(system.eSystemType, coreBundle)
             updateCoreVariables(options)
         } catch (e: Exception) {
-            Timber.e(e)
+            com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.e(TAG,e)
         }
     }
 
@@ -474,7 +474,7 @@ abstract class AbsGameActivity : com.mozhimen.emulatork.common.android.Immersive
             waitGLEvent<GLRetroView.GLRetroEvents.FrameRendered>()
             restoreQuickSave(archiveState)
         } catch (e: Throwable) {
-            Timber.e(e, "Error while loading auto-save")
+            com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.e(TAG,"Error while loading auto-save",e)
         }
     }
 
@@ -554,7 +554,7 @@ abstract class AbsGameActivity : com.mozhimen.emulatork.common.android.Immersive
 
     private fun printRetroVariables(retroGameView: GLRetroView) {
         retroGameView.getVariables().forEach {
-            Timber.i("Libretro variable: $it")
+             com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.i(TAG,"Libretro variable: $it")
         }
     }
 
@@ -564,7 +564,7 @@ abstract class AbsGameActivity : com.mozhimen.emulatork.common.android.Immersive
             ?.zipOnKeys(gamepadConfigMap, this::findControllerId)
             ?.filterNotNullValues()
             ?.forEach { (port, controllerId) ->
-                Timber.i("Controls setting $port to $controllerId")
+                 com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.i(TAG,"Controls setting $port to $controllerId")
                 retroGameView?.setControllerType(port, controllerId)
             }
     }
@@ -580,7 +580,7 @@ abstract class AbsGameActivity : com.mozhimen.emulatork.common.android.Immersive
     }
 
     private fun handleRetroViewError(errorCode: Int) {
-        Timber.e("Error in GLRetroView $errorCode")
+        com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.e(TAG,"Error in GLRetroView $errorCode")
         val gameLoaderError = when (errorCode) {
             GLRetroView.ERROR_GL_NOT_COMPATIBLE -> SLoadError.GLIncompatible
             GLRetroView.ERROR_LOAD_GAME -> SLoadError.LoadGame
@@ -612,7 +612,7 @@ abstract class AbsGameActivity : com.mozhimen.emulatork.common.android.Immersive
             .toTypedArray()
 
         updatedVariables.forEach {
-            Timber.i("Updating core variable: ${it.key} ${it.value}")
+             com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.i(TAG,"Updating core variable: ${it.key} ${it.value}")
         }
 
         retroGameView?.updateVariables(*updatedVariables)
@@ -861,7 +861,7 @@ abstract class AbsGameActivity : com.mozhimen.emulatork.common.android.Immersive
     }
 
     private fun performUnexpectedErrorFinish(exception: Throwable) {
-        Timber.e(exception, "Handling java exception in BaseGameActivity")
+        com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.e(TAG,"Handling java exception in BaseGameActivity",exception)
         val resultIntent = Intent().apply {
             putExtra(PLAY_GAME_RESULT_ERROR, exception.message)
         }
@@ -895,7 +895,7 @@ abstract class AbsGameActivity : com.mozhimen.emulatork.common.android.Immersive
 
         if (state != null) {
             saveStateManager().setAutoSave(game, coreBundle.eCoreType, state)
-            Timber.i("Stored autosave file with size: ${state?.state?.size}")
+             com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.i(TAG,"Stored autosave file with size: ${state?.state?.size}")
         }
     }
 
@@ -903,7 +903,7 @@ abstract class AbsGameActivity : com.mozhimen.emulatork.common.android.Immersive
         val retroGameView = retroGameView ?: return
         val sramState = retroGameView.serializeSRAM()
         saveManager().setSaveRAM(game, sramState)
-        Timber.i("Stored sram file with size: ${sramState.size}")
+         com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.i(TAG,"Stored sram file with size: ${sramState.size}")
     }
 
     private suspend fun saveSlot(index: Int) {
@@ -981,7 +981,7 @@ abstract class AbsGameActivity : com.mozhimen.emulatork.common.android.Immersive
             delay(get_of_config_longAnimTime().toLong())
             retroGameViewFlow().reset()
         } catch (e: Throwable) {
-            Timber.e(e, "Error in reset")
+            com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.e(TAG,"Error in reset",e)
         }
     }
 

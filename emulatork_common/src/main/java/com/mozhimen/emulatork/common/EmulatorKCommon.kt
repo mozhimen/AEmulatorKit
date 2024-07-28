@@ -10,7 +10,6 @@ import com.mozhimen.emulatork.basic.storage.StorageBaseFile
 import com.mozhimen.emulatork.basic.storage.StorageFileGroup
 import com.mozhimen.emulatork.basic.storage.StorageFile
 import com.mozhimen.emulatork.common.storage.StorageFileMerger
-import com.mozhimen.emulatork.basic.storage.StorageDirProvider
 import com.mozhimen.emulatork.common.bios.BiosManager
 import com.mozhimen.emulatork.common.storage.StorageProvider
 import com.mozhimen.emulatork.common.storage.StorageProviderRegistry
@@ -27,7 +26,6 @@ import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.mapNotNull
-import timber.log.Timber
 
 /**
  * @ClassName LemuroidLibrary
@@ -66,13 +64,14 @@ open class EmulatorKCommon(
         try {
             indexProviders(startedAtMs)
         } catch (e: Throwable) {
-            Timber.e("Library indexing stopped due to exception", e)
+            e.printStackTrace()
+            com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.e(TAG,"Library indexing stopped due to exception", e)
         } finally {
             cleanUp(startedAtMs)
         }
 
         val executionTime = System.currentTimeMillis() - startedAtMs
-        Timber.i("Library indexing completed in: $executionTime ms")
+         com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.i(TAG,"Library indexing completed in: $executionTime ms")
     }
 
     //////////////////////////////////////////////////////////////////////////////////////
@@ -131,7 +130,7 @@ open class EmulatorKCommon(
     }
 
     private fun buildScanEntry(storageFile: StorageFileGroup, game: Game?): ScanEntry {
-        Timber.w("buildScanEntry $game")
+         com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.w(TAG,"buildScanEntry $game")
         return if (game != null) {
             ScanEntry.GameFile(storageFile, game)
         } else {
@@ -313,7 +312,7 @@ open class EmulatorKCommon(
 
     private fun removeDeletedDataFiles(startedAtMs: Long) {
         val dataFiles = retrogradedb.dataFileDao().selectByLastIndexedAtLessThan(startedAtMs)
-        com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.d("Deleting data files from db before: $startedAtMs games $dataFiles")
+        com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.d(TAG,"Deleting data files from db before: $startedAtMs games $dataFiles")
         retrogradedb.dataFileDao().delete(dataFiles)
     }
 

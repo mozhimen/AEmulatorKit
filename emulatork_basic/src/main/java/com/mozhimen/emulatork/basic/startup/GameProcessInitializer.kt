@@ -2,7 +2,8 @@ package com.mozhimen.emulatork.basic.startup
 
 import android.content.Context
 import androidx.startup.Initializer
-import timber.log.Timber
+import com.mozhimen.basick.utilk.commons.IUtilK
+
 
 /**
  * @ClassName GameProcessInitializer
@@ -11,9 +12,9 @@ import timber.log.Timber
  * @Date 2024/5/13
  * @Version 1.0
  */
-class GameProcessInitializer : Initializer<Unit> {
+class GameProcessInitializer : Initializer<Unit>,IUtilK {
     override fun create(context: Context) {
-        Timber.i("Requested initialization of game process tasks")
+         com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.i(TAG,"Requested initialization of game process tasks")
     }
 
     override fun dependencies(): List<Class<out Initializer<*>>> {

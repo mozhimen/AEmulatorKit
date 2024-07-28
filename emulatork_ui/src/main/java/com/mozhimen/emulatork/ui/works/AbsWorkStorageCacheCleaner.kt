@@ -3,9 +3,10 @@ package com.mozhimen.emulatork.ui.works
 import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import com.mozhimen.basick.utilk.commons.IUtilK
 import com.mozhimen.emulatork.basic.setting.SettingManager
 import com.mozhimen.emulatork.ext.works.WorkScheduler
-import timber.log.Timber
+
 import com.mozhimen.emulatork.basic.cache.CacheCleaner2
 import com.mozhimen.emulatork.basic.storage.StorageDirProvider
 import java.io.File
@@ -20,7 +21,7 @@ import java.io.File
 abstract class AbsWorkStorageCacheCleaner(
     context: Context,
     workerParams: WorkerParameters
-) : CoroutineWorker(context, workerParams) {
+) : CoroutineWorker(context, workerParams) ,IUtilK{
 
     //    @Inject
 //    lateinit var settingsManager: SettingsManager
@@ -32,7 +33,7 @@ abstract class AbsWorkStorageCacheCleaner(
         try {
             performCleaning()
         } catch (e: Throwable) {
-            Timber.e(e, "Error while clearing cache")
+            com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.e( TAG,"Error while clearing cache",e)
         }
 
         return Result.success()

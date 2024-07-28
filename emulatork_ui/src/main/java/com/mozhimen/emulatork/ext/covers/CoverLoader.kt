@@ -6,6 +6,7 @@ import coil.ImageLoader
 import coil.load
 import coil.util.CoilUtils
 import com.mozhimen.basick.utilk.kotlin.UtilKIntColor
+import com.mozhimen.basick.utilk.kotlin.UtilKStringWrapper
 import com.mozhimen.emulatork.db.game.entities.Game
 import com.mozhimen.xmlk.drawablek.DrawableKText
 import okhttp3.OkHttpClient
@@ -45,28 +46,12 @@ class CoverLoader(applicationContext: Context) {
 
     companion object {
         fun getFallbackDrawable(game: Game) =
-            DrawableKText(computeTitle(game), computeColor(game))
+            DrawableKText(UtilKStringWrapper.getStr_ofCompute(game.title), UtilKIntColor.get_ofRandom(game.title))
 
         fun getFallbackRemoteUrl(game: Game): String {
-            val color = Integer.toHexString(computeColor(game)).substring(2)
-            val title = computeTitle(game)
+            val color = Integer.toHexString(UtilKIntColor.get_ofRandom(game.title)).substring(2)
+            val title = UtilKStringWrapper.getStr_ofCompute(game.title)
             return "https://fakeimg.pl/512x512/$color/fff/?font=bebas&text=$title"
-        }
-
-        private fun computeTitle(game: Game): String {
-            val sanitizedName = game.title
-                .replace(Regex("\\(.*\\)"), "")
-
-            return sanitizedName.asSequence()
-                .filter { it.isDigit() or it.isUpperCase() or (it == '&') }
-                .take(3)
-                .joinToString("")
-                .ifBlank { game.title.first().toString() }
-                .capitalize()
-        }
-
-        private fun computeColor(game: Game): Int {
-            return UtilKIntColor.get_ofRandom(game.title)
         }
     }
 }

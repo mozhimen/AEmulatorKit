@@ -10,6 +10,8 @@ package com.mozhimen.emulatork.db.game.database
 class RetrogradeDBManager {
     val db: RetrogradeDatabase by lazy { RetrogradeDatabase.getRetrogradeDb() }
 
+    /////////////////////////////////////////////////////////////////////////////////////
+
     companion object {
         @JvmStatic
         val instance = INSTANCE.holder

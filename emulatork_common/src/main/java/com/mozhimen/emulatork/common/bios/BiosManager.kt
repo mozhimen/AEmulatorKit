@@ -11,7 +11,7 @@ import com.mozhimen.emulatork.basic.storage.StorageDirProvider
 import com.mozhimen.emulatork.basic.storage.StorageFile
 import com.mozhimen.emulatork.common.core.CoreBundle
 import com.mozhimen.emulatork.db.game.entities.Game
-import timber.log.Timber
+
 import java.io.File
 import java.io.InputStream
 
@@ -51,7 +51,7 @@ class BiosManager(private val storageProvider: StorageDirProvider) : IUtilK {
     }
 
     fun deleteBiosBefore(timestampMs: Long) {
-        Timber.i("Pruning old bios files")
+         com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.i(TAG,"Pruning old bios files")
         BiosProvider.getBioss()
             .map { File(storageProvider.getInternalFileSystem(), it.libretroFileName) }
             .filter { it.lastModified() < normalizeTimestamp(timestampMs) }
@@ -76,7 +76,7 @@ class BiosManager(private val storageProvider: StorageDirProvider) : IUtilK {
     ): Boolean {
         val bios = findByCRC(storageFile) ?: findByName(storageFile) ?: return false
 
-        Timber.i("Importing bios file: $bios")
+         com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.i(TAG,"Importing bios file: $bios")
 
         val biosFile = File(storageProvider.getInternalFileSystem(), bios.libretroFileName)
         if (biosFile.exists() && biosFile.setLastModified(normalizeTimestamp(timestampMs))) {

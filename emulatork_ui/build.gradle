@@ -31,7 +31,7 @@ android {
 }
 
 dependencies {
-    api project(':emulatork_common')
+    api project(project.path.replace(project.name,'')+':emulatork_common')
 
     api project(':ANavigateKit:navigatek_navigation')
     api project(":AImageKit:imagek_coil1")

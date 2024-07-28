@@ -32,8 +32,8 @@ android {
 }
 
 dependencies {
-    api project(':emulatork_ui')
-    api project(':emulatork_common_hilt')
+    api project(project.path.replace(project.name, '') + ':emulatork_ui')
+    api project(project.path.replace(project.name, '') + ':emulatork_common_hilt')
 
     implementation 'com.google.dagger:hilt-android:2.50'
     kapt 'com.google.dagger:hilt-compiler:2.50'

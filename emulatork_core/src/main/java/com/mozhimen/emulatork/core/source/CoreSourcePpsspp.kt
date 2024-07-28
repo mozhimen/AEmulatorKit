@@ -2,12 +2,13 @@ package com.mozhimen.emulatork.core.source
 
 import android.content.SharedPreferences
 import android.net.Uri
+import com.mozhimen.basick.utilk.commons.IUtilK
 import com.mozhimen.emulatork.basic.storage.StorageDirProvider
 import com.mozhimen.netk.retrofit2.commons.DownloadApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.Response
-import timber.log.Timber
+
 import java.io.File
 import java.util.zip.ZipInputStream
 
@@ -18,7 +19,7 @@ import java.util.zip.ZipInputStream
  * @Date 2024/5/11
  * @Version 1.0
  */
-class CoreSourcePpsspp : CoreSource {
+class CoreSourcePpsspp : CoreSource, IUtilK {
 
     companion object {
         const val PPSSPP_ASSETS_VERSION = "1.15"
@@ -60,7 +61,7 @@ class CoreSourcePpsspp : CoreSource {
         response.body()?.use { zipInputStream ->
             while (true) {
                 val entry = zipInputStream.nextEntry ?: break
-                com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.d(TAG,"Writing file: ${entry.name}")
+                com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.d(TAG, "Writing file: ${entry.name}")
                 val destFile = File(
                     coreAssetsDirectory,
                     entry.name

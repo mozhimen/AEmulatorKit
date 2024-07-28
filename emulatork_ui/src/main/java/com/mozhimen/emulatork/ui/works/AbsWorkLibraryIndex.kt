@@ -11,7 +11,7 @@ import com.mozhimen.emulatork.ext.works.WorkScheduler
 import com.mozhimen.emulatork.ui.game.AbsGameActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import timber.log.Timber
+
 
 /**
  * @ClassName LibraryIndexWork
@@ -46,7 +46,7 @@ abstract class AbsWorkLibraryIndex(context: Context, workerParams: WorkerParamet
         }
 
         result.exceptionOrNull()?.let {
-            Timber.e("Library indexing work terminated with an exception:", it)
+            com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.e(TAG,"Library indexing work terminated with an exception:", it)
         }
 
         WorkScheduler.scheduleCoreUpdate(workCoreUpdateClazz(), applicationContext)

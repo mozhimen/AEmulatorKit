@@ -7,7 +7,7 @@ import com.mozhimen.emulatork.basic.startup.DebugInitializer
 import com.mozhimen.emulatork.ext.works.WorkScheduler
 import com.mozhimen.emulatork.ui.works.AbsWorkCoreUpdate
 import com.mozhimen.emulatork.ui.works.AbsWorkSaveSync
-import timber.log.Timber
+
 
 /**
  * @ClassName MainProcessInitializer
@@ -20,7 +20,7 @@ abstract class AbsMainProcessInitializer : Initializer<Unit>, IUtilK {
     abstract fun workSaveSyncClazz(): Class<out AbsWorkSaveSync>
     abstract fun workCoreUpdateClazz(): Class<out AbsWorkCoreUpdate>
     override fun create(context: Context) {
-        Timber.i("Requested initialization of main process tasks")
+         com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.i(TAG,"Requested initialization of main process tasks")
             WorkScheduler.enqueueAutoWork(workSaveSyncClazz(), context, 0)
             WorkScheduler.scheduleCoreUpdate(workCoreUpdateClazz(), context)
     }

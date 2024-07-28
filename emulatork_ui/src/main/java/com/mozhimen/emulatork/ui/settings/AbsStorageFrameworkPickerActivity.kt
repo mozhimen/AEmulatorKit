@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import com.mozhimen.basick.utilk.android.app.showAlertDialog
+import com.mozhimen.basick.utilk.android.util.UtilKLogWrapper
 import com.mozhimen.basick.utilk.commons.IUtilK
 import com.mozhimen.emulatork.basic.preferences.SharedPreferencesManager
 import com.mozhimen.emulatork.basic.storage.StorageDirProvider
@@ -63,7 +64,7 @@ abstract class AbsStorageFrameworkPickerActivity : FragmentActivity(), IUtilK {
 
             val currentValue: String? = sharedPreferences.getString(preferenceKey, null)
             val newValue = resultData?.data
-
+            UtilKLogWrapper.d(TAG,"onActivityResult: newValue $newValue")
             if (newValue != null && newValue.toString() != currentValue) {
                 updatePersistableUris(newValue)
 

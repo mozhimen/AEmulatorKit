@@ -8,12 +8,13 @@ import android.hardware.SensorManager
 import android.view.Surface
 import com.mozhimen.basick.utilk.android.hardware.UtilKSensorManager
 import com.mozhimen.basick.utilk.android.view.UtilKDisplay
+import com.mozhimen.basick.utilk.commons.IUtilK
 import com.mozhimen.basick.utilk.kotlin.math.UtilKMathInterpolation
 import com.mozhimen.basick.utilk.kotlin.properties.UtilKReadWriteProperty
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.filterNotNull
-import timber.log.Timber
+
 import kotlin.math.abs
 import kotlin.math.sign
 
@@ -24,7 +25,7 @@ import kotlin.math.sign
  * @Date 2024/5/13
  * @Version 1.0
  */
-class SensorTilt(private val context: Context) : SensorEventListener {
+class SensorTilt(private val context: Context) : SensorEventListener, IUtilK {
 
     companion object {
         const val SKIPPED_MEASUREMENTS = 1
@@ -68,7 +69,7 @@ class SensorTilt(private val context: Context) : SensorEventListener {
     fun setSensitivity(sensitivity: Float) {
         maxRotation = UtilKMathInterpolation.get_ofLinear(sensitivity, MAX_MAX_ROTATION, MIN_MAX_ROTATION)
         deadZone = maxRotation * 0.1f
-        com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.d(TAG,"Setting tilt sensitivity max angle: ${Math.toDegrees(maxRotation.toDouble())}")
+        com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.d(TAG, "Setting tilt sensitivity max angle: ${Math.toDegrees(maxRotation.toDouble())}")
     }
 
     fun isAvailable(): Boolean {

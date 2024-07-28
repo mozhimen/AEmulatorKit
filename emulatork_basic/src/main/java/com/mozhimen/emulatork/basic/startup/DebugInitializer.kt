@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.StrictMode
 import androidx.startup.Initializer
 import com.mozhimen.emulatork.basic.BuildConfig
-import timber.log.Timber
 
 /**
  * @ClassName DebugInitializer
@@ -17,7 +16,7 @@ class DebugInitializer : Initializer<Unit> {
 
     override fun create(context: Context) {
         if (BuildConfig.DEBUG) {
-            Timber.plant(Timber.DebugTree())
+//             com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.plant( com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.DebugTree())
             enableStrictMode()
         }
     }

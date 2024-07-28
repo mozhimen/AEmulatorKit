@@ -1,7 +1,9 @@
 package com.mozhimen.emulatork.ext.game
 
 import android.content.Context
+import android.util.Log
 import com.mozhimen.basick.utilk.android.widget.showToast
+import com.mozhimen.basick.utilk.commons.IUtilK
 import com.mozhimen.emulatork.common.android.BusyProvider
 import com.mozhimen.emulatork.db.game.database.RetrogradeDatabase
 import com.mozhimen.emulatork.db.game.entities.Game
@@ -25,9 +27,12 @@ open class GameInteractor constructor(
     private val useLeanback: Boolean,
     private val coverShortcutGenerator: CoverShortcutGenerator,
     private val gameLauncher: GameLauncher
-) {
+) :IUtilK{
     fun onGamePlay(game: Game) {
-        if (activity !is BusyProvider) return
+        if (activity !is BusyProvider) {
+            Log.d(TAG, "onGamePlay:  !is BusyProvider ${activity::class.java.simpleName}")
+            return
+        }
         if (activity.isBusy()) {
             R.string.game_interactory_busy.showToast()
             return

@@ -25,7 +25,7 @@ import com.mozhimen.emulatork.ext.game.GameInteractor
 import com.mozhimen.emulatork.ext.covers.CoverLoader
 import com.mozhimen.emulatork.ui.dagger.settings.StorageFrameworkPickerActivity
 import dagger.android.support.AndroidSupportInjection
-import timber.log.Timber
+
 import javax.inject.Inject
 
 /**

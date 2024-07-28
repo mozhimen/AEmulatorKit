@@ -1,5 +1,6 @@
 package com.mozhimen.emulatork.common.metadata
 
+import com.mozhimen.basick.utilk.commons.IUtilK
 import com.mozhimen.basick.utilk.kotlin.filterNullable
 import com.mozhimen.emulatork.basic.system.ESystemType
 import com.mozhimen.emulatork.basic.metadata.Metadata
@@ -9,7 +10,7 @@ import com.mozhimen.emulatork.common.system.SystemProvider
 import com.mozhimen.emulatork.db.libretro.database.LibretroDB
 import com.mozhimen.emulatork.db.libretro.database.LibretroDBManager
 import com.mozhimen.emulatork.db.libretro.entities.LibretroRom
-import timber.log.Timber
+
 import java.util.Locale
 
 /**
@@ -22,7 +23,7 @@ import java.util.Locale
 // TODO We are not currently trying to guess the system using extensions. This is often not reliable, but sometimes it
 // might work (think about .n64/.z64)
 
-class MetadataProviderLibretroDB(private val ovgdbManager: LibretroDBManager) : MetadataProvider {
+class MetadataProviderLibretroDB(private val ovgdbManager: LibretroDBManager) : MetadataProvider ,IUtilK{
     companion object {
         private val THUMB_REPLACE = Regex("[&*/:`<>?\\\\|]")
     }
@@ -49,7 +50,7 @@ class MetadataProviderLibretroDB(private val ovgdbManager: LibretroDBManager) : 
                 ?: findByKnownSystem(storageFile)
                 ?: findByPathAndSupportedExtension(storageFile)
         }.getOrElse {
-            Timber.e("Error in retrieving $storageFile metadata: $it... Skipping.")
+            com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.e(TAG,"Error in retrieving $storageFile metadata: $it... Skipping.")
             null
         }
 

@@ -20,7 +20,6 @@ import com.mozhimen.emulatork.db.game.database.RetrogradeDatabase
 import com.mozhimen.emulatork.db.game.entities.Game
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import timber.log.Timber
 import java.io.File
 
 /**
@@ -112,10 +111,10 @@ class GameLoadManager(
                 )
             )
         } catch (e: LoadException) {
-            UtilKLogWrapper.e(e, "Error while preparing game")
+            UtilKLogWrapper.e( TAG,"Error while preparing game",e)
             throw e
         } catch (e: Exception) {
-            Timber.e(e, "Error while preparing game")
+            com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.e(TAG,"Error while preparing game",e)
             throw LoadException(SLoadError.Generic)
         }
     }

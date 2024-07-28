@@ -3,10 +3,16 @@ package com.mozhimen.emulatork.common.storage
 import android.content.Context
 import android.net.Uri
 import android.provider.DocumentsContract
+import android.util.Log
 import androidx.documentfile.provider.DocumentFile
 import com.mozhimen.basick.elemk.androidx.documentfile.isTypeZip
+import com.mozhimen.basick.utilk.android.os.UtilKEnvironment
+import com.mozhimen.basick.utilk.commons.IUtilK
+import com.mozhimen.basick.utilk.java.io.UtilKFile
 import com.mozhimen.basick.utilk.java.io.inputStream2file_use_ofCopyTo
 import com.mozhimen.basick.utilk.java.util.extractEntryToFile_use
+import com.mozhimen.basick.utilk.kotlin.UtilKStrPath
+import com.mozhimen.basick.utilk.kotlin.strFilePath2uri
 import com.mozhimen.emulatork.common.R
 import com.mozhimen.emulatork.basic.preferences.SharedPreferencesManager
 import com.mozhimen.emulatork.basic.storage.StorageFile
@@ -19,7 +25,7 @@ import com.mozhimen.emulatork.db.game.entities.Game
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flow
-import timber.log.Timber
+
 import java.io.File
 import java.io.InputStream
 import java.util.zip.ZipInputStream
@@ -31,7 +37,7 @@ import java.util.zip.ZipInputStream
  * @Date 2024/5/10
  * @Version 1.0
  */
-class StorageProviderAccessFramework(private val context: Context) : StorageProvider {
+class StorageProviderAccessFramework(private val context: Context) : StorageProvider, IUtilK {
 
     companion object {
         const val VIRTUAL_FILE_PATH = "/virtual/file/path"
@@ -50,7 +56,8 @@ class StorageProviderAccessFramework(private val context: Context) : StorageProv
     override val enabledByDefault = true
 
     override fun listStorageBaseFiles(): Flow<List<StorageBaseFile>> {
-        return getExternalFolder()?.let { folder ->
+        return ((getExternalFolder() ?: (UtilKEnvironment.getExternalStoragePublicDir_ofDownloads().absolutePath + "/game/").strFilePath2uri()?.path))?.let { folder ->
+            Log.d(TAG, "listStorageBaseFiles: folder $folder")
             traverseDirectoryEntries(Uri.parse(folder))
         } ?: emptyFlow()
     }
@@ -95,7 +102,7 @@ class StorageProviderAccessFramework(private val context: Context) : StorageProv
                 listBaseStorageFiles(rootUri, currentDirectoryDocumentId)
             }
             if (result.isFailure) {
-                Timber.e(result.exceptionOrNull(), "Error while listing files")
+                com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.e(TAG, "Error while listing files", result.exceptionOrNull())
             }
 
             val (files, directories) = result.getOrDefault(
@@ -113,7 +120,7 @@ class StorageProviderAccessFramework(private val context: Context) : StorageProv
 
         val childrenUri = DocumentsContract.buildChildDocumentsUriUsingTree(treeUri, rootDocumentId)
 
-        com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.d(TAG,"Querying files in directory: $childrenUri")
+        com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.d(TAG, "Querying files in directory: $childrenUri")
 
         val projection = arrayOf(
             DocumentsContract.Document.COLUMN_DOCUMENT_ID,

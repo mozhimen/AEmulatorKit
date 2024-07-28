@@ -28,14 +28,16 @@ interface GameDao {
     @Query("SELECT * FROM games WHERE lastIndexedAt < :lastIndexedAt")
     fun selectByLastIndexedAtLessThan(lastIndexedAt: Long): List<Game>
 
+    @Query("select count(*) from games")
+    fun selectCount():Int
+
+    @Query("select * from games order by lastIndexedAt desc limit :pageSize offset :index")
+    fun selectByPage(index: Int, pageSize: Int): List<Game>
+
     @Query("SELECT * FROM games WHERE isFavorite = 1 ORDER BY title ASC")
     fun selectFavorites(): PagingSource<Int, Game>
 
-    @Query(
-        """
-        SELECT * FROM games WHERE lastPlayedAt IS NOT NULL AND isFavorite = 0 ORDER BY lastPlayedAt DESC LIMIT :limit
-        """
-    )
+    @Query("SELECT * FROM games WHERE lastPlayedAt IS NOT NULL AND isFavorite = 0 ORDER BY lastPlayedAt DESC LIMIT :limit")
     fun selectFirstUnfavoriteRecents(limit: Int): Flow<List<Game>>
 
     @Query("SELECT * FROM games WHERE isFavorite = 1 ORDER BY lastPlayedAt DESC LIMIT :limit")

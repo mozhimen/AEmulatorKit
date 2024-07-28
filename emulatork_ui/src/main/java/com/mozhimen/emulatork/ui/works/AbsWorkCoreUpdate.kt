@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
+import com.mozhimen.basick.utilk.commons.IUtilK
 import com.mozhimen.emulatork.common.core.CoreSelectionManager
 import com.mozhimen.emulatork.core.download.CoreDownload
 import com.mozhimen.emulatork.db.game.database.RetrogradeDatabase
@@ -11,7 +12,7 @@ import com.mozhimen.emulatork.ext.library.NotificationsManager
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
-import timber.log.Timber
+
 import com.mozhimen.emulatork.common.system.SystemProvider
 /**
  * @ClassName CoreUpdateWork
@@ -21,7 +22,7 @@ import com.mozhimen.emulatork.common.system.SystemProvider
  * @Version 1.0
  */
 abstract class AbsWorkCoreUpdate(context: Context, workerParams: WorkerParameters) :
-    CoroutineWorker(context, workerParams) {
+    CoroutineWorker(context, workerParams) ,IUtilK{
 
     //    @Inject
 //    lateinit var retrogradeDatabase: RetrogradeDatabase
@@ -39,7 +40,7 @@ abstract class AbsWorkCoreUpdate(context: Context, workerParams: WorkerParameter
 
     override suspend fun doWork(): Result {
 
-        Timber.i("Starting core update/install work")
+         com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.i(TAG,"Starting core update/install work")
 
         val notificationsManager = NotificationsManager(applicationContext, gameActivityClazz())
 
@@ -60,7 +61,7 @@ abstract class AbsWorkCoreUpdate(context: Context, workerParams: WorkerParameter
 
             coreDownload().downloadCores(applicationContext, cores)
         } catch (e: Throwable) {
-            Timber.e(e, "Core update work failed with exception: ${e.message}")
+            com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.e(TAG, "Core update work failed with exception: ${e.message}",e)
         }
 
         return Result.success()

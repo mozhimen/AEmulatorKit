@@ -2,7 +2,9 @@ package com.mozhimen.emulatork.common.storage
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import androidx.core.net.toUri
+import com.mozhimen.basick.utilk.commons.IUtilK
 import com.mozhimen.basick.utilk.java.io.isFileZipped
 import com.mozhimen.basick.utilk.java.util.extractEntryToFile_use
 import com.mozhimen.emulatork.common.R
@@ -30,7 +32,7 @@ import java.util.zip.ZipInputStream
 class StorageProviderLocal(
     private val context: Context,
     private val storageDirProvider: StorageDirProvider
-) : StorageProvider {
+) : StorageProvider ,IUtilK{
 
     override val id: String = "local"
 
@@ -43,7 +45,7 @@ class StorageProviderLocal(
     override val enabledByDefault = true
 
     override fun listStorageBaseFiles(): Flow<List<StorageBaseFile>> =
-        walkDirectory(getExternalFolder() ?: storageDirProvider.getExternalFileRoms())
+        walkDirectory((getExternalFolder() ?: storageDirProvider.getExternalFileRoms()).also { Log.d(TAG, "listStorageBaseFiles: $it") })
 
     override fun getStorageFile(storageBaseFile: StorageBaseFile): StorageFile? {
         return DocumentFileParser.parseDocumentFile(context, storageBaseFile)

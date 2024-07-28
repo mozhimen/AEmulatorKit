@@ -33,7 +33,7 @@ android {
 dependencies {
     implementation project(project.path.replace(project.name, '') + ':emulatork_basic')
 
-    implementation project(':ALibKit_Jetpack:room')
+    api project(':ALibKit_Jetpack:room')
     kapt 'androidx.room:room-compiler:2.6.1'
 //    kapt 'com.google.dagger:dagger-compiler:2.19'
 

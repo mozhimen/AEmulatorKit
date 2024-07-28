@@ -5,7 +5,7 @@ import com.mozhimen.basick.utilk.commons.IUtilK
 import com.mozhimen.basick.utilk.java.io.getStrCrc32_use
 import com.mozhimen.basick.utilk.kotlin.long2strCrc32
 import com.mozhimen.emulatork.basic.system.SystemSerialExtractor
-import timber.log.Timber
+
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 

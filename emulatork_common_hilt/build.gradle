@@ -30,7 +30,7 @@ android {
 }
 
 dependencies {
-    api project(':emulatork_common')
+    api project(project.path.replace(project.name,'')+':emulatork_common')
     api project(':AInjectKit:injectk_dagger_hilt')
     api project(':AInjectKit:injectk_androidx_hilt_work')
 

@@ -17,14 +17,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.epoxy.Carousel
 import com.mozhimen.basick.utilk.android.app.UtilKActivityStart
 import com.mozhimen.basick.utilk.androidx.fragment.runOnViewLifecycleState
-import com.mozhimen.emulatork.db.game.database.RetrogradeDatabase
+import com.mozhimen.basick.utilk.commons.IUtilK
 import com.mozhimen.emulatork.ext.covers.CoverLoader
 import com.mozhimen.emulatork.ext.game.GameInteractor
 import com.mozhimen.emulatork.ext.library.SettingsInteractor
 import com.mozhimen.emulatork.test.hilt.R
 import com.mozhimen.emulatork.ui.hilt.settings.StorageFrameworkPickerActivity
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -35,7 +34,7 @@ import javax.inject.Inject
  * @Version 1.0
  */
 @AndroidEntryPoint
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), IUtilK {
 
     @Inject
     lateinit var gameInteractor: GameInteractor
@@ -85,14 +84,14 @@ class HomeFragment : Fragment() {
 
         runOnViewLifecycleState(Lifecycle.State.RESUMED) {
             pagingController.getActions().collect {
-                com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.d(TAG,"Received home view model action + $it")
+                com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.d(TAG, "Received home view model action + $it")
                 handleEpoxyAction(it)
             }
         }
 
         runOnViewLifecycleState(Lifecycle.State.RESUMED) {
             homeViewModel.getViewStates().collect {
-                com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.d(TAG,"getViewStates + $it")
+                com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.d(TAG, "getViewStates + $it")
                 pagingController.updateState(it)
             }
         }

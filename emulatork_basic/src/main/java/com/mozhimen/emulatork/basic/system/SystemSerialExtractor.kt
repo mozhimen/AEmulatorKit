@@ -6,7 +6,7 @@ import com.mozhimen.basick.utilk.kotlin.kiloBytes
 import com.mozhimen.basick.utilk.kotlin.megaBytes
 import com.mozhimen.basick.utilk.kotlin.startsWithAny
 import com.mozhimen.basick.utilk.kotlin.indexOf
-import timber.log.Timber
+
 import java.io.InputStream
 import java.nio.charset.Charset
 import kotlin.math.ceil
@@ -203,7 +203,7 @@ object SystemSerialExtractor : IUtilK {
             .filter { it.isNotBlank() }
             .joinToString("-") { it.trim() }
 
-        Timber.i("SegaCD final serial: $finalSerial")
+         com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.i(TAG,"SegaCD final serial: $finalSerial")
         return SystemSerial(finalSerial, ESystemType.SEGACD)
     }
 

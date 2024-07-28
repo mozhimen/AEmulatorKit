@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Build
+import com.mozhimen.basick.utilk.commons.IUtilK
 import com.mozhimen.basick.utilk.java.io.deleteFile
 import com.mozhimen.basick.utilk.java.io.inputStream2file_use_ofCopyTo
 import com.mozhimen.emulatork.basic.preferences.SharedPreferencesManager
@@ -17,7 +18,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
-import timber.log.Timber
+
 import java.io.File
 
 /**
@@ -29,7 +30,7 @@ import java.io.File
  */
 class CoreDownloaderImpl(
     private val storageProvider: StorageDirProvider, retrofit: Retrofit
-) : CoreDownload {
+) : CoreDownload ,IUtilK{
 
     // This is the last tagged versions of cores.
     companion object {
@@ -64,7 +65,7 @@ class CoreDownloaderImpl(
     }
 
     private suspend fun downloadCoreFromGithub(coreID: ECoreType): File {
-        Timber.i("Downloading core $coreID from github")
+         com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.i(TAG,"Downloading core $coreID from github")
 
         val mainCoresDirectory = storageProvider.getInternalFileCores()
         val coresDirectory = File(mainCoresDirectory, CORES_VERSION).apply {
@@ -101,7 +102,7 @@ class CoreDownloaderImpl(
         val response = api.downloadFile(uri.toString())
 
         if (!response.isSuccessful) {
-            Timber.e("Download core response was unsuccessful")
+            com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.e(TAG,"Download core response was unsuccessful")
             throw Exception(response.errorBody()?.string() ?: "Download error")
         }
 

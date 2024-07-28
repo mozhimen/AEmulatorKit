@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
+import com.mozhimen.basick.utilk.commons.IUtilK
 import com.mozhimen.emulatork.basic.setting.SettingManager
 import com.mozhimen.emulatork.common.archive.ArchiveManager
 import com.mozhimen.emulatork.core.type.ECoreType
@@ -12,7 +13,6 @@ import com.mozhimen.emulatork.ext.library.NotificationsManager
 import com.mozhimen.emulatork.ext.works.WorkScheduler
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
-import timber.log.Timber
 
 /**
  * @ClassName SaveSyncWork
@@ -22,7 +22,7 @@ import timber.log.Timber
  * @Version 1.0
  */
 abstract class AbsWorkSaveSync constructor(context: Context, workerParams: WorkerParameters) :
-    CoroutineWorker(context, workerParams) {
+    CoroutineWorker(context, workerParams),IUtilK{
 
     //    @Inject
 //    lateinit var saveSyncManager: SaveSyncManager
@@ -49,7 +49,7 @@ abstract class AbsWorkSaveSync constructor(context: Context, workerParams: Worke
         try {
             archiveManager().sync(coresToSync)
         } catch (e: Throwable) {
-            Timber.e(e, "Error in saves sync")
+            com.mozhimen.basick.utilk.android.util.UtilKLogWrapper.e(TAG,"Error in saves sync",e)
         }
 
         return Result.success()

@@ -9,4 +9,17 @@ package com.mozhimen.emulatork.db.libretro.database
  */
 class LibretroDBManager {
     val db: LibretroDB by lazy { LibretroDB.getLibretroDB() }
+
+    /////////////////////////////////////////////////////////////////////////////////////
+
+    companion object {
+        @JvmStatic
+        val instance = INSTANCE.holder
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////
+
+    private object INSTANCE {
+        val holder = LibretroDBManager()
+    }
 }
