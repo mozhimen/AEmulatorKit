@@ -23,8 +23,8 @@ object Migrations {
 
     val VERSION_7_8: Migration by lazy {
         object : Migration(7, 8) {
-            override fun migrate(database: SupportSQLiteDatabase) {
-                database.execSQL(
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
                     """
                 CREATE VIRTUAL TABLE fts_games USING FTS4(
                   tokenize=unicode61 "remove_diacritics=1",
@@ -32,35 +32,35 @@ object Migrations {
                   title);
                 """
                 )
-                database.execSQL(
+                db.execSQL(
                     """
                 CREATE TRIGGER games_bu BEFORE UPDATE ON games BEGIN
                   DELETE FROM fts_games WHERE docid=old.id;
                 END;
                 """
                 )
-                database.execSQL(
+                db.execSQL(
                     """
                 CREATE TRIGGER games_bd BEFORE DELETE ON games BEGIN
                   DELETE FROM fts_games WHERE docid=old.id;
                 END;
                 """
                 )
-                database.execSQL(
+                db.execSQL(
                     """
                 CREATE TRIGGER games_au AFTER UPDATE ON games BEGIN
                   INSERT INTO fts_games(docid, title) VALUES(new.id, new.title);
                 END;
                 """
                 )
-                database.execSQL(
+                db.execSQL(
                     """
                 CREATE TRIGGER games_ai AFTER INSERT ON games BEGIN
                   INSERT INTO fts_games(docid, title) VALUES(new.id, new.title);
                 END;
                 """
                 )
-                database.execSQL(
+                db.execSQL(
                     """
                 INSERT INTO fts_games(docid, title) SELECT id, title FROM games;
                 """
