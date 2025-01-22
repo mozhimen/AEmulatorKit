@@ -20,19 +20,19 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "AEmulatorKit"
-include ':test_dagger'
-include ':test_simple'
-include ':test_hilt'
-include ':emulatork_basic'
-include ':emulatork_common'
-include ':emulatork_common_hilt'
-include ':emulatork_common_dagger'
-include ':emulatork_ui_dagger'
-include ':emulatork_ui_hilt'
-include ':emulatork_ui'
-include ':emulatork_input'
-include ':emulatork_db'
-include ':emulatork_core'
+include ':test:dagger'
+include ':test:simple'
+include ':test:hilt'
+include ':basic'
+include ':common'
+include ':common:hilt'
+include ':common:dagger'
+include ':ui:dagger'
+include ':ui:hilt'
+include ':ui'
+include ':input'
+include ':db'
+include ':core'
 //ALibKit_Squareup
 include ':ALibKit_Squareup'
 project(':ALibKit_Squareup').projectDir = new File("D:\\WorkSpace\\GitHub\\ALibKit_Squareup")
@@ -45,7 +45,11 @@ include ':ALibKit_Squareup:okhttp3_logging_interceptor'
 include ':ALibKit_Google'
 project(':ALibKit_Google').projectDir = new File("D:\\WorkSpace\\GitHub\\ALibKit_Google")
 include ':ALibKit_Google:dagger'
-include ':ALibKit_Google:dagger_hilt'
+include ':ALibKit_Google:dagger:hilt_android'
+//ALibKit_Google
+include ':ALibKit_Google'
+project(':ALibKit_Google').projectDir = new File("D:\\WorkSpace\\GitHub\\ALibKit_Google")
+include ':ALibKit_Google:material'
 //ALibKit_Jetpack
 include ':ALibKit_Jetpack'
 project(':ALibKit_Jetpack').projectDir = new File("D:\\WorkSpace\\GitHub\\ALibKit_Jetpack")
@@ -57,50 +61,72 @@ include ':ALibKit_Jetpack:room'
 include ':ALibKit_Jetpack:paging3'
 include ':ALibKit_Jetpack:hilt_work'
 include ':ALibKit_Jetpack:work'
+include ':ALibKit_Jetpack:navigation_common'
+include ':ALibKit_Jetpack:navigation_fragment'
+include ':ALibKit_Jetpack:navigation_ui'
+include ':ALibKit_Jetpack:databinding'
+include ':ALibKit_Jetpack:core'
+include ':ALibKit_Jetpack:annotation'
+include ':ALibKit_Jetpack:room_paging'
+//ALibKit_Jetbrains
+include ':ALibKit_Jetbrains'
+project(':ALibKit_Jetbrains').projectDir = new File("D:\\WorkSpace\\GitHub\\ALibKit_Jetbrains")
+include ':ALibKit_Jetbrains:kotlin_stdlib'
+include ':ALibKit_Jetbrains:kotlinx_coroutines'
+include ':ALibKit_Jetbrains:kotlinx_serialization_core'
+include ':ALibKit_Jetbrains:kotlinx_serialization_json'
 //ALibKit_Jetbrains
 include ':ALibKit_Jetbrains'
 project(':ALibKit_Jetbrains').projectDir = new File("D:\\WorkSpace\\GitHub\\ALibKit_Jetbrains")
 include ':ALibKit_Jetbrains:kotlinx_serialization'
-//SwiftKit
-include ':SwiftKit'
-project(':SwiftKit').projectDir = new File("D:\\WorkSpace\\GitHub\\SwiftKit")
-include ':SwiftKit:basick'
-include ':SwiftKit:xmlk'
+//ALibKit_Airbnb
+include ':ALibKit_Airbnb'
+project(':ALibKit_Airbnb').projectDir = new File("D:\\WorkSpace\\GitHub\\ALibKit_Airbnb")
+include ':ALibKit_Airbnb:epoxy4'
+include ':ALibKit_Airbnb:epoxy4:paging'
+//KUtilKit
+include ':KUtilKit'
+project(':KUtilKit').projectDir = new File("D:\\WorkSpace\\GitHub\\KUtilKit")
+include ':KUtilKit:android'
+include ':KUtilKit:kotlin'
+//ASwiftKit
+include ':ASwiftKit'
+project(':ASwiftKit').projectDir = new File("D:\\WorkSpace\\GitHub\\ASwiftKit")
+include ':ASwiftKit:basick'
+include ':ASwiftKit:xmlk'
 //ATaskKit
 include ':ATaskKit'
 project(':ATaskKit').projectDir = new File("D:\\WorkSpace\\GitHub\\ATaskKit")
-include ':ATaskKit:taskk_work'
+include ':ATaskKit:work'
 //ANavigateKit
 include ':ANavigateKit'
 project(':ANavigateKit').projectDir = new File("D:\\WorkSpace\\GitHub\\ANavigateKit")
-include ':ANavigateKit:navigatek_navigation'
+include ':ANavigateKit:navigation'
 //APagingKit
 include ':APagingKit'
 project(':APagingKit').projectDir = new File("D:\\WorkSpace\\GitHub\\APagingKit")
-include ':APagingKit:pagingk_paging3_data'
-include ':APagingKit:pagingk_epoxy4'
+include ':APagingKit:paging3:data'
 //AInjectKit
 include ':AInjectKit'
 project(':AInjectKit').projectDir = new File("D:\\WorkSpace\\GitHub\\AInjectKit")
-include ':AInjectKit:injectk_dagger'
-include ':AInjectKit:injectk_dagger_hilt'
-include ':AInjectKit:injectk_androidx_hilt_work'
+include ':AInjectKit:google:dagger'
+include ':AInjectKit:google:dagger_hilt'
+include ':AInjectKit:jetpack:hilt_work'
 //ANetKit
 include ':ANetKit'
 project(':ANetKit').projectDir = new File("D:\\WorkSpace\\GitHub\\ANetKit")
-include ':ANetKit:netk_retrofit2'
-include ':ANetKit:netk_okhttp3'
-include ':ANetKit:netk_okio2'
+include ':ANetKit:retrofit2'
+include ':ANetKit:okhttp3'
+include ':ANetKit:okio2'
 //ACacheKit
 include ':ACacheKit'
 project(':ACacheKit').projectDir = new File("D:\\WorkSpace\\GitHub\\ACacheKit")
-include ':ACacheKit:cachek_flow_preferences'
-include ':ACacheKit:cachek_harmony'
-include ':ACacheKit:cachek_room_paging'
+include ':ACacheKit:flow_preferences'
+include ':ACacheKit:harmony'
 //AImageKit
 include ':AImageKit'
 project(':AImageKit').projectDir = new File("D:\\WorkSpace\\GitHub\\AImageKit")
-include ':AImageKit:imagek_coil1'
+include ':AImageKit:coil1'
 //AImageKit
 include ':AXmlKit'
 project(':AXmlKit').projectDir = new File("D:\\WorkSpace\\GitHub\\AXmlKit")
@@ -110,7 +136,7 @@ include ':AXmlKit:drawablek'
 //ARxKit
 include ':ARxKit'
 project(':ARxKit').projectDir = new File("D:\\WorkSpace\\GitHub\\ARxKit")
-include ':ARxKit:rxk_epoxy4'
+include ':ARxKit:epoxy4'
 //AEmulatorKit_LibretroDroid
 include ':AEmulatorKit_LibretroDroid'
 project(':AEmulatorKit_LibretroDroid').projectDir = new File("D:\\WorkSpace\\GitHub\\AEmulatorKit_LibretroDroid")
@@ -118,11 +144,11 @@ include ':AEmulatorKit_LibretroDroid:libretrodroid'
 //ASerialKit
 include ':ASerialKit'
 project(':ASerialKit').projectDir = new File("D:\\WorkSpace\\GitHub\\ASerialKit")
-include ':ASerialKit:serialk_moshi'
-include ':ASerialKit:serialk_serialization'
+include ':ASerialKit:moshi'
+include ':ASerialKit:kotlinx_serialization'
 //AIOKit
 include ':AIOKit'
 project(':AIOKit').projectDir = new File("D:\\WorkSpace\\GitHub\\AIOKit")
-include ':AIOKit:iok_cache'
+include ':AIOKit:cache'
 
 
